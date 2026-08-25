@@ -3,6 +3,7 @@ __pycache__/
 .pytest_cache/
 # never in git: raw market data, lake bytes, encrypted or decrypted holdout
 lake/
+!fixtures/
 staging/
 *.tar.age
 *.parquet

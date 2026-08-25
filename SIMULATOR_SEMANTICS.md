@@ -62,8 +62,9 @@ one 15m bar timestamp, the engine processes, in this exact order:
    Sign: long pays when rate > 0, short receives; reversed for rate < 0.
    Missing funding datum → 0 applied, event recorded.
 2. **Pending market exits** (queued by trailing/time/management decisions
-   from strictly earlier timestamps): filled at this bar's open with market
-   costs. Exception (protocol §2.4 exit priority): if the bar opens beyond
+   at or before this timestamp; the decisions themselves use only
+   information from strictly earlier bars): filled at this bar's open with
+   market costs. Exception (protocol §2.4 exit priority): if the bar opens beyond
    the position's stop, a queued full-close executes as the STOP instead
    (doubled slippage, reason `stop`, event recorded).
 3. **Pending entries** (submitted at this bar's open time by a decision

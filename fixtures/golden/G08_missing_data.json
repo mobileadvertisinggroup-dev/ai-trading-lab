@@ -1,0 +1,81 @@
+{
+  "expected": {
+    "cancel": {
+      "reason": "missing_bar",
+      "symbol": "A"
+    },
+    "derivation": "bar at T0+15m missing: second entry cancelled (never deferred); queued exit defers, fills at next existing bar open 100 cost-free: pnl 0. cash unchanged.",
+    "exit_deferred_then_filled_at": 1699979400000,
+    "final_cash": 10000.0
+  },
+  "fixture": {
+    "bar_ms": 900000,
+    "bars": {
+      "A": [
+        [
+          1699977600000,
+          100,
+          100.1,
+          99.9,
+          100
+        ],
+        [
+          1699979400000,
+          100,
+          100.1,
+          99.9,
+          100
+        ]
+      ]
+    },
+    "funding": {},
+    "funding_interval_ms": 28800000,
+    "instructions": [
+      {
+        "costs": {
+          "fee": 0.0,
+          "hs": 0.0,
+          "slip": 0.0
+        },
+        "max_notional": null,
+        "qty": 10,
+        "side": 1,
+        "stop_offset": 50,
+        "symbol": "A",
+        "t": 1699977600000,
+        "target_offset": 60,
+        "type": "entry"
+      },
+      {
+        "costs": {
+          "fee": 0.0,
+          "hs": 0.0,
+          "slip": 0.0
+        },
+        "max_notional": null,
+        "qty": 5,
+        "side": -1,
+        "stop_offset": 50,
+        "symbol": "A",
+        "t": 1699978500000,
+        "target_offset": 60,
+        "type": "entry"
+      },
+      {
+        "pos_id": 1,
+        "reason": "manual",
+        "slip_mult": 1.0,
+        "t": 1699978500000,
+        "type": "exit"
+      }
+    ],
+    "limits": {
+      "max_gross_exposure": 1.5,
+      "max_positions": 10,
+      "min_notional": 50.0
+    },
+    "starting_cash": 10000.0
+  },
+  "review_status": "PENDING INDEPENDENT REVIEW",
+  "reviewed_by": null
+}

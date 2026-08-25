@@ -1,0 +1,80 @@
+{
+  "expected": {
+    "derivation": "long qty 15 fill 100 (1500 notional = cap, allowed at <=). Stop 50. Next bar OPENS at 25: gap-through fills at the open, never the stop. pnl = 15*(25-100) = -1125. cash = -125 <= 0 => insolvency + ruin; later entry on B rejected 'ruined'.",
+    "final_cash": -125.0,
+    "insolvency_recorded": true,
+    "ruined_reject": true
+  },
+  "fixture": {
+    "bar_ms": 900000,
+    "bars": {
+      "A": [
+        [
+          1699977600000,
+          100,
+          100.1,
+          99.9,
+          100
+        ],
+        [
+          1699978500000,
+          25,
+          30,
+          20,
+          22
+        ]
+      ],
+      "B": [
+        [
+          1699979400000,
+          10,
+          10.1,
+          9.9,
+          10
+        ]
+      ]
+    },
+    "funding": {},
+    "funding_interval_ms": 28800000,
+    "instructions": [
+      {
+        "costs": {
+          "fee": 0.0,
+          "hs": 0.0,
+          "slip": 0.0
+        },
+        "max_notional": null,
+        "qty": 15,
+        "side": 1,
+        "stop_offset": 50.0,
+        "symbol": "A",
+        "t": 1699977600000,
+        "target_offset": 500.0,
+        "type": "entry"
+      },
+      {
+        "costs": {
+          "fee": 0.0,
+          "hs": 0.0,
+          "slip": 0.0
+        },
+        "max_notional": null,
+        "qty": 10,
+        "side": 1,
+        "stop_offset": 1,
+        "symbol": "B",
+        "t": 1699979400000,
+        "target_offset": 2,
+        "type": "entry"
+      }
+    ],
+    "limits": {
+      "max_gross_exposure": 1.5,
+      "max_positions": 10,
+      "min_notional": 50.0
+    },
+    "starting_cash": 1000.0
+  },
+  "review_status": "PENDING INDEPENDENT REVIEW",
+  "reviewed_by": null
+}
