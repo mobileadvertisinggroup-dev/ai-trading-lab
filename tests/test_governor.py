@@ -175,3 +175,37 @@ def test_golden_G10_invalid_rl_action():
     n_invalid = sum(1 for ev in e.events if ev["kind"] == "invalid_action")
     assert n_invalid == len(s["invalid_actions"])
     assert g["review_status"] == "PENDING INDEPENDENT REVIEW"
+
+
+def test_golden_G11_partial_exit_then_breakeven():
+    path = os.path.join(GOLDEN_DIR, "G11_partial_exit_breakeven.json")
+    with open(path) as f:
+        g = json.load(f)
+    s = g["scenario"]
+    e = Engine(s["starting_cash"])
+    bars = {int(r[0]): Bar(int(r[0]), *r[1:5]) for r in s["bars"]}
+    first_t = min(bars)
+    e.submit_entry("A", 1, s["qty"], stop=0.0, target=0.0,
+                   r_dist=s["stop_offset"], decision_ts=first_t,
+                   costs=Costs(0.0, 0.0, 0.0),
+                   stop_offset=s["stop_offset"],
+                   target_offset=s["target_offset"])
+    actions = {}
+    for t, a in s["actions"]:
+        actions.setdefault(int(t), []).append(a)
+    for t in sorted(bars):
+        for a in actions.get(t, []):
+            assert e.apply_management_action(t, 1, a)
+            if a == "move_stop_breakeven":
+                assert e.positions[1].stop == g["expected"]["stop_after_breakeven"]
+        e.process_bar_time(t, {"A": bars[t]})
+    assert e.cash == pytest.approx(g["expected"]["final_cash"])
+    closes = [ev for ev in e.events if ev["kind"] == "fill_close"]
+    assert len(closes) == len(g["expected"]["closes"])
+    for got, want in zip(closes, g["expected"]["closes"]):
+        assert got["t"] == want["t"]
+        assert got["qty"] == pytest.approx(want["qty"])
+        assert got["price"] == pytest.approx(want["price"])
+        assert got["pnl"] == pytest.approx(want["pnl"])
+        assert got["reason"] == want["reason"]
+    assert g["review_status"] == "PENDING INDEPENDENT REVIEW"

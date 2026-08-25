@@ -1,0 +1,92 @@
+{
+  "component": "round_coordinator",
+  "derivation": "Seven arms, four rounds. Round 1: all seven report ok -> valid. Round 2: arm B reports failure (timeout) -> the round is INVALID FOR ALL SEVEN ARMS, failed_arms=[B]; the six healthy arms accumulate nothing. Round 3: arm G never reports at all - a missing report IS a failure (the arm was unable to decide) -> invalid, failed_arms=[G], missing_reports=[G]. Round 4: all ok -> valid. Totals: 4 rounds, 2 valid, 2 invalid. Re-opening any finalized round (backfill) must raise. (SPEC SS23: any arm unable to decide invalidates the round for all arms; record the failure; never backfill.)",
+  "expected": {
+    "backfill_raises": true,
+    "counts": {
+      "invalid": 2,
+      "total": 4,
+      "valid": 2
+    },
+    "round2_failed_arms": [
+      "B"
+    ],
+    "round3_failed_arms": [
+      "G"
+    ],
+    "round3_missing_reports": [
+      "G"
+    ],
+    "validity": [
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "review_status": "PENDING INDEPENDENT REVIEW",
+  "reviewed_by": null,
+  "scenario": {
+    "arms": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "rounds": [
+      {
+        "reports": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "E": true,
+          "F": true,
+          "G": true
+        },
+        "t": 1699977600000
+      },
+      {
+        "fail_reason": {
+          "B": "model_call_timeout"
+        },
+        "reports": {
+          "A": true,
+          "B": false,
+          "C": true,
+          "D": true,
+          "E": true,
+          "F": true,
+          "G": true
+        },
+        "t": 1699992000000
+      },
+      {
+        "reports": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "E": true,
+          "F": true
+        },
+        "t": 1700006400000
+      },
+      {
+        "reports": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "E": true,
+          "F": true,
+          "G": true
+        },
+        "t": 1700020800000
+      }
+    ]
+  }
+}

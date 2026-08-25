@@ -1,0 +1,72 @@
+{
+  "component": "engine_management",
+  "derivation": "Cost-free long qty 8 fills at bar-1 open 100; stop anchored at 95, target 115; after bar 1 the mark is its close, 100. At T0+15m the agent issues reduce_50; per SIMULATOR_SEMANTICS SS3.2 a queued exit executes at the SAME timestamp's open, 104: realizes 4*(104-100)=+16; 4 remain with entry 100, stop 95, target 115. A breakeven move at that same timestamp would be invalid (mark still 100 = entry, not yet protective); the agent issues it at T0+30m after the mark updated to 104: stop -> 100 (tighter than 95 and protective). Bar 4 (open 101, low 99) triggers the breakeven stop: open not beyond stop, ref=100, cost-free fill 100, pnl 4*(100-100)=0. Final cash = 10000+16+0 = 10016. NOTE: partial exits and stop moves are main-simulator scope (SIMULATOR_SEMANTICS SS8), outside the reference-ledger differential subset, so G11 verifies layers 1 (manual) and 3 (main simulator). Engine-level fixture uses 15m action timestamps; arms issue management only at 4h boundaries (SS4) - timing mechanics identical.",
+  "expected": {
+    "closes": [
+      {
+        "pnl": 16.0,
+        "price": 104.0,
+        "qty": 4.0,
+        "reason": "rl_reduce_50",
+        "t": 1699978500000
+      },
+      {
+        "pnl": 0.0,
+        "price": 100.0,
+        "qty": 4.0,
+        "reason": "stop",
+        "t": 1699980300000
+      }
+    ],
+    "final_cash": 10016.0,
+    "stop_after_breakeven": 100.0
+  },
+  "review_status": "PENDING INDEPENDENT REVIEW",
+  "reviewed_by": null,
+  "scenario": {
+    "actions": [
+      [
+        1699978500000,
+        "reduce_50"
+      ],
+      [
+        1699979400000,
+        "move_stop_breakeven"
+      ]
+    ],
+    "bars": [
+      [
+        1699977600000,
+        100.0,
+        100.2,
+        99.8,
+        100.0
+      ],
+      [
+        1699978500000,
+        104.0,
+        104.2,
+        103.8,
+        104.0
+      ],
+      [
+        1699979400000,
+        104.0,
+        104.2,
+        103.8,
+        104.0
+      ],
+      [
+        1699980300000,
+        101.0,
+        101.2,
+        99.0,
+        99.5
+      ]
+    ],
+    "qty": 8.0,
+    "starting_cash": 10000.0,
+    "stop_offset": 5.0,
+    "target_offset": 15.0
+  }
+}

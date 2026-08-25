@@ -57,22 +57,27 @@ jobs:
             lake-${{ inputs.release_version }}.tar.zst.part
           rm lake-${{ inputs.release_version }}.tar.zst
           sha256sum lake-*.part* holdout-*.tar.age > SHA256SUMS
-      - name: Publish immutable data release
+      - name: Publish data release (draft -> upload all -> publish)
         if: inputs.mode == 'full'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if gh release view "${{ inputs.release_version }}" >/dev/null 2>&1; then
-            echo "release ${{ inputs.release_version }} already exists — data releases are immutable (HOLDOUT_POLICY §3); bump the version" >&2
+            echo "release ${{ inputs.release_version }} already exists — data releases are never overwritten (HOLDOUT_POLICY §3); bump the version" >&2
             exit 1
           fi
+          # draft first so a partial upload is never visible as published
           gh release create "${{ inputs.release_version }}" \
+            --draft \
             --title "Raw data ${{ inputs.release_version }}" \
-            --notes "Immutable content-hashed raw lake + sealed holdout artifact. Verify against data/manifests/lake_manifest_${{ inputs.release_version }}.json." \
+            --notes "Content-hashed raw lake + sealed holdout artifact. Tamper-evident: verify every asset against data/manifests/lake_manifest_${{ inputs.release_version }}.json and SHA256SUMS (pinned in git)."
+          gh release upload "${{ inputs.release_version }}" \
             "$RUNNER_TEMP"/work/lake-*.part* \
             "$RUNNER_TEMP"/work/holdout-*.tar.age \
             "$RUNNER_TEMP"/work/SHA256SUMS
+          # publish only after every asset is uploaded
+          gh release edit "${{ inputs.release_version }}" --draft=false
       - name: Commit metadata-only manifests
         if: inputs.mode == 'full'
         run: |

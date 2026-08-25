@@ -9,10 +9,15 @@ both sides' records.
 This harness is the only module allowed to import both implementations
 (verification only); the implementations never import each other.
 
-Comparison tolerance: numeric fields must agree within REL_TOL = 1e-9
-relative (covers float-association differences between two independently
-ordered computations); anything larger is a divergence. Structural fields
-(kind, symbol, pos_id, side, reason, order, count) must match exactly.
+Comparison policy (review issue A, 2026-08-25): numeric fields are
+compared EXACTLY (bit equality of IEEE-754 doubles) — FINAL-1.2 requires
+exact reconciliation where semantics are identical, and both
+implementations empirically produce identical doubles on every fixture
+(122/122 numeric comparisons, max diff 0.0). A nonzero difference of any
+magnitude is a divergence and goes to §13 adjudication; it is never
+absorbed by a tolerance. REL_TOL below is retained ONLY to annotate the
+divergence report with whether the difference is within float-association
+noise, aiding adjudication — it never changes the verdict.
 """
 from __future__ import annotations
 
@@ -112,7 +117,14 @@ def normalize_ref(ledger: list[dict]) -> list[dict]:
 # --------------------------------------------------------- comparison
 
 def _num_eq(a, b) -> bool:
-    return math.isclose(float(a), float(b), rel_tol=REL_TOL, abs_tol=1e-9)
+    return float(a) == float(b)          # EXACT — see module docstring
+
+
+def _diff_annotation(a, b) -> str:
+    close = math.isclose(float(a), float(b), rel_tol=REL_TOL, abs_tol=1e-9)
+    return ("within float-association noise (<= 1e-9 relative) — likely "
+            "operation-order difference" if close
+            else "exceeds float-association noise — likely semantic bug")
 
 
 def compare(fx: dict) -> dict:
@@ -140,6 +152,7 @@ def compare(fx: dict) -> dict:
             if k in ra and not _num_eq(ra[k], rb[k]):
                 return {"match": False, "index": i, "field": k,
                         "sim": ra, "ref": rb,
+                        "annotation": _diff_annotation(ra[k], rb[k]),
                         "reason": f"numeric divergence on {k!r}: "
                                   f"{ra[k]} vs {rb[k]}"}
     if len(a) != len(b):

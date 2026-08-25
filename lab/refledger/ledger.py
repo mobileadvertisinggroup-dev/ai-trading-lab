@@ -77,12 +77,19 @@ def replay(fx: dict) -> list[dict]:
         return p["last_mark"]
 
     def equity(bar_open_by_sym):
-        return cash + sum(p["side"] * p["qty"] *
-                          (mark_of(p, bar_open_by_sym) - p["entry"])
-                          for p in openpos())
+        # accumulation order is part of the frozen semantics (§1): start at
+        # cash, add each open position's unrealized P&L in position-id order
+        eq = cash
+        for p in openpos():
+            eq += p["side"] * p["qty"] * (mark_of(p, bar_open_by_sym)
+                                          - p["entry"])
+        return eq
 
     def exposure(bar_open_by_sym):
-        return sum(p["qty"] * mark_of(p, bar_open_by_sym) for p in openpos())
+        x = 0.0
+        for p in openpos():
+            x += p["qty"] * mark_of(p, bar_open_by_sym)
+        return x
 
     def close_fill(t, p, ref, slip_mult, reason):
         nonlocal cash
@@ -223,9 +230,11 @@ def replay(fx: dict) -> list[dict]:
         # -- 5. insolvency at bar-close marks (incl. flat negative cash)
         if not ruined:
             closes = {s: bars[s][t][3] for s in bars if t in bars[s]}
-            eq = cash + sum(p["side"] * p["qty"] *
-                            (closes.get(p["symbol"], p["last_mark"]) - p["entry"])
-                            for p in openpos())
+            eq = cash
+            for p in openpos():
+                eq += p["side"] * p["qty"] * (closes.get(p["symbol"],
+                                                         p["last_mark"])
+                                              - p["entry"])
             if eq <= 0:
                 rec(t, "insolvency", equity=eq)
                 for p in list(openpos()):

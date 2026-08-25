@@ -22,8 +22,13 @@ specified and the event is recorded.
 - **Unrealized P&L** of a position: `side × qty × (mark − entry_fill)`,
   side ∈ {+1 long, −1 short}, mark = latest known 15m close (or the current
   processing price where a rule says so).
-- **Equity** = cash + Σ unrealized P&L of open positions.
-- **Gross exposure** = Σ qty × mark over open positions.
+- **Equity** = cash + Σ unrealized P&L of open positions. The
+  accumulation ORDER is part of these semantics (exact reconciliation
+  requires it): start from cash, then add each open position's unrealized
+  P&L sequentially in position-id (creation) order, one IEEE-754 double
+  addition per position.
+- **Gross exposure** = Σ qty × mark over open positions, accumulated from
+  0.0 sequentially in position-id order.
 - All accounting in float64; no rounding until display. Quantities and
   prices are used exactly as computed.
 

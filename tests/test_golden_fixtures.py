@@ -15,9 +15,14 @@ import pytest
 
 from lab.verify.differential import compare, run_sim, normalize_sim
 
+def _is_engine_fixture(path):
+    with open(path) as f:
+        return "fixture" in json.load(f)    # component fixtures use "scenario"
+
+
 GOLDEN = sorted(p for p in glob.glob(os.path.join(
     os.path.dirname(__file__), "..", "fixtures", "golden", "*.json"))
-    if "G09" not in p and "G10" not in p)   # component fixtures: own tests
+    if _is_engine_fixture(p))               # component fixtures: own tests
 
 
 @pytest.mark.parametrize("path", GOLDEN, ids=[os.path.basename(p) for p in GOLDEN])

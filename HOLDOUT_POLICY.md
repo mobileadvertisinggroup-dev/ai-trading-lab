@@ -48,9 +48,21 @@ holdout data are **never committed to Git**.
   from the primary source is the second recovery path and must reproduce
   identical content hashes for the same frozen range (or the discrepancy is
   investigated and recorded — never papered over).
-- **Immutability**: project code treats the lake as read-only after
-  ingestion; the manifest hash pins the exact bytes. The ingestion workflow
-  is the only writer, and it only ever creates new versions.
+- **Immutability model (honest statement)**: GitHub releases are, by
+  default, mutable by repository administrators; whether the repository's
+  platform-level immutable-releases setting is enabled is verified and
+  evidenced at ingestion time (review issue C). The layer this project
+  RELIES on is tamper-evidence, not platform immutability: every asset's
+  sha256 is pinned in git-committed manifests (`SHA256SUMS` + the lake
+  manifest), so any later modification of a release asset is detected by
+  the mandatory hash verification on download, and the audit trail lives
+  in git history. The workflow refuses to reuse an existing tag (new data
+  = new version), publishes draft → upload-all → publish so partial
+  uploads are never visible, and project code treats the lake as
+  read-only after ingestion. Recovery from administrator deletion:
+  re-ingestion from the primary source must reproduce identical content
+  hashes for the same frozen range, or the discrepancy is investigated
+  and recorded.
 
 ## 4. Seal mechanics
 
