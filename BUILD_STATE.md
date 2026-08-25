@@ -8,7 +8,7 @@ decisions silently; append, don't erase.
 
 - **Current phase:** Phase 2 — CODE COMPLETE (quarantine/seal/partition/access + ingestion downloader + Actions workflow; 19/19 dev tests). Awaiting: user's age public key, then probe run, then full ingestion run on Actions. Phase 3 (simulator) starts now in parallel — it needs no market data. Phase 1 COMPLETE (: Arm A, max holding period, universe rule, data-quality rule, 60/20/20 partition rule authored and FROZEN in EXPERIMENT_PROTOCOL.md, sha256 `6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca`, before any ingestion). Phase 0 complete.
 - **Last completed gate:** none (no gates reached yet)
-- **Specification:** `SPEC_FINAL-1.1.md`, sha256 `5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a`, preserved verbatim at commit `16ec585e6ab281aece7c705a2073f1a02e5ec7ef`
+- **Specification:** `SPEC_FINAL-1.2.md` (AUTHORITATIVE), sha256 `a29b6c9eb942cb56f7bfe44b1d3a861436875762ded37fbc37ecf96f5a369cc8`. FINAL-1.1 preserved unchanged for audit (`SPEC_FINAL-1.1.md`, sha256 `5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a`, commit `16ec585`).
 - **Checkpoint 1:** not reached
 - **Checkpoint 2:** not reached
 - **Holdout:** partition RULE frozen (EXPERIMENT_PROTOCOL.md §7); concrete dates not yet computable (no data ingested); nothing to quarantine yet
@@ -16,6 +16,31 @@ decisions silently; append, don't erase.
 - **Model hashes:** none (no models trained)
 - **Integrity-manifest hash:** none (constitutional tests not yet written)
 - **Safe resume command:** clone this repo, read `SPEC_FINAL-1.1.md`, this file, and `build_state.json`, verify the spec sha256 above matches, then continue from "Pending actions".
+
+## Specification version FINAL-1.2 (governance change, 2026-08-25)
+
+- **User explicitly authorized** this change (2026-08-25, in-session instruction).
+- **Change:** the mandatory Engine v7 differential gate is replaced everywhere
+  by the INDEPENDENT REFERENCE LEDGER DIFFERENTIAL GATE; total-independence
+  mandate added (no previous project may be attached, inspected, copied,
+  imported, called, or used — verification included); property-based
+  accounting invariant tests added. Minimum differential subset, golden
+  fixtures, independent review, and mismatch adjudication retained unweakened.
+- **Reason:** preserve total independence from previous projects while
+  retaining differential verification.
+- **Timing:** before data-derived model training, constitutional-test
+  locking, shakedown, holdout evaluation, or official results.
+- **Affected phase:** Phase 5 verification only. **No existing results or
+  models required invalidation** (none exist; nothing built so far touches
+  any previous project).
+- **B2 permanently closed:** REMOVED BY APPROVED SPECIFICATION CHANGE.
+  No permission exists to attach binance-execution-manager.
+- Hash lineage (protocol doc reference update only, no semantic change):
+  EXPERIMENT_PROTOCOL.md `6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca` (Phase-1 freeze under FINAL-1.1)
+  → `da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590` (same frozen content, authority reference now FINAL-1.2).
+  All *[Phase-1 frozen]* content is byte-identical apart from that one line.
+- SIMULATOR_SEMANTICS.md, INTEGRITY_TEST_POLICY.md, ARCHITECTURE.md do not
+  exist yet; they will be authored under FINAL-1.2 from the start.
 
 ## Repository identity (recorded per user instruction, 2026-08-25)
 
@@ -28,7 +53,7 @@ decisions silently; append, don't erase.
 
 ## User-imposed operating constraints (2026-08-25, binding)
 
-1. **Engine v7 location must be established, not assumed.** Do not request
+1. **[SUPERSEDED by FINAL-1.2, 2026-08-25 — Engine v7 gate removed; no previous project may be touched at all.]** Original text: Engine v7 location must be established, not assumed. Do not request
    attachment of `binance-execution-manager` (or any repo) for the §13 gate
    until it is established to actually contain the frozen Engine v7. Before
    Phase 5, produce the Engine v7 requirements report: exact artifact
@@ -110,7 +135,7 @@ content and hashing identical either way).
 | ID | Severity | Description | Needed from user | Blocks |
 |---|---|---|---|---|
 | B1 | none (informational) | Repo name deviates from spec (`ai-trading-lab` vs `akra-ai-trading-lab`). | Optional: rename repo in GitHub Settings → General. | Nothing. |
-| B2 | deferred hard blocker (Phase 5) | Engine v7 location and artifact are UNKNOWN. Per user instruction (2026-08-25) its location must be established, never assumed from a repository name; the earlier presumption about `binance-execution-manager` is withdrawn. The §13 gate cannot run without the genuine frozen Engine v7. | Before Phase 5: the Engine v7 requirements report (see user-imposed constraints above); user identifies the artifact/location or supplies a read-only exported snapshot. | Phase 5 gate only. Phases 1–4 proceed regardless. |
+| B2 | **CLOSED — REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2, 2026-08-25)** | (historical) Engine v7 location and artifact were unknown. Per user instruction (2026-08-25) its location must be established, never assumed from a repository name; the earlier presumption about `binance-execution-manager` is withdrawn. The §13 gate cannot run without the genuine frozen Engine v7. | Before Phase 5: the Engine v7 requirements report (see user-imposed constraints above); user identifies the artifact/location or supplies a read-only exported snapshot. | Phase 5 gate only. Phases 1–4 proceed regardless. |
 
 ## Completed actions
 
@@ -159,7 +184,7 @@ Ingestion RUN still requires the user's age public key.
 
 1. **Phase 2 (remainder):** ingestion downloader + availability calendars + ingestion Actions workflow + release publisher.
 2. **Phase 3 — Independent simulator** (SIMULATOR_SEMANTICS.md + implementation).
-3. Before Phase 5: Engine v7 requirements report (user constraint #1; B2).
+3. Phase 5 (revised): Independent Reference Ledger + golden fixtures + property-based invariant gate (FINAL-1.2 §13).
 
 ## Material changes / invalidated artifacts / required retraining
 
@@ -173,3 +198,4 @@ None. No experimental artifacts exist yet.
 | D7 | 2026-08-25 | Raw-lake storage: GitHub Release assets on immutable data releases (`raw-v<N>`), content-hashed manifests committed to git; NO market data, secrets, or decrypted holdout in git ever. Retention/recovery per HOLDOUT_POLICY.md §3. | User constraint (2026-08-25); SPEC §6, §9. | §6, §9 |
 | D8 | 2026-08-25 | Seal cryptography: age (X25519, pyrage). USER generates the identity locally and provides only the public key; sealing is non-interactive public-key encryption; user alone can decrypt at Checkpoint 2. | Satisfies SPEC §9 user-sole-key custody while allowing non-interactive CI sealing. | §9 |
 | D9 | 2026-08-25 | Validation-period positions still open at the holdout boundary are force-closed at the last pre-boundary 15m close for evaluation purposes (logged); labels whose information interval crosses a partition boundary are purged per §10. Prevents any evaluation path from needing sealed rows. | Consequence of §7 + §10; recorded now, implemented in simulator (Phase 3). | §7, §9, §10 |
+| D10 | 2026-08-25 | Specification FINAL-1.2 adopted as authoritative (user-authorized): Engine v7 gate → Independent Reference Ledger gate; absolute independence from previous projects; property-based invariant tests added; B2 closed permanently. FINAL-1.1 preserved for audit. | Explicit user governance instruction. | FINAL-1.2 §13, Appendix A2 |

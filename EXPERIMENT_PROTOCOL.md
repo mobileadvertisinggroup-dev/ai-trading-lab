@@ -3,7 +3,7 @@
 Status: **PHASE-1 FROZEN** (Arm A, maximum holding period, universe rule,
 data-quality rule, partition rule). Frozen 2026-08-25, before any data
 ingestion, candidate generation, label creation, or model training, as
-required by SPEC_FINAL-1.1.md §2, §3, §5, §6, §7 (R03, R15, R16, R18, R53).
+required by SPEC_FINAL-1.2.md §2, §3, §5, §6, §7 (unchanged from FINAL-1.1) (R03, R15, R16, R18, R53).
 
 Sections marked *[Phase-1 frozen]* may not change without a new protocol
 version, invalidation, and the full material-change procedure of spec §16.

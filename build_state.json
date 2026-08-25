@@ -1,10 +1,17 @@
 {
   "project": "AKRA AI TRADING LAB",
   "spec": {
-    "file": "SPEC_FINAL-1.1.md",
-    "version": "FINAL-1.1",
-    "sha256": "5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a",
-    "preserved_at_commit": "16ec585e6ab281aece7c705a2073f1a02e5ec7ef"
+    "file": "SPEC_FINAL-1.2.md",
+    "version": "FINAL-1.2",
+    "sha256": "a29b6c9eb942cb56f7bfe44b1d3a861436875762ded37fbc37ecf96f5a369cc8",
+    "supersedes": {
+      "file": "SPEC_FINAL-1.1.md",
+      "version": "FINAL-1.1",
+      "sha256": "5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a",
+      "preserved_at_commit": "16ec585e6ab281aece7c705a2073f1a02e5ec7ef"
+    },
+    "change_authorized_by_user": "2026-08-25",
+    "change_summary": "Engine v7 gate replaced by Independent Reference Ledger gate; total independence from previous projects; property-based invariant tests added; B2 permanently closed"
   },
   "current_phase": "2",
   "phase_0_status": "complete_pending_user_items",
@@ -30,18 +37,14 @@
     "D6",
     "D7",
     "D8",
-    "D9"
+    "D9",
+    "D10"
   ],
   "active_blockers": [
     {
       "id": "B1",
       "severity": "informational",
       "summary": "repo name deviates from spec; rename deferred per user atomicity constraint"
-    },
-    {
-      "id": "B2",
-      "severity": "deferred_hard_blocker_phase5",
-      "summary": "Engine v7 location/artifact unknown; establish before Phase 5, never assume; requirements report due before Phase 5"
     }
   ],
   "material_changes": [],
@@ -51,15 +54,23 @@
     "User: provide age public key -> commit to data/manifests/holdout_recipient.txt",
     "Actions: run lab-ingest probe mode (S-ING-1 parser validation), then full ingestion (raw-v1)",
     "Phase 3: independent simulator (SIMULATOR_SEMANTICS.md + implementation) \u2014 proceeding now",
-    "Before Phase 5: Engine v7 requirements report"
+    "Phase 5 (revised): Independent Reference Ledger + golden fixtures + property-based invariant gate"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T13:55:00Z",
+  "updated": "2026-08-25T14:20:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
-    "phase1_frozen_sha256": "6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca",
-    "frozen_date": "2026-08-25"
+    "phase1_frozen_sha256": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+    "frozen_date": "2026-08-25",
+    "hash_lineage": [
+      {
+        "old": "6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca",
+        "new": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+        "reason": "authority reference FINAL-1.1 -> FINAL-1.2 only; frozen content unchanged",
+        "approved": "user governance instruction 2026-08-25"
+      }
+    ]
   },
   "phase_2_status": "code_complete_awaiting_recipient_key_and_actions_runs",
   "repository_url": "https://github.com/mobileadvertisinggroup-dev/ai-trading-lab",
@@ -75,5 +86,12 @@
   "tests": {
     "dev_suite": "19 passed",
     "last_run": "2026-08-25"
-  }
+  },
+  "closed_blockers": [
+    {
+      "id": "B2",
+      "closed": "2026-08-25",
+      "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
+    }
+  ]
 }
