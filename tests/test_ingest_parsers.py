@@ -61,3 +61,24 @@ def test_months_between():
     import datetime as dt
     assert I.months_between(dt.date(2023, 11, 5), dt.date(2024, 2, 1)) == \
         ["2023-11", "2023-12", "2024-01", "2024-02"]
+
+
+def test_exclusion_registry_classification():
+    from lab.data.ingest import classify_symbol, load_exclusion_registry
+    reg = load_exclusion_registry("data/manifests/exclusion_registry_v1.json")
+    assert reg["registry_version"] == "exclusions-v1"
+    # stablecoin bases excluded, incl. the reviewer's named newer assets
+    for s in ("USDCUSDT", "USDEUSDT", "USDSUSDT", "FDUSDUSDT", "EURUSDT"):
+        rec = classify_symbol(s, reg)
+        assert not rec["included"] and rec["category"] == "stablecoin_base"
+    # leveraged/inverse tokens excluded by pattern
+    for s in ("BTCUPUSDT", "ETHDOWNUSDT", "ADABULLUSDT", "XRPBEARUSDT"):
+        assert not classify_symbol(s, reg)["included"]
+    # ordinary assets included with a full classification record
+    rec = classify_symbol("BTCUSDT", reg)
+    assert rec == {"symbol": "BTCUSDT", "included": True, "category": None,
+                   "rule": None}
+    assert classify_symbol("SOLUSDT", reg)["included"]
+    # near-miss names are NOT over-excluded
+    assert classify_symbol("SUPERUSDT", reg)["included"]   # ends 'ER' not 'UP'
+    assert classify_symbol("PUNDIXUSDT", reg)["included"]

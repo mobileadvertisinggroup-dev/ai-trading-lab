@@ -169,9 +169,39 @@ def _get_zip_csv(url: str, verify_checksum: bool = True) -> bytes | None:
         return z.read(names[0])
 
 
-def list_perp_symbols() -> list[str]:
+REGISTRY_PATH = "data/manifests/exclusion_registry_v1.json"
+
+
+def load_exclusion_registry(path: str = REGISTRY_PATH) -> dict:
+    with open(path) as f:
+        return json.load(f)
+
+
+def classify_symbol(symbol: str, registry: dict) -> dict:
+    """Deterministic point-in-time classification against the versioned
+    registry (review verdict §6). Returns the record preserved in the
+    dataset manifest."""
+    base = symbol[:-4] if symbol.endswith("USDT") else symbol
+    for cat, spec in registry["categories"].items():
+        if base in spec.get("bases", ()):
+            return {"symbol": symbol, "included": False, "category": cat,
+                    "rule": "base-list"}
+        pat = spec.get("pattern")
+        if pat and re.search(pat, base):
+            return {"symbol": symbol, "included": False, "category": cat,
+                    "rule": f"pattern:{pat}"}
+    return {"symbol": symbol, "included": True, "category": None,
+            "rule": None}
+
+
+def list_perp_symbols(registry: dict | None = None,
+                      classifications_out: list | None = None) -> list[str]:
     """All USDT-quoted symbols present in the um monthly klines archive —
-    including delisted ones (survivorship-free to archive coverage)."""
+    including delisted ones (survivorship-free to archive coverage) —
+    filtered by the versioned exclusion registry. Every discovered symbol's
+    classification is appended to classifications_out (dataset-manifest
+    record)."""
+    registry = registry or load_exclusion_registry()
     prefix = "data/futures/um/monthly/klines/"
     url = f"{VISION}?delimiter=/&prefix={prefix}"
     symbols, marker = [], ""
@@ -184,10 +214,14 @@ def list_perp_symbols() -> list[str]:
                 symbols.append(sym)
         if not truncated:
             break
-    # exclusions per protocol §4: stablecoin bases and leveraged tokens
-    excl = re.compile(r"^(USDC|TUSD|BUSD|FDUSD|DAI|EUR|AEUR|USDP)USDT$|"
-                      r".*(UP|DOWN|BULL|BEAR)USDT$")
-    return sorted(s for s in symbols if not excl.fullmatch(s))
+    included = []
+    for sym in sorted(set(symbols)):
+        rec = classify_symbol(sym, registry)
+        if classifications_out is not None:
+            classifications_out.append(rec)
+        if rec["included"]:
+            included.append(sym)
+    return included
 
 
 def download_symbol(symbol: str, start: dt.date, end: dt.date,
@@ -283,8 +317,12 @@ def run_ingestion(out_dir: str, manifests_dir: str, recipient_path: str,
     os.makedirs(staging, exist_ok=True)
     os.makedirs(plain, exist_ok=True)
 
-    symbols = list_perp_symbols()
-    log.info("discovered %d USDT perp symbols in archive", len(symbols))
+    registry = load_exclusion_registry()
+    classifications: list[dict] = []
+    symbols = list_perp_symbols(registry, classifications)
+    log.info("discovered %d included USDT perp symbols (%d classified, "
+             "registry %s)", len(symbols), len(classifications),
+             registry["registry_version"])
     for i, sym in enumerate(symbols):
         st = download_symbol(sym, start, end, staging)
         log.info("[%d/%d] %s months=%d rows=%d funding=%d",
@@ -329,6 +367,9 @@ def run_ingestion(out_dir: str, manifests_dir: str, recipient_path: str,
     manifest = L.build_manifest(plain, release_version, extra={
         "holdout_artifact": os.path.basename(artifact),
         "holdout_artifact_sha256": seal_meta["artifact_sha256"],
+        "exclusion_registry_version": registry["registry_version"],
+        "exclusion_registry_sha256": L.sha256_file(REGISTRY_PATH),
+        "symbol_classifications": classifications,
     })
     with open(os.path.join(manifests_dir, f"lake_manifest_{release_version}.json"), "w") as f:
         json.dump(manifest, f, indent=2, sort_keys=True)
@@ -349,7 +390,22 @@ def probe() -> None:
     print("funding first line:", f.split(b"\n", 1)[0][:200])
     print("funding parsed rows:", len(parse_funding_csv(f)))
     syms = list_perp_symbols()
-    print("archive symbols:", len(syms), "first:", syms[:5], "last:", syms[-5:])
+    print("archive symbols (included):", len(syms), "first:", syms[:5],
+          "last:", syms[-5:])
+    # measured chunking plan (verdict §5.5): time one representative
+    # symbol-month and project the full acquisition against the Actions
+    # timeout; NEVER publish a partial dataset as complete — if the
+    # projection exceeds the budget, ingestion is redesigned (sharded
+    # acquisition with encrypted intermediates), not truncated.
+    t0 = time.time()
+    _get_zip_csv(f"{VISION}/data/futures/um/monthly/klines/BTCUSDT/15m/"
+                 f"BTCUSDT-15m-2022-06.zip")
+    per_month = time.time() - t0
+    est_months = len(syms) * 60          # ~5 years average history
+    hours = per_month * est_months / 3600
+    print(f"timing: {per_month:.2f}s per symbol-month; projected "
+          f"~{hours:.1f}h for {len(syms)} symbols x ~60 months "
+          f"(budget: 5.8h job timeout; sequential)")
 
 
 def main() -> None:

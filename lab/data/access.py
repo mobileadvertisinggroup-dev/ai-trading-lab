@@ -51,22 +51,13 @@ class GuardedLake:
 
     # -- authorization -----------------------------------------------------
     def _authorized(self) -> bool:
-        path = os.path.join(self.manifests_dir, AUTHORIZATION)
-        if not os.path.exists(path):
-            return False
-        try:
-            with open(path) as f:
-                auth = json.load(f)
-        except (OSError, json.JSONDecodeError):
-            return False
-        if not all(auth.get(k) for k in REQUIRED_AUTH_FIELDS):
-            return False
-        if auth.get("consumed"):
-            return False  # holdout is single-use (SPEC §22)
-        # full cryptographic cross-checks against build_state.json / git are
-        # performed by lab.data.unseal at decryption time; presence +
-        # completeness gates the read layer.
-        return True
+        """Strict verification (review verdict §7): every hash in the
+        authorization record is checked against the CURRENT recomputed
+        value by lab.data.authz — fabricated or merely nonempty hashes can
+        never grant access (negative-tested)."""
+        from lab.data.authz import verify_authorization
+        ok, _failures = verify_authorization(self.manifests_dir)
+        return ok
 
     # -- audit chain -------------------------------------------------------
     def _audit(self, action: str, detail: dict, decision: str):

@@ -29,8 +29,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 350
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      # SHA-pinned (review verdict §5.1). Provenance: resolved via
+      # `git ls-remote https://github.com/actions/<name> refs/tags/<tag>`
+      # on 2026-08-25 through the session git proxy:
+      #   actions/checkout v4.3.0  -> 08eba0b27e820071cde6df949e0beb9ba4906955
+      #   actions/setup-python v5.6.0 -> a26af69be951a213d495a4c3e4e4022e16d87065
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.11"
       - name: Install pinned dependencies
@@ -40,9 +45,22 @@ jobs:
       - name: Probe (parser/source assumptions, non-holdout 2021 sample)
         if: inputs.mode == 'probe'
         run: python -m lab.data.ingest --probe
-      - name: Full ingestion + seal
+      - name: Capture repository release-setting evidence (verdict §5.4)
+        if: inputs.mode == 'full'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p data/manifests
+          gh api "repos/$GITHUB_REPOSITORY" \
+            > data/manifests/repo_settings_evidence_${{ inputs.release_version }}.json
+          echo "release-setting evidence captured"
+      - name: Full ingestion + seal (acquisition staging per PC-1)
         if: inputs.mode == 'full'
         run: |
+          # PC-1 protections: staging lives in RUNNER_TEMP (outside the
+          # checkout -> can never be committed), is never uploaded as an
+          # artifact, never cached, and is verifiably destroyed below.
           python -m lab.data.ingest \
             --out-dir "$RUNNER_TEMP/work" \
             --manifests-dir data/manifests \
@@ -57,7 +75,7 @@ jobs:
             lake-${{ inputs.release_version }}.tar.zst.part
           rm lake-${{ inputs.release_version }}.tar.zst
           sha256sum lake-*.part* holdout-*.tar.age > SHA256SUMS
-      - name: Publish data release (draft -> upload all -> publish)
+      - name: Release transaction (verdict §5.2 order)
         if: inputs.mode == 'full'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -67,24 +85,38 @@ jobs:
             echo "release ${{ inputs.release_version }} already exists — data releases are never overwritten (HOLDOUT_POLICY §3); bump the version" >&2
             exit 1
           fi
-          # draft first so a partial upload is never visible as published
+          # (1) DRAFT release — a partial upload is never visible as published
           gh release create "${{ inputs.release_version }}" \
             --draft \
             --title "Raw data ${{ inputs.release_version }}" \
             --notes "Content-hashed raw lake + sealed holdout artifact. Tamper-evident: verify every asset against data/manifests/lake_manifest_${{ inputs.release_version }}.json and SHA256SUMS (pinned in git)."
+          # (2) upload ALL assets
           gh release upload "${{ inputs.release_version }}" \
             "$RUNNER_TEMP"/work/lake-*.part* \
             "$RUNNER_TEMP"/work/holdout-*.tar.age \
             "$RUNNER_TEMP"/work/SHA256SUMS
-          # publish only after every asset is uploaded
-          gh release edit "${{ inputs.release_version }}" --draft=false
-      - name: Commit metadata-only manifests
-        if: inputs.mode == 'full'
-        run: |
-          set -euo pipefail
+          # (3) verify every uploaded asset hash against local SHA256SUMS
+          mkdir -p "$RUNNER_TEMP/verify" && cd "$RUNNER_TEMP/verify"
+          gh release download "${{ inputs.release_version }}" -p '*'
+          sha256sum -c "$RUNNER_TEMP"/work/SHA256SUMS
+          cd "$GITHUB_WORKSPACE"
+          # (4) commit + push manifests; ONLY a successful push allows publish
           git config user.name "akra-lab-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/manifests
-          git commit -m "ingestion ${{ inputs.release_version }}: partition + seal + lake manifests (metadata only)"
+          git commit -m "ingestion ${{ inputs.release_version }}: partition + seal + lake manifests + release evidence (metadata only)"
           git pull --rebase origin main
           git push
+          # (5) publish — reached only if every prior step succeeded;
+          # on any failure above the release remains an unofficial draft
+          gh release edit "${{ inputs.release_version }}" --draft=false
+      - name: Verified destruction of acquisition staging (PC-1)
+        if: always() && inputs.mode == 'full'
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/work" "$RUNNER_TEMP/verify"
+          if [ -e "$RUNNER_TEMP/work" ] || [ -e "$RUNNER_TEMP/verify" ]; then
+            echo "FATAL: acquisition staging still present after destruction" >&2
+            exit 1
+          fi
+          echo "acquisition staging destroyed and verified absent"

@@ -52,7 +52,14 @@
     "D21",
     "D22",
     "D23",
-    "D24"
+    "D24",
+    "D25",
+    "D26",
+    "D27",
+    "D28",
+    "D29",
+    "D30",
+    "D31"
   ],
   "active_blockers": [
     {
@@ -65,11 +72,10 @@
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "REVIEW-GATED: constitutional lock, real ingestion, holdout key, shakedown",
-    "Data-free queue is now essentially drained; remaining pre-lock work needs either the review verdict or real data (feature freeze, training, RL profiling, shakedown)"
+    "STOPPED per verdict \u00a78 \u2014 awaiting delta review and PC-1 decision"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T21:40:00Z",
+  "updated": "2026-08-25T23:30:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
@@ -92,10 +98,11 @@
     "no repo rename during active workflow unless atomic"
   ],
   "pending_user_inputs": [
-    "independent review: fixtures G01-G12 derivations + issues A and D approval (bundle ready)"
+    "review of REVIEW_DELTA_PACKAGE_PHASE6.zip",
+    "explicit APPROVE/REJECT of PROPOSED_CLARIFICATION_PC1.md"
   ],
   "tests": {
-    "dev_suite": "106 passed (exact differential equality)",
+    "dev_suite": "111 passed (exact differential equality, strict layer-1 rule)",
     "last_run": "2026-08-25"
   },
   "closed_blockers": [
@@ -118,5 +125,44 @@
     "bundle": "INDEPENDENT_REVIEW_BUNDLE_PHASE6.zip",
     "bundle_source_commit": "70605dfe65654c1ba24dc53e0e56f37db405875d",
     "issues_report": "REVIEW_ISSUES_PHASE6.md"
+  },
+  "review_verdict_phase6": {
+    "received": "2026-08-25",
+    "verbatim": "reviews/REVIEW_VERDICT_PHASE6.md",
+    "overall": "conditionally approved",
+    "approved": [
+      "G01",
+      "G02",
+      "G04",
+      "G05",
+      "G06",
+      "G07",
+      "G08",
+      "G09",
+      "G10",
+      "G11",
+      "G12",
+      "differential exact-equality policy (binding interpretation recorded)",
+      "refledger structural independence (shared subset)",
+      "Phase-1 protocol as transparent baseline (not optimality/profitability)"
+    ],
+    "g03_correction": {
+      "old": "superseded/G03_gross_winner_net_loser_v1.json",
+      "old_sha256": "dc1add29ecf69bce81d1e61b3d369c2dd3e28701f0e624fd86df1c8ba0247d28",
+      "new": "G03_gross_winner_net_loser_v2.json",
+      "new_sha256": "8bb5363d9321480301b34c010e072c78d838515507c619ce61bf6f672366586e",
+      "canonical_final_cash": 9979.960015,
+      "reruns": "full suite 111/111: simulator, reference ledger, exact differential, goldens G01-G12, randomized property fuzz"
+    },
+    "still_blocked": [
+      "constitutional lock",
+      "real ingestion",
+      "holdout-key request",
+      "shakedown"
+    ],
+    "awaiting": [
+      "independent review of delta package",
+      "explicit user approval of PC-1"
+    ]
   }
 }

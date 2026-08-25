@@ -1,0 +1,54 @@
+{
+  "as_of": "2026-08-25",
+  "categories": {
+    "leveraged_or_inverse_token": {
+      "pattern": "(UP|DOWN|BULL|BEAR|[0-9]+L|[0-9]+S)$",
+      "rule": "pattern rule: base asset name ending in UP, DOWN, BULL, BEAR, or matching \\d+[LS]$ (e.g. 3L/3S tokens)"
+    },
+    "stablecoin_base": {
+      "bases": [
+        "USDC",
+        "TUSD",
+        "BUSD",
+        "FDUSD",
+        "DAI",
+        "USDP",
+        "PAX",
+        "PYUSD",
+        "GUSD",
+        "USDD",
+        "USDE",
+        "USDS",
+        "SUSD",
+        "LUSD",
+        "FRAX",
+        "MIM",
+        "USTC",
+        "UST",
+        "USDJ",
+        "EUR",
+        "AEUR",
+        "EURI",
+        "EURT",
+        "EURS",
+        "XUSD",
+        "RLUSD",
+        "USD1",
+        "USDF",
+        "BFUSD",
+        "AUSD",
+        "USDX"
+      ],
+      "rule": "base asset is designed to track a fiat currency or basket (collateralized, algorithmic, or yield-bearing wrapper)"
+    },
+    "wrapped_same_asset": {
+      "bases": [
+        "WUSDT"
+      ],
+      "rule": "wrappers of the quote asset itself"
+    }
+  },
+  "notes": "Coverage audited at ingestion: every discovered symbol is classified included/excluded with its category and rule match recorded; unknown fiat-pegged assets discovered later require a NEW registry version (never a silent edit).",
+  "policy": "Point-in-time exclusion registry (protocol \u00a74 instrument scope; review verdict \u00a76). Classifications are append-only: a new version may ADD entries or categories but historical classifications are never silently changed after results exist \u2014 any change is a new registry version recorded in the dataset manifest with old and new hashes. The exact registry version and every symbol's classification at ingestion are preserved in the dataset manifest.",
+  "registry_version": "exclusions-v1"
+}

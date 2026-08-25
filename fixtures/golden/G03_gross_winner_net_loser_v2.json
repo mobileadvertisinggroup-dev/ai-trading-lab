@@ -1,0 +1,71 @@
+{
+  "component": "engine_fixture",
+  "derivation": "entry fill = 100*(1+0.001+0.0005) = 100.15; open fee = 100*100.15*0.0005 = 5.0075. exit fill = 100.2*(1-0.0015) = 100.0497; close fee = 100*100.0497*0.0005 = 5.002485. gross price P&L = 100*(100.2-100) = +20 > 0 but net pnl = 100*(100.0497-100.15) = -10.03; net total = -10.03 - 5.0075 - 5.002485 = -20.039985. final cash = 10000 - 20.039985 = 9979.960015 (canonical decimal).",
+  "expected": {
+    "final_cash": 9979.960015,
+    "gross_move_positive": true,
+    "layer1_comparison": {
+      "abs_bound": 1e-08,
+      "decimals": 6,
+      "note": "The canonical value is exact decimal hand arithmetic. The implementation computes in IEEE-754 doubles, whose result may differ from the canonical decimal by accumulation of half-ULP rounding (observed 2e-12 here). The layer-1 rule: the implementation's cash, rounded (Decimal, ROUND_HALF_EVEN) to the 6 decimal places of the derivation, must equal the canonical value EXACTLY, and the raw difference must not exceed abs_bound. Neither check can hide a genuine arithmetic error; both surface the float artifact instead of storing it as truth (reviewer correction, 2026-08-25).",
+      "rule": "quantize-to-derivation-precision-exact"
+    }
+  },
+  "fixture": {
+    "bar_ms": 900000,
+    "bars": {
+      "A": [
+        [
+          1699977600000,
+          100,
+          100.3,
+          99.9,
+          100.2
+        ],
+        [
+          1699978500000,
+          100.2,
+          100.4,
+          100.0,
+          100.2
+        ]
+      ]
+    },
+    "funding": {},
+    "funding_interval_ms": 28800000,
+    "instructions": [
+      {
+        "costs": {
+          "fee": 0.0005,
+          "hs": 0.001,
+          "slip": 0.0005
+        },
+        "max_notional": null,
+        "qty": 100.0,
+        "side": 1,
+        "stop_offset": 50.0,
+        "symbol": "A",
+        "t": 1699977600000,
+        "target_offset": 60.0,
+        "type": "entry"
+      },
+      {
+        "pos_id": 1,
+        "reason": "manual",
+        "slip_mult": 1.0,
+        "t": 1699978500000,
+        "type": "exit"
+      }
+    ],
+    "limits": {
+      "max_gross_exposure": 1.5,
+      "max_positions": 10,
+      "min_notional": 50.0
+    },
+    "starting_cash": 10000.0
+  },
+  "fixture_version": 2,
+  "review_status": "REVIEWED",
+  "reviewed_by": "independent reviewer (ChatGPT), 2026-08-25 \u2014 approved in principle; v2 stores the canonical value per the required correction",
+  "supersedes": "superseded/G03_gross_winner_net_loser_v1.json"
+}

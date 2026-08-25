@@ -91,6 +91,30 @@ holdout data are **never committed to Git**.
 5. The decrypted holdout is never written back into the ordinary raw lake
    (spec §9.8) and never uploaded anywhere.
 
+## 4a. Acquisition staging (PC-1 protections; review verdict §4)
+
+The sealing pipeline's acquisition staging — the ephemeral runner storage
+holding the complete source stream before the split-and-seal — is governed
+by these binding protections regardless of PC-1's approval status:
+
+1. Lives only in `RUNNER_TEMP`, outside the repository checkout: it can
+   never be committed to Git.
+2. Inaccessible to model training, validation, dashboard, and ordinary
+   diagnostic code (none of which run in the ingestion job; the readable
+   lake is the only thing they ever see, via GuardedLake).
+3. No display of holdout values, rows, summaries, or outcomes;
+   metadata-only logs (counts, names, hashes).
+4. Never uploaded as an ordinary Actions artifact; never cached between
+   runs.
+5. Destroyed immediately after successful sealing or on failure, by an
+   `always()` workflow step that FAILS the run if the staging directories
+   still exist after removal (verified destruction).
+6. Only pre-holdout data enters the readable lake; holdout data goes
+   directly from staging into the encrypted seal.
+
+The corresponding protocol wording change is PROPOSED_CLARIFICATION_PC1.md,
+awaiting explicit user approval; real ingestion is prohibited until then.
+
 ## 5. Access refusal layer
 
 - **All** project data reads go through `lab.data.access.GuardedLake`. Raw
@@ -133,12 +157,20 @@ holdout data are **never committed to Git**.
 
 ## 7. Decryption gate (Checkpoint 2)
 
-`lab.data.unseal` refuses to decrypt unless ALL of the following match
-(spec §9): approved protocol hash; current Git commit; dataset manifest
-hash; model manifest hash; integrity-test manifest hash; the user's most
-recently approved externally preserved manifest root hash; and a recorded
-Checkpoint-2 authorization. The identity is accepted only via interactive
-prompt (never argv, never env-persisted, never files). Every decryption
-attempt — refused or authorized — is appended to the audit log. After the
-single authorized evaluation, the holdout is marked permanently consumed;
-temporary decrypted material is wiped.
+IMPLEMENTED (`lab/data/unseal.py` + `lab/data/authz.py`, review verdict
+§7): decryption refuses unless ALL of the following match EXACTLY against
+independently recomputed current values — protocol hash (recomputed from
+EXPERIMENT_PROTOCOL.md), current Git commit (`git rev-parse HEAD`), dataset
+manifest hash (of the named manifest file), model manifest hash, locked
+integrity-test manifest hash (from build_state.json), the user's most
+recently approved externally preserved root hash (from build_state.json),
+plus a recorded, non-consumed Checkpoint-2 authorization. An authorization
+record with fabricated or merely nonempty hashes can never grant access —
+negative-tested at both the read layer and the unseal gate
+(tests/test_authz_negative.py; becomes a locked constitutional test). The
+identity is accepted only via interactive TTY prompt (never argv, env,
+or file path; never stored; held in memory for the single decryption).
+Decrypted output is refused inside the project tree or lake (default
+/dev/shm). Every attempt — refused or authorized — is appended to the
+hash-chained audit log; consumption is recorded immutably WITHOUT the key;
+after the single authorized evaluation the temporary material is wiped.
