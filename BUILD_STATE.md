@@ -6,7 +6,7 @@ decisions silently; append, don't erase.
 
 ## Current status
 
-- **Current phase:** Phase 0 — Read-only discovery (COMPLETE, pending user input on two items below)
+- **Current phase:** Phase 1 — Protocol foundation (COMPLETE: Arm A, max holding period, universe rule, data-quality rule, 60/20/20 partition rule authored and FROZEN in EXPERIMENT_PROTOCOL.md, sha256 `6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca`, before any ingestion). Phase 0 complete, pending user input on B1/B2 below.
 - **Last completed gate:** none (no gates reached yet)
 - **Specification:** `SPEC_FINAL-1.1.md`, sha256 `5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a`, preserved verbatim at commit `16ec585e6ab281aece7c705a2073f1a02e5ec7ef`
 - **Checkpoint 1:** not reached
@@ -93,10 +93,16 @@ content and hashing identical either way).
 
 ## Pending actions (next, in spec order)
 
-1. **Phase 1 — Protocol foundation:** author and freeze `EXPERIMENT_PROTOCOL.md` §Arm A: full deterministic momentum/trend-breakout rule set (long/short entry, stops, targets, sizing, max holding period, max concurrent positions, exposure/leverage limits, time-exit, missing-data behavior), the mechanical point-in-time universe rule, the data-quality rule defining the eligible continuous interval, and the exact 60/20/20 partition rule with 4h-boundary snapping. Freeze before any ingestion (R53).
-2. Phase 0 residual: Engine v7 semantic inventory (waiting on B2; does not block Phase 1).
-3. Phase 2 — ingestion + holdout quarantine design (sealing utility, refusal layer).
+1. **Phase 2 — Data ingestion + holdout quarantine:** GitHub Actions ingestion of Binance USDT-M 15m klines + funding (per frozen §8); content-hashed immutable raw lake; sealing utility with non-interactive pass-through for the mechanically determined holdout range; refusal layer for all utilities.
+2. **Phase 3 — Independent simulator** (SIMULATOR_SEMANTICS.md + implementation).
+3. Phase 0 residual: Engine v7 semantic inventory (waiting on B2; blocks Phase 5 gate only).
 
 ## Material changes / invalidated artifacts / required retraining
 
 None. No experimental artifacts exist yet.
+
+## Decisions (continued)
+
+| # | Date | Decision | Rationale | Spec authority |
+|---|---|---|---|---|
+| D6 | 2026-08-25 | Phase-1 protocol frozen: Arm A = Donchian 60-bar breakout (long/short) on 4h bars, ATR(28)-based 2xATR stop / +3R target / 20-bar opposite-channel trailing exit / 42-bar (7-day) max holding period; 0.75% equity risk per trade, 15% notional cap, 10 max positions, 150% gross exposure; universe = point-in-time top-75 USDT-perps by trailing 30d median daily quote volume (>=25M USDT, >=90d history, >=99% completeness); costs = 5bps taker + tiered spread/slippage + real funding; eligible interval + 60/20/20 partition by mechanical rule. Full text: EXPERIMENT_PROTOCOL.md sha256 6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca. | Reasonable in-spec design decisions, recorded per s2; classic transparent momentum system, deterministic and unambiguous. | SPEC s2, s3, s5, s6, s7 (R03, R15, R16, R18, R53) |

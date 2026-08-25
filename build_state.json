@@ -6,30 +6,55 @@
     "sha256": "5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a",
     "preserved_at_commit": "16ec585e6ab281aece7c705a2073f1a02e5ec7ef"
   },
-  "current_phase": "0",
+  "current_phase": "1",
   "phase_0_status": "complete_pending_user_items",
   "last_completed_gate": null,
   "checkpoint_1": "not_reached",
   "checkpoint_2": "not_reached",
-  "holdout": {"defined": false, "sealed": false, "consumed": false},
+  "holdout": {
+    "defined": false,
+    "sealed": false,
+    "consumed": false
+  },
   "dataset_hashes": {},
   "model_hashes": {},
   "integrity_manifest_hash": null,
   "repository": "mobileadvertisinggroup-dev/ai-trading-lab",
   "branch": "main",
-  "decisions": ["D1", "D2", "D3", "D4", "D5"],
+  "decisions": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D6"
+  ],
   "active_blockers": [
-    {"id": "B1", "severity": "informational", "summary": "repo name deviates from spec (ai-trading-lab vs akra-ai-trading-lab)"},
-    {"id": "B2", "severity": "deferred_hard_blocker", "summary": "Engine v7 repo (binance-execution-manager) attachment requires user authorization; blocks Phase 5 differential gate only"}
+    {
+      "id": "B1",
+      "severity": "informational",
+      "summary": "repo name deviates from spec (ai-trading-lab vs akra-ai-trading-lab)"
+    },
+    {
+      "id": "B2",
+      "severity": "deferred_hard_blocker",
+      "summary": "Engine v7 repo (binance-execution-manager) attachment requires user authorization; blocks Phase 5 differential gate only"
+    }
   ],
   "material_changes": [],
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "Phase 1: author and freeze EXPERIMENT_PROTOCOL.md (Arm A, max holding period, universe rule, data-quality rule, 60/20/20 partition rule) before any ingestion",
-    "Phase 0 residual: Engine v7 semantic inventory (waiting on blocker B2)",
-    "Phase 2: ingestion + holdout quarantine design"
+    "Phase 2: data ingestion (GitHub Actions) + holdout quarantine: sealing utility, refusal layer, content-hashed immutable raw lake",
+    "Phase 3: independent simulator per SIMULATOR_SEMANTICS.md",
+    "Phase 0 residual: Engine v7 semantic inventory (waiting on blocker B2)"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T12:55:00Z"
+  "updated": "2026-08-25T13:10:00Z",
+  "phase_1_status": "frozen",
+  "protocol": {
+    "file": "EXPERIMENT_PROTOCOL.md",
+    "phase1_frozen_sha256": "6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca",
+    "frozen_date": "2026-08-25"
+  }
 }
