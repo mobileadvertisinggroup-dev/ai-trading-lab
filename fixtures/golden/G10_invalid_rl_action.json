@@ -1,0 +1,36 @@
+{
+  "component": "engine_management",
+  "derivation": "Long qty 10 opened cost-free at 100 with stop 95. Four invalid actions: moving the stop DOWN to 90 widens it; moving it to 150 crosses the mark (not protective); widen_stop and increase_position are not permitted actions. All four must be rejected with recorded invalid_action events and MUST NOT change cash (10000, no fees charged), the stop (95), or the open quantity (10).",
+  "expected": {
+    "cash_unchanged": 10000.0,
+    "stop_unchanged": 95.0
+  },
+  "review_status": "PENDING INDEPENDENT REVIEW",
+  "reviewed_by": null,
+  "scenario": {
+    "invalid_actions": [
+      [
+        "tighten_stop",
+        90.0
+      ],
+      [
+        "tighten_stop",
+        150.0
+      ],
+      [
+        "widen_stop",
+        null
+      ],
+      [
+        "increase_position",
+        null
+      ]
+    ],
+    "px": 100.0,
+    "qty": 10.0,
+    "r_dist": 5.0,
+    "starting_cash": 10000.0,
+    "stop": 95.0,
+    "target": 115.0
+  }
+}

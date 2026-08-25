@@ -20,6 +20,7 @@ import numpy as np
 
 from lab import protocol as P
 from lab.arms.indicators import SymbolSeries
+from lab.risk.governor import EntryRequest, PortfolioState, RiskGovernor
 from lab.sim.engine import Bar, Costs, Engine
 
 
@@ -63,13 +64,16 @@ def tier_costs(rank: int) -> Costs:
 
 class ArmARunner:
     def __init__(self, provider: MarketProvider, starting_cash: float,
-                 universe_fn, valid_round_fn=None):
+                 universe_fn, valid_round_fn=None, governor=None):
         """universe_fn(t_ms) -> ordered list of symbols (rank order, §4).
-        valid_round_fn(t_ms) -> bool; None = all boundaries valid."""
+        valid_round_fn(t_ms) -> bool; None = all boundaries valid.
+        governor: external risk governor (SPEC §14); every arm gets one —
+        pass an instance to share state, None for a fresh default."""
         self.provider = provider
         self.engine = Engine(starting_cash)
         self.universe_fn = universe_fn
         self.valid_round_fn = valid_round_fn or (lambda t: True)
+        self.governor = governor or RiskGovernor()
         self.candidates: list[dict] = []       # the candidate ledger
         self.equity_curve: list[dict] = []
         self._series: dict[str, SymbolSeries] = {}
@@ -115,10 +119,27 @@ class ArmARunner:
             if bars_held >= P.MAX_HOLD_BARS_4H:
                 self.engine.submit_exit(p.pos_id, 1.0, "time_exit")
 
+    def _portfolio_state(self, equity: float) -> PortfolioState:
+        marks = self._marks()
+        long_x = short_x = 0.0
+        for p in self.engine.open_positions():
+            notional = p.open_qty * marks.get(p.symbol, p.last_mark)
+            if p.side > 0:
+                long_x += notional
+            else:
+                short_x += notional
+        return PortfolioState(equity=equity, gross_exposure=long_x + short_x,
+                              long_exposure=long_x, short_exposure=short_x,
+                              n_positions=len(self.engine.open_positions()))
+
     def _decision_round(self, t: int):
         universe = self.universe_fn(t)
         open_syms = {p.symbol for p in self.engine.open_positions()}
         equity = self.engine.equity(self._marks())
+        self.governor.observe(
+            t, equity,
+            positions_with_stop=all(p.stop is not None and p.stop > 0
+                                    for p in self.engine.open_positions()))
         n_universe = len(universe)
         for rank, sym in enumerate(universe):
             if sym in open_syms:
@@ -138,6 +159,13 @@ class ArmARunner:
             r_dist = P.STOP_ATR_MULT * sig["atr"]
             qty = (P.RISK_FRACTION * equity) / r_dist
             costs = tier_costs(rank)
+            # external risk governor (SPEC §14): approve / restrict / reject.
+            # Uses the signal close as the pre-trade reference price; the
+            # engine's own caps re-check at the actual fill.
+            decision, allowed_qty, gov_reason = self.governor.check_entry(
+                EntryRequest(t=t, symbol=sym, side=side, qty=qty,
+                             price=sig["close"], stop_distance=r_dist),
+                self._portfolio_state(equity))
             self.candidates.append({
                 "t": int(t), "symbol": sym, "side": side,
                 "close": sig["close"], "hh_entry": sig["hh_entry"],
@@ -145,9 +173,12 @@ class ArmARunner:
                 "r_dist": r_dist, "rank": rank + 1,
                 "n_eligible": n_universe, "equity": equity,
                 "qty_submitted": qty,
+                "governor": decision, "governor_reason": gov_reason,
             })
+            if decision == "reject":
+                continue        # external restriction, recorded — never bypassed
             self.engine.submit_entry(
-                sym, side, qty, stop=0.0, target=0.0,
+                sym, side, allowed_qty, stop=0.0, target=0.0,
                 r_dist=r_dist, decision_ts=t, costs=costs,
                 max_notional=P.NOTIONAL_CAP_FRACTION * equity,
                 stop_offset=r_dist,                       # fill -/+ 2xATR

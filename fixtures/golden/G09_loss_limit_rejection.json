@@ -1,0 +1,34 @@
+{
+  "component": "risk_governor",
+  "derivation": "Day-start equity 10000; current equity 9690. Day loss = (10000-9690)/10000 = 3.1% >= the 3% daily loss limit (RISK_POLICY). The governor must reject the new entry with reason daily_loss_limit and allowed qty 0. Open-position protection is unaffected (not exercised here).",
+  "expected": {
+    "decision": [
+      "reject",
+      0.0,
+      "daily_loss_limit"
+    ]
+  },
+  "review_status": "PENDING INDEPENDENT REVIEW",
+  "reviewed_by": null,
+  "scenario": {
+    "day_start_equity": 10000.0,
+    "day_start_t": 1699977600000,
+    "entry_request": {
+      "data_complete": true,
+      "has_protective_stop": true,
+      "price": 100.0,
+      "qty": 10.0,
+      "side": 1,
+      "stop_distance": 5.0,
+      "symbol": "A",
+      "t": 1699981200000
+    },
+    "state": {
+      "equity": 9690.0,
+      "gross_exposure": 0.0,
+      "long_exposure": 0.0,
+      "n_positions": 0,
+      "short_exposure": 0.0
+    }
+  }
+}

@@ -13,7 +13,7 @@
     "change_authorized_by_user": "2026-08-25",
     "change_summary": "Engine v7 gate replaced by Independent Reference Ledger gate; total independence from previous projects; property-based invariant tests added; B2 permanently closed"
   },
-  "current_phase": "5",
+  "current_phase": "6",
   "phase_0_status": "complete_pending_user_items",
   "last_completed_gate": null,
   "checkpoint_1": "not_reached",
@@ -42,7 +42,8 @@
     "D11",
     "D12",
     "D13",
-    "D14"
+    "D14",
+    "D15"
   ],
   "active_blockers": [
     {
@@ -55,13 +56,14 @@
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "Actions: lab-ingest probe, then full ingestion (raw-v1) \u2014 after age key",
-    "Phase 6: external risk governor (RISK_POLICY.md) + remaining golden fixtures, then Arms B-G",
-    "Phase 7: dashboard and operations",
-    "INTEGRITY_TEST_POLICY.md + constitutional lock before shakedown"
+    "BLOCKED on user age key: Actions lab-ingest probe -> full ingestion (raw-v1)",
+    "Phase 6 remainder (needs data): feature set freeze (DATA_DICTIONARY.md), Arms B/C/E training, Arm D regime model, Arm F RL (profiling run first, SPEC \u00a725), Arm G composition",
+    "Phase 7: dashboard and operations; Phase 8: shakedown",
+    "INTEGRITY_TEST_POLICY.md + constitutional lock before shakedown",
+    "PENDING USER: golden fixture independent review (G01-G10)"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T16:40:00Z",
+  "updated": "2026-08-25T17:30:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
@@ -88,7 +90,7 @@
     "independent review of fixtures/golden/*.json derivations (before constitutional lock)"
   ],
   "tests": {
-    "dev_suite": "61 passed",
+    "dev_suite": "76 passed",
     "property_examples": "85 random differential fixtures, 0 divergences",
     "last_run": "2026-08-25"
   },
@@ -101,5 +103,6 @@
   ],
   "phase_3_status": "engine_built_semantics_frozen_doc_authored",
   "phase_4_status": "arm_a_code_complete",
-  "phase_5_status": "gate_built_passing_dev_level_fixtures_pending_independent_review"
+  "phase_5_status": "gate_built_passing_dev_level_fixtures_pending_independent_review",
+  "phase_6_status": "governor_labels_purge_done; arms B-G modeling blocked on ingested data"
 }

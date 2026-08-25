@@ -90,7 +90,9 @@ def test_arm_a_breakout_entry_and_target_exit():
     # candidate contains ONLY decision-time inputs
     assert set(cand) == {"t", "symbol", "side", "close", "hh_entry",
                          "ll_entry", "atr", "r_dist", "rank", "n_eligible",
-                         "equity", "qty_submitted"}
+                         "equity", "qty_submitted", "governor",
+                         "governor_reason"}
+    assert cand["governor"] in ("approve", "restrict")
 
     opens = [ev for ev in r.engine.events if ev["kind"] == "fill_open"]
     assert len(opens) == 2

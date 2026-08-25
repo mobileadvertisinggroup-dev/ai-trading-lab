@@ -15,8 +15,9 @@ import pytest
 
 from lab.verify.differential import compare, run_sim, normalize_sim
 
-GOLDEN = sorted(glob.glob(os.path.join(
-    os.path.dirname(__file__), "..", "fixtures", "golden", "*.json")))
+GOLDEN = sorted(p for p in glob.glob(os.path.join(
+    os.path.dirname(__file__), "..", "fixtures", "golden", "*.json"))
+    if "G09" not in p and "G10" not in p)   # component fixtures: own tests
 
 
 @pytest.mark.parametrize("path", GOLDEN, ids=[os.path.basename(p) for p in GOLDEN])
