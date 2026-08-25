@@ -11,7 +11,7 @@ decisions silently; append, don't erase.
 - **Specification:** `SPEC_FINAL-1.1.md`, sha256 `5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a`, preserved verbatim at commit `16ec585e6ab281aece7c705a2073f1a02e5ec7ef`
 - **Checkpoint 1:** not reached
 - **Checkpoint 2:** not reached
-- **Holdout:** not yet defined (Phase 1 partition rule not yet frozen); no market data ingested; nothing to quarantine yet
+- **Holdout:** partition RULE frozen (EXPERIMENT_PROTOCOL.md §7); concrete dates not yet computable (no data ingested); nothing to quarantine yet
 - **Dataset hashes:** none (no data ingested)
 - **Model hashes:** none (no models trained)
 - **Integrity-manifest hash:** none (constitutional tests not yet written)
