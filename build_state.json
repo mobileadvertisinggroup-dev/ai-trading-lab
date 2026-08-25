@@ -47,7 +47,10 @@
     "D16",
     "D17",
     "D18",
-    "D19"
+    "D19",
+    "D20",
+    "D21",
+    "D22"
   ],
   "active_blockers": [
     {
@@ -61,10 +64,10 @@
   "required_retraining": [],
   "pending_actions": [
     "REVIEW-GATED: constitutional lock, real ingestion, holdout key, shakedown",
-    "Allowed meanwhile: data-free scaffolding (feature dictionary draft, Arm D regime model, Arm F RL env, dashboard skeleton, INTEGRITY_TEST_POLICY.md draft)"
+    "Remaining data-free scaffolding: lab/features/build.py against DATA_DICTIONARY draft; Arms B/C/E training pipeline shells; multi-arm orchestrator over RoundCoordinator; deliberate-leak fixtures"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T18:40:00Z",
+  "updated": "2026-08-25T19:50:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
@@ -90,7 +93,7 @@
     "independent review: fixtures G01-G12 derivations + issues A and D approval (bundle ready)"
   ],
   "tests": {
-    "dev_suite": "79 passed (exact differential equality)",
+    "dev_suite": "90 passed (exact differential equality)",
     "last_run": "2026-08-25"
   },
   "closed_blockers": [
