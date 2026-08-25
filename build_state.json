@@ -43,7 +43,11 @@
     "D12",
     "D13",
     "D14",
-    "D15"
+    "D15",
+    "D16",
+    "D17",
+    "D18",
+    "D19"
   ],
   "active_blockers": [
     {
@@ -56,14 +60,11 @@
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "BLOCKED on user age key: Actions lab-ingest probe -> full ingestion (raw-v1)",
-    "Phase 6 remainder (needs data): feature set freeze (DATA_DICTIONARY.md), Arms B/C/E training, Arm D regime model, Arm F RL (profiling run first, SPEC \u00a725), Arm G composition",
-    "Phase 7: dashboard and operations; Phase 8: shakedown",
-    "INTEGRITY_TEST_POLICY.md + constitutional lock before shakedown",
-    "PENDING USER: golden fixture independent review (G01-G10)"
+    "REVIEW-GATED: constitutional lock, real ingestion, holdout key, shakedown",
+    "Allowed meanwhile: data-free scaffolding (feature dictionary draft, Arm D regime model, Arm F RL env, dashboard skeleton, INTEGRITY_TEST_POLICY.md draft)"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T17:30:00Z",
+  "updated": "2026-08-25T18:40:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
@@ -86,12 +87,10 @@
     "no repo rename during active workflow unless atomic"
   ],
   "pending_user_inputs": [
-    "age public key for holdout seal (before first real ingestion run)",
-    "independent review of fixtures/golden/*.json derivations (before constitutional lock)"
+    "independent review: fixtures G01-G12 derivations + issues A and D approval (bundle ready)"
   ],
   "tests": {
-    "dev_suite": "76 passed",
-    "property_examples": "85 random differential fixtures, 0 divergences",
+    "dev_suite": "79 passed (exact differential equality)",
     "last_run": "2026-08-25"
   },
   "closed_blockers": [
@@ -104,5 +103,15 @@
   "phase_3_status": "engine_built_semantics_frozen_doc_authored",
   "phase_4_status": "arm_a_code_complete",
   "phase_5_status": "gate_built_passing_dev_level_fixtures_pending_independent_review",
-  "phase_6_status": "governor_labels_purge_done; arms B-G modeling blocked on ingested data"
+  "phase_6_status": "governor_labels_purge_done; arms B-G modeling blocked on ingested data",
+  "review_gate_2026_08_25": {
+    "no_constitutional_lock": true,
+    "no_real_ingestion": true,
+    "no_holdout_key_requests": true,
+    "no_shakedown": true,
+    "until": "independent fixture review complete",
+    "bundle": "INDEPENDENT_REVIEW_BUNDLE_PHASE6.zip",
+    "bundle_source_commit": "70605dfe65654c1ba24dc53e0e56f37db405875d",
+    "issues_report": "REVIEW_ISSUES_PHASE6.md"
+  }
 }
