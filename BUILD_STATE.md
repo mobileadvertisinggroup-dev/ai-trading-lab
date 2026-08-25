@@ -6,7 +6,7 @@ decisions silently; append, don't erase.
 
 ## Current status
 
-- **Current phase:** Phase 1 — Protocol foundation (COMPLETE: Arm A, max holding period, universe rule, data-quality rule, 60/20/20 partition rule authored and FROZEN in EXPERIMENT_PROTOCOL.md, sha256 `6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca`, before any ingestion). Phase 0 complete, pending user input on B1/B2 below.
+- **Current phase:** Phase 2 — Data ingestion & holdout quarantine (IN PROGRESS: core quarantine/seal/partition machinery built and tested; ingestion downloader + Actions workflow next). Phase 1 COMPLETE (: Arm A, max holding period, universe rule, data-quality rule, 60/20/20 partition rule authored and FROZEN in EXPERIMENT_PROTOCOL.md, sha256 `6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca`, before any ingestion). Phase 0 complete.
 - **Last completed gate:** none (no gates reached yet)
 - **Specification:** `SPEC_FINAL-1.1.md`, sha256 `5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a`, preserved verbatim at commit `16ec585e6ab281aece7c705a2073f1a02e5ec7ef`
 - **Checkpoint 1:** not reached
@@ -17,6 +17,33 @@ decisions silently; append, don't erase.
 - **Integrity-manifest hash:** none (constitutional tests not yet written)
 - **Safe resume command:** clone this repo, read `SPEC_FINAL-1.1.md`, this file, and `build_state.json`, verify the spec sha256 above matches, then continue from "Pending actions".
 
+## Repository identity (recorded per user instruction, 2026-08-25)
+
+- Name: `ai-trading-lab` — Owner: `mobileadvertisinggroup-dev`
+- URL: https://github.com/mobileadvertisinggroup-dev/ai-trading-lab
+- Branch: `main`
+- Renaming during an active workflow is deferred unless references, Actions
+  configuration, and state files can be updated safely and atomically (user
+  constraint). B1 remains informational only.
+
+## User-imposed operating constraints (2026-08-25, binding)
+
+1. **Engine v7 location must be established, not assumed.** Do not request
+   attachment of `binance-execution-manager` (or any repo) for the §13 gate
+   until it is established to actually contain the frozen Engine v7. Before
+   Phase 5, produce the Engine v7 requirements report: exact artifact
+   required; expected repository/path; known frozen version/commit/sha256;
+   minimum files or ledger exports required; whether a read-only exported
+   snapshot suffices. If Engine v7 remains unavailable, B2 is the Phase-5
+   hard blocker; the differential gate is never weakened, bypassed, or
+   replaced without adjudication.
+2. **GitHub Actions rules**: never print holdout rows/summaries in Actions
+   logs; never commit raw market data, secrets, or decrypted holdout data to
+   Git; never upload decrypted holdout data as an ordinary artifact;
+   least-privilege secrets and controlled artifact retention; all execution
+   paper-only. Persistence/retention/recovery design recorded in
+   HOLDOUT_POLICY.md §3 and below.
+
 ## Phase 0 — Discovery findings (2026-08-25)
 
 ### Existing projects inventory (all untouched, per §1 / R01)
@@ -25,7 +52,7 @@ decisions silently; append, don't erase.
 |---|---|---|
 | BTC Arena | `mobileadvertisinggroup-dev/btc-arena` | Retired 2026-08-25 (cron paused, code/data/history preserved). Read-only reference only. |
 | akra-website | `mobileadvertisinggroup-dev/akra-website` | Untouched. |
-| binance-execution-manager | `mobileadvertisinggroup-dev/binance-execution-manager` (private) | Presumed host of **Engine v7**. NOT yet inspected — read-only attachment was denied by the session permission layer and requires explicit user authorization. See Blocker B2. |
+| binance-execution-manager | `mobileadvertisinggroup-dev/binance-execution-manager` (private) | Untouched, not inspected. NOT presumed to contain Engine v7 (user instruction 2026-08-25: establish, don't assume). |
 | AKRA Arena / Wallet D / Forward V1/V3 / Momentum Lab | Not found among repositories visible to this session | If they exist elsewhere, they are outside this session's reach and therefore trivially untouched. |
 
 Standalone-project location convention discovered: one GitHub repository per
@@ -83,7 +110,7 @@ content and hashing identical either way).
 | ID | Severity | Description | Needed from user | Blocks |
 |---|---|---|---|---|
 | B1 | none (informational) | Repo name deviates from spec (`ai-trading-lab` vs `akra-ai-trading-lab`). | Optional: rename repo in GitHub Settings → General. | Nothing. |
-| B2 | deferred hard blocker | Engine v7 source (presumed in private repo `binance-execution-manager`) is not attachable: session permission layer denied the read-only attachment. Without it, the §13 differential gate (R28) cannot run and — per §13 — the gate may not be skipped or trivialized. | Say "attach binance-execution-manager" (or approve the attachment prompt) so Phase 0 can inventory Engine v7's supported semantics. | Phase 5 gate only. Phases 1–4 proceed regardless. |
+| B2 | deferred hard blocker (Phase 5) | Engine v7 location and artifact are UNKNOWN. Per user instruction (2026-08-25) its location must be established, never assumed from a repository name; the earlier presumption about `binance-execution-manager` is withdrawn. The §13 gate cannot run without the genuine frozen Engine v7. | Before Phase 5: the Engine v7 requirements report (see user-imposed constraints above); user identifies the artifact/location or supplies a read-only exported snapshot. | Phase 5 gate only. Phases 1–4 proceed regardless. |
 
 ## Completed actions
 
@@ -91,11 +118,42 @@ content and hashing identical either way).
 2. 2026-08-25 — Spec FINAL-1.1 preserved verbatim (`SPEC_FINAL-1.1.md`), sha256 recorded, committed (`16ec585`).
 3. 2026-08-25 — BUILD_STATE.md + build_state.json initialized (this commit).
 
+### Phase 2 progress (2026-08-25)
+
+Built and tested (11/11 dev tests passing):
+
+- `lab/protocol.py` — frozen protocol constants, single code-level source.
+- `lab/data/partition.py` — mechanical universe eligibility, round validity,
+  eligible-interval and 60/20/20 partition computation (pure functions).
+- `lab/data/lake.py` — content-hashed Parquet lake + manifest build/verify.
+- `lab/data/seal.py` — sealing utility: splits at the quarantine boundary,
+  age-encrypts holdout rows to the user's public key (pyrage/X25519),
+  metadata-only logging, transient tar shredded.
+- `lab/data/access.py` — GuardedLake: sole sanctioned read path; refuses
+  holdout-intersecting requests (exact/partial/single-ts/alt-symbol/funding/
+  universe) absent complete Checkpoint-2 authorization; hash-chained
+  append-only audit log; consumed-holdout refusal.
+- `HOLDOUT_POLICY.md` — quarantine, seal, storage/retention/recovery, Actions
+  log-hygiene, key custody, decryption gate.
+
+Remaining for Phase 2: ingestion downloader (Binance USDT-M bulk + REST),
+availability-calendar builder, ingestion GitHub Actions workflow, release
+publisher. Requires from user before the ingestion RUN (not before the code):
+an age public key (see Pending user inputs).
+
+## Pending user inputs (non-blocking for current work)
+
+1. **Age public key for the holdout seal** — required before the first real
+   ingestion run. Generate locally: install `age`, run `age-keygen -o akra-holdout-identity.txt`;
+   keep that file private (it is the only decryption key; SPEC §9 requires
+   user-sole custody) and provide ONLY the public line (`age1…`).
+2. Engine v7 identification (see B2) — needed before Phase 5.
+
 ## Pending actions (next, in spec order)
 
-1. **Phase 2 — Data ingestion + holdout quarantine:** GitHub Actions ingestion of Binance USDT-M 15m klines + funding (per frozen §8); content-hashed immutable raw lake; sealing utility with non-interactive pass-through for the mechanically determined holdout range; refusal layer for all utilities.
+1. **Phase 2 (remainder):** ingestion downloader + availability calendars + ingestion Actions workflow + release publisher.
 2. **Phase 3 — Independent simulator** (SIMULATOR_SEMANTICS.md + implementation).
-3. Phase 0 residual: Engine v7 semantic inventory (waiting on B2; blocks Phase 5 gate only).
+3. Before Phase 5: Engine v7 requirements report (user constraint #1; B2).
 
 ## Material changes / invalidated artifacts / required retraining
 
@@ -106,3 +164,6 @@ None. No experimental artifacts exist yet.
 | # | Date | Decision | Rationale | Spec authority |
 |---|---|---|---|---|
 | D6 | 2026-08-25 | Phase-1 protocol frozen: Arm A = Donchian 60-bar breakout (long/short) on 4h bars, ATR(28)-based 2xATR stop / +3R target / 20-bar opposite-channel trailing exit / 42-bar (7-day) max holding period; 0.75% equity risk per trade, 15% notional cap, 10 max positions, 150% gross exposure; universe = point-in-time top-75 USDT-perps by trailing 30d median daily quote volume (>=25M USDT, >=90d history, >=99% completeness); costs = 5bps taker + tiered spread/slippage + real funding; eligible interval + 60/20/20 partition by mechanical rule. Full text: EXPERIMENT_PROTOCOL.md sha256 6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca. | Reasonable in-spec design decisions, recorded per s2; classic transparent momentum system, deterministic and unambiguous. | SPEC s2, s3, s5, s6, s7 (R03, R15, R16, R18, R53) |
+| D7 | 2026-08-25 | Raw-lake storage: GitHub Release assets on immutable data releases (`raw-v<N>`), content-hashed manifests committed to git; NO market data, secrets, or decrypted holdout in git ever. Retention/recovery per HOLDOUT_POLICY.md §3. | User constraint (2026-08-25); SPEC §6, §9. | §6, §9 |
+| D8 | 2026-08-25 | Seal cryptography: age (X25519, pyrage). USER generates the identity locally and provides only the public key; sealing is non-interactive public-key encryption; user alone can decrypt at Checkpoint 2. | Satisfies SPEC §9 user-sole-key custody while allowing non-interactive CI sealing. | §9 |
+| D9 | 2026-08-25 | Validation-period positions still open at the holdout boundary are force-closed at the last pre-boundary 15m close for evaluation purposes (logged); labels whose information interval crosses a partition boundary are purged per §10. Prevents any evaluation path from needing sealed rows. | Consequence of §7 + §10; recorded now, implemented in simulator (Phase 3). | §7, §9, §10 |

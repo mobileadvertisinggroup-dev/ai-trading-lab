@@ -6,7 +6,7 @@
     "sha256": "5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a",
     "preserved_at_commit": "16ec585e6ab281aece7c705a2073f1a02e5ec7ef"
   },
-  "current_phase": "1",
+  "current_phase": "2",
   "phase_0_status": "complete_pending_user_items",
   "last_completed_gate": null,
   "checkpoint_1": "not_reached",
@@ -27,34 +27,52 @@
     "D3",
     "D4",
     "D5",
-    "D6"
+    "D6",
+    "D7",
+    "D8",
+    "D9"
   ],
   "active_blockers": [
     {
       "id": "B1",
       "severity": "informational",
-      "summary": "repo name deviates from spec (ai-trading-lab vs akra-ai-trading-lab)"
+      "summary": "repo name deviates from spec; rename deferred per user atomicity constraint"
     },
     {
       "id": "B2",
-      "severity": "deferred_hard_blocker",
-      "summary": "Engine v7 repo (binance-execution-manager) attachment requires user authorization; blocks Phase 5 differential gate only"
+      "severity": "deferred_hard_blocker_phase5",
+      "summary": "Engine v7 location/artifact unknown; establish before Phase 5, never assume; requirements report due before Phase 5"
     }
   ],
   "material_changes": [],
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "Phase 2: data ingestion (GitHub Actions) + holdout quarantine: sealing utility, refusal layer, content-hashed immutable raw lake",
-    "Phase 3: independent simulator per SIMULATOR_SEMANTICS.md",
-    "Phase 0 residual: Engine v7 semantic inventory (waiting on blocker B2)"
+    "Phase 2 remainder: ingestion downloader, availability calendars, ingestion Actions workflow, release publisher",
+    "Phase 3: independent simulator (SIMULATOR_SEMANTICS.md + implementation)",
+    "Before Phase 5: Engine v7 requirements report"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T13:10:00Z",
+  "updated": "2026-08-25T13:30:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
     "phase1_frozen_sha256": "6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca",
     "frozen_date": "2026-08-25"
+  },
+  "phase_2_status": "in_progress_core_built_and_tested",
+  "repository_url": "https://github.com/mobileadvertisinggroup-dev/ai-trading-lab",
+  "user_constraints_2026_08_25": [
+    "engine_v7_location_must_be_established_not_assumed; requirements report before Phase 5",
+    "actions: no holdout rows in logs; no raw data/secrets/decrypted holdout in git; no decrypted holdout artifacts; least-privilege secrets; paper-only",
+    "no repo rename during active workflow unless atomic"
+  ],
+  "pending_user_inputs": [
+    "age public key for holdout seal (before first real ingestion run)",
+    "Engine v7 identification (before Phase 5)"
+  ],
+  "tests": {
+    "dev_suite": "11 passed",
+    "last_run": "2026-08-25"
   }
 }

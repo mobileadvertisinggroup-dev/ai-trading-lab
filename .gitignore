@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+# never in git: raw market data, lake bytes, encrypted or decrypted holdout
+lake/
+staging/
+*.tar.age
+*.parquet
+# secrets never exist here, but belt-and-suspenders:
+*identity*.txt
+.env
