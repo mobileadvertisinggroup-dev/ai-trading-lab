@@ -188,3 +188,64 @@ def compute_partition(start_ms: int, end_ms: int) -> dict:
         # are sealed.
         "quarantine_start_ms": int(b[i_v]),
     }
+
+
+# ---------------------------------------------------------------------------
+# Vectorized fast path — MUST agree exactly with the per-call definitions
+# above; tests/test_partition.py::test_fast_path_matches_slow_path enforces
+# the equivalence on synthetic data. Used by ingestion where the per-boundary
+# loop would be too slow.
+# ---------------------------------------------------------------------------
+
+def daily_universe_metrics(cal: SymbolCalendar) -> pd.DataFrame:
+    """Per-day (liq_median, completeness) as seen AT any decision time on that
+    day — i.e., over the trailing 30 calendar days strictly before the day.
+
+    Index: date (midnight UTC). Columns: liq_median (NaN when < 20 defined
+    days), completeness (fraction of expected 15m bars).
+    """
+    if cal.first_bar_ms < 0:
+        return pd.DataFrame(columns=["liq_median", "completeness"])
+    daily = cal.daily
+    full = pd.date_range(daily.index.min(), daily.index.max() + pd.Timedelta(days=1),
+                         freq="D", tz="UTC")
+    bars = daily["bars_present"].reindex(full, fill_value=0)
+    qvol = daily["qvol"].reindex(full)
+    med = qvol.rolling(P.UNIVERSE_TRAILING_DAYS,
+                       min_periods=P.UNIVERSE_MIN_DEFINED_DAYS).median().shift(1)
+    comp = (bars.rolling(P.UNIVERSE_TRAILING_DAYS, min_periods=1).sum().shift(1)
+            / (P.UNIVERSE_TRAILING_DAYS * P.BARS_15M_PER_DAY))
+    return pd.DataFrame({"liq_median": med, "completeness": comp})
+
+
+def eligibility_series(cal: SymbolCalendar, boundaries_ms: np.ndarray) -> pd.Series:
+    """Vectorized is_eligible() over many boundaries. Index: boundary ms.
+    Values: liq_median where eligible, NaN where not."""
+    out = pd.Series(np.nan, index=boundaries_ms.astype(np.int64))
+    if cal.first_bar_ms < 0:
+        return out
+    metrics = daily_universe_metrics(cal)
+    days = pd.to_datetime((boundaries_ms // DAY_MS) * DAY_MS, unit="ms", utc=True)
+    m = metrics.reindex(days)
+    liq = m["liq_median"].to_numpy()
+    comp = m["completeness"].to_numpy()
+    ok = ((cal.first_bar_ms <= boundaries_ms - P.UNIVERSE_MIN_HISTORY_DAYS * DAY_MS)
+          & (cal.last_bar_ms >= boundaries_ms - P.TRADABLE_LOOKBACK_MS)
+          & np.isfinite(liq)
+          & (liq >= P.UNIVERSE_MIN_MEDIAN_DAILY_QVOL_USDT)
+          & (comp >= P.UNIVERSE_MIN_COMPLETENESS))
+    out[ok] = liq[ok]
+    return out
+
+
+def round_validity_fast(boundaries_ms: np.ndarray,
+                        calendars: dict[str, SymbolCalendar],
+                        btc_bars_15m_by_4h: dict[int, int]) -> pd.Series:
+    """Vectorized round_validity(). Same semantics, one pass per symbol."""
+    n_eligible = pd.Series(0, index=boundaries_ms.astype(np.int64))
+    for sym in calendars:
+        n_eligible += eligibility_series(calendars[sym], boundaries_ms).notna().astype(int)
+    btc_ok = pd.Series(
+        [btc_bars_15m_by_4h.get(int(t) - P.BAR_4H_MS, 0) == P.BARS_15M_PER_4H
+         for t in boundaries_ms], index=boundaries_ms.astype(np.int64))
+    return (btc_ok & (n_eligible >= P.VALID_ROUND_MIN_ELIGIBLE)).sort_index()

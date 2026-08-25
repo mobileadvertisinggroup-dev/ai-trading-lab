@@ -6,7 +6,7 @@ decisions silently; append, don't erase.
 
 ## Current status
 
-- **Current phase:** Phase 2 — Data ingestion & holdout quarantine (IN PROGRESS: core quarantine/seal/partition machinery built and tested; ingestion downloader + Actions workflow next). Phase 1 COMPLETE (: Arm A, max holding period, universe rule, data-quality rule, 60/20/20 partition rule authored and FROZEN in EXPERIMENT_PROTOCOL.md, sha256 `6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca`, before any ingestion). Phase 0 complete.
+- **Current phase:** Phase 2 — CODE COMPLETE (quarantine/seal/partition/access + ingestion downloader + Actions workflow; 19/19 dev tests). Awaiting: user's age public key, then probe run, then full ingestion run on Actions. Phase 3 (simulator) starts now in parallel — it needs no market data. Phase 1 COMPLETE (: Arm A, max holding period, universe rule, data-quality rule, 60/20/20 partition rule authored and FROZEN in EXPERIMENT_PROTOCOL.md, sha256 `6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca`, before any ingestion). Phase 0 complete.
 - **Last completed gate:** none (no gates reached yet)
 - **Specification:** `SPEC_FINAL-1.1.md`, sha256 `5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a`, preserved verbatim at commit `16ec585e6ab281aece7c705a2073f1a02e5ec7ef`
 - **Checkpoint 1:** not reached
@@ -136,10 +136,16 @@ Built and tested (11/11 dev tests passing):
 - `HOLDOUT_POLICY.md` — quarantine, seal, storage/retention/recovery, Actions
   log-hygiene, key custody, decryption gate.
 
-Remaining for Phase 2: ingestion downloader (Binance USDT-M bulk + REST),
-availability-calendar builder, ingestion GitHub Actions workflow, release
-publisher. Requires from user before the ingestion RUN (not before the code):
-an age public key (see Pending user inputs).
+Phase 2 remainder built (2026-08-25, later same day): `lab/data/ingest.py`
+(archive symbol discovery incl. delisted, monthly+daily kline & funding
+download with CHECKSUM verify, defensive parsers, vectorized calendars,
+interval/partition, seal, manifests), differential-tested vectorized
+universe fast path in `partition.py`, `.github/workflows/ingest.yml`
+(probe/full modes, immutable release publisher, metadata-only manifest
+commits), pinned `requirements.txt`. 19/19 dev tests.
+Live-source validation deliberately deferred to the Actions `probe` run
+(S-ING-1) because exchange endpoints are unreachable from this container.
+Ingestion RUN still requires the user's age public key.
 
 ## Pending user inputs (non-blocking for current work)
 

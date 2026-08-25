@@ -112,3 +112,40 @@ def test_round_validity_and_eligible_interval():
     assert not v2.any()
     with pytest.raises(RuntimeError):
         PT.eligible_interval(v2, freeze)
+
+
+def test_fast_path_matches_slow_path():
+    """Vectorized eligibility/validity must agree exactly with definitions."""
+    rng = np.random.default_rng(7)
+    n_days = 160
+    cals = {}
+    for i in range(40):
+        sym = f"R{i:02d}USDT"
+        # irregular data: random gaps, varying volumes, staggered listings
+        start = int(rng.integers(0, 40)) * DAY
+        times, qvs = [], []
+        for d in range(n_days - start // DAY):
+            day0 = start + d * DAY
+            bars = int(rng.choice([96, 96, 96, 92, 80, 0],
+                                  p=[.6, .15, .1, .07, .05, .03]))
+            for b in range(bars):
+                times.append(day0 + b * P.BAR_15M_MS)
+                qvs.append(float(rng.uniform(1e5, 1.2e6)))
+        cals[sym] = PT.build_symbol_calendar(
+            sym, np.array(times, dtype=np.int64), np.array(qvs))
+    cals[P.CONTEXT_SYMBOL] = make_calendar(P.CONTEXT_SYMBOL, 0, n_days)
+
+    boundaries = PT.all_boundaries(120 * DAY, 155 * DAY)
+    btc_map = {int(b) - H4: 16 for b in boundaries}
+
+    for sym, cal in cals.items():
+        fast = PT.eligibility_series(cal, boundaries)
+        for t in boundaries:
+            ok, med = PT.is_eligible(cal, int(t))
+            assert ok == bool(pd.notna(fast.loc[int(t)])), (sym, t)
+            if ok:
+                assert fast.loc[int(t)] == pytest.approx(med), (sym, t)
+
+    slow = PT.round_validity(boundaries, cals, btc_map)
+    fast = PT.round_validity_fast(boundaries, cals, btc_map)
+    assert (slow == fast).all()

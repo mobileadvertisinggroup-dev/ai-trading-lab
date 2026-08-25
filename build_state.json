@@ -48,19 +48,20 @@
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "Phase 2 remainder: ingestion downloader, availability calendars, ingestion Actions workflow, release publisher",
-    "Phase 3: independent simulator (SIMULATOR_SEMANTICS.md + implementation)",
+    "User: provide age public key -> commit to data/manifests/holdout_recipient.txt",
+    "Actions: run lab-ingest probe mode (S-ING-1 parser validation), then full ingestion (raw-v1)",
+    "Phase 3: independent simulator (SIMULATOR_SEMANTICS.md + implementation) \u2014 proceeding now",
     "Before Phase 5: Engine v7 requirements report"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T13:30:00Z",
+  "updated": "2026-08-25T13:55:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
     "phase1_frozen_sha256": "6283db52b10103c381530686478a21f205748960d5b6e2374c4ea27811a178ca",
     "frozen_date": "2026-08-25"
   },
-  "phase_2_status": "in_progress_core_built_and_tested",
+  "phase_2_status": "code_complete_awaiting_recipient_key_and_actions_runs",
   "repository_url": "https://github.com/mobileadvertisinggroup-dev/ai-trading-lab",
   "user_constraints_2026_08_25": [
     "engine_v7_location_must_be_established_not_assumed; requirements report before Phase 5",
@@ -72,7 +73,7 @@
     "Engine v7 identification (before Phase 5)"
   ],
   "tests": {
-    "dev_suite": "11 passed",
+    "dev_suite": "19 passed",
     "last_run": "2026-08-25"
   }
 }
