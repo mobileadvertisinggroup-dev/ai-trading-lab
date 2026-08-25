@@ -13,7 +13,7 @@
     "change_authorized_by_user": "2026-08-25",
     "change_summary": "Engine v7 gate replaced by Independent Reference Ledger gate; total independence from previous projects; property-based invariant tests added; B2 permanently closed"
   },
-  "current_phase": "3",
+  "current_phase": "4",
   "phase_0_status": "complete_pending_user_items",
   "last_completed_gate": null,
   "checkpoint_1": "not_reached",
@@ -39,7 +39,8 @@
     "D8",
     "D9",
     "D10",
-    "D11"
+    "D11",
+    "D12"
   ],
   "active_blockers": [
     {
@@ -54,11 +55,10 @@
   "pending_actions": [
     "User: provide age public key -> data/manifests/holdout_recipient.txt",
     "Actions: lab-ingest probe, then full ingestion (raw-v1)",
-    "Phase 4: Arm A runner (4h aggregation, Donchian/ATR signals, sizing, tiers, orchestration over GuardedLake)",
-    "Phase 5 (revised): Independent Reference Ledger + golden fixtures + property-based invariant gate"
+    "Phase 5: Independent Reference Ledger (lab/refledger, zero shared code), golden fixtures with independent review, property-based invariant tests, differential gate harness"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T14:50:00Z",
+  "updated": "2026-08-25T15:40:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
@@ -85,7 +85,7 @@
     "Engine v7 identification (before Phase 5)"
   ],
   "tests": {
-    "dev_suite": "32 passed",
+    "dev_suite": "40 passed",
     "last_run": "2026-08-25"
   },
   "closed_blockers": [
@@ -95,5 +95,6 @@
       "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
     }
   ],
-  "phase_3_status": "engine_built_semantics_frozen_doc_authored"
+  "phase_3_status": "engine_built_semantics_frozen_doc_authored",
+  "phase_4_status": "arm_a_code_complete"
 }

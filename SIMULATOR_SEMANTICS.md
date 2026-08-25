@@ -63,13 +63,17 @@ one 15m bar timestamp, the engine processes, in this exact order:
    Missing funding datum → 0 applied, event recorded.
 2. **Pending market exits** (queued by trailing/time/management decisions
    from strictly earlier timestamps): filled at this bar's open with market
-   costs.
+   costs. Exception (protocol §2.4 exit priority): if the bar opens beyond
+   the position's stop, a queued full-close executes as the STOP instead
+   (doubled slippage, reason `stop`, event recorded).
 3. **Pending entries** (submitted at this bar's open time by a decision
    round): capacity-checked in submission order (protocol §2.6 ordering),
-   then filled at this bar's open. Checks per candidate, in order:
-   min-notional, position-count cap, gross-exposure cap (using equity at
-   check time and fill-price notional). Failing any check → rejection event
-   (reason recorded), no state change.
+   then filled at this bar's open. First the per-position notional cap is
+   applied: qty is reduced so notional ≤ the submitted cap (protocol §2.5
+   "reduced to fit"). Then checks per candidate, in order: min-notional,
+   position-count cap, gross-exposure cap (using equity at check time and
+   fill-price notional). Failing any check → rejection event (reason
+   recorded), no state change.
 4. **Protective checks intrabar** for every open position, in position-id
    (creation) order:
    - Stop hit iff `low ≤ stop` (long) / `high ≥ stop` (short).

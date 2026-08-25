@@ -74,6 +74,9 @@ class _PendingEntry:
     r_dist: float
     decision_ts: int
     costs: Costs
+    max_notional: float | None = None   # per-position cap; qty reduced at fill
+    stop_offset: float | None = None    # anchor at fill: stop = fill -/+ offset
+    target_offset: float | None = None  # anchor at fill: target = fill +/- offset
 
 
 @dataclass
@@ -129,11 +132,18 @@ class Engine:
     # ------------------------------------------------------- caller inputs
     def submit_entry(self, symbol: str, side: int, qty: float, stop: float,
                      target: float, r_dist: float, decision_ts: int,
-                     costs: Costs) -> None:
+                     costs: Costs, max_notional: float | None = None,
+                     stop_offset: float | None = None,
+                     target_offset: float | None = None) -> None:
         """Queue an entry decided at decision_ts, to fill at that bar's open.
-        Submission order == protocol §2.6 processing order."""
+        Submission order == protocol §2.6 processing order. max_notional:
+        per-position cap — qty is reduced at fill to fit (protocol §2.5).
+        stop_offset/target_offset: protocol §2.4 anchors protection off the
+        FILL price — when given, they override stop/target with
+        fill -/+ offset at fill time."""
         self._pending_entries.append(_PendingEntry(
-            symbol, side, qty, stop, target, r_dist, decision_ts, costs))
+            symbol, side, qty, stop, target, r_dist, decision_ts, costs,
+            max_notional, stop_offset, target_offset))
 
     def submit_exit(self, pos_id: int, fraction: float, reason: str,
                     slip_mult: float = 1.0) -> None:
@@ -245,6 +255,17 @@ class Engine:
                 self._emit(t, "exit_deferred", pos_id=x.pos_id,
                            reason=x.reason)
                 continue
+            gap_stop = (bar.open <= p.stop if p.side > 0
+                        else bar.open >= p.stop)
+            if gap_stop and x.fraction >= 1.0:
+                # protocol §2.4 exit priority: the stop outranks a queued
+                # market exit when both trigger at the open (gap-through)
+                self._emit(t, "exit_open_gap_stop_priority", pos_id=p.pos_id,
+                           queued_reason=x.reason, stop=p.stop, open=bar.open)
+                fill = self._exit_fill_price(bar.open, p.side, p.costs,
+                                             P.STOP_SLIPPAGE_MULT)
+                self._fill_close(t, p, p.open_qty, fill, "stop")
+                continue
             qty = p.open_qty * x.fraction
             fill = self._exit_fill_price(bar.open, p.side, p.costs,
                                          x.slip_mult)
@@ -264,7 +285,10 @@ class Engine:
                            reason="missing_bar", decision_ts=e.decision_ts)
                 continue
             fill = self._entry_fill_price(bar.open, e.side, e.costs)
-            notional = e.qty * fill
+            qty = e.qty
+            if e.max_notional is not None and qty * fill > e.max_notional:
+                qty = e.max_notional / fill     # reduced to fit (§2.5)
+            notional = qty * fill
             if notional < self.min_notional:
                 self._emit(t, "rejection", symbol=e.symbol,
                            reason="min_notional", notional=notional,
@@ -282,8 +306,12 @@ class Engine:
                 continue
             fee = notional * e.costs.fee
             self.cash -= fee
-            p = Position(self._next_id, e.symbol, e.side, e.qty, fill, t,
-                         e.decision_ts, e.stop, e.target, e.r_dist, e.costs,
+            stop = (fill - e.side * e.stop_offset
+                    if e.stop_offset is not None else e.stop)
+            target = (fill + e.side * e.target_offset
+                      if e.target_offset is not None else e.target)
+            p = Position(self._next_id, e.symbol, e.side, qty, fill, t,
+                         e.decision_ts, stop, target, e.r_dist, e.costs,
                          fees_paid=fee)
             self.positions[p.pos_id] = p
             self._next_id += 1
