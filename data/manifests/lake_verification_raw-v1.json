@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "funding_rows_scanned": 1379126,
+    "interval_start_reproduced": 1610323200000,
+    "klines_rows_scanned": 35355927,
+    "manifest_files_verified": 13241,
+    "n_symbols": 512,
+    "partition_arithmetic_reproduced": {
+      "i_t": 7386,
+      "i_v": 9848,
+      "n_boundaries": 12310,
+      "quarantine_start_ms": 1752134400000
+    },
+    "round_validity_boundaries_matched": 12103,
+    "zero_readable_holdout_rows": true
+  },
+  "release_version": "raw-v1",
+  "verdict": "VERIFIED"
+}

@@ -18,7 +18,7 @@
   ],
   "pc1": "adopted 2026-08-25 with explicit user approval after independent review"
  },
- "current_phase": "6",
+ "current_phase": "pre-Checkpoint-1 assignment (13 steps); steps 1-2 verified",
  "phase_0_status": "complete_pending_user_items",
  "last_completed_gate": null,
  "checkpoint_1": "not_reached",
@@ -86,7 +86,8 @@
   "D40",
   "D41",
   "D42",
-  "D43"
+  "D43",
+  "D44"
  ],
  "active_blockers": [
   {
@@ -99,12 +100,12 @@
  "invalidated_artifacts": [],
  "required_retraining": [],
  "pending_actions": [
-  "Phase 2 complete: raw-v1 accepted. Next: shakedown preparation remains PROHIBITED until user authorization; constitutional lock and holdout access remain prohibited",
-  "model training pipeline runs (Arms B/C/E/F) become possible on train partition only via GuardedLake",
-  "never request the private key; paper-only"
+  "step 3: official Arm A candidates + frozen labels on the verified lake",
+  "steps 4-13 per the review decision, stopping at Checkpoint 1",
+  "prohibited: private key, holdout decryption/inspection, Checkpoint-2 authorization, official holdout evaluation, real money, protocol changes, silent imputation"
  ],
  "safe_resume": "Clone repo; read SPEC_FINAL-1.2.1.md (authoritative, sha256 84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8), BUILD_STATE.md, build_state.json; verify that sha256; continue from pending_actions. Do not re-decide frozen choices.",
- "updated": "2026-08-26T15:10:00Z",
+ "updated": "2026-08-26T15:55:00Z",
  "phase_1_status": "frozen",
  "protocol": {
   "file": "EXPERIMENT_PROTOCOL.md",
