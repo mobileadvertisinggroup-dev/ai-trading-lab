@@ -76,25 +76,35 @@ class ArmARunner:
         self.governor = governor or RiskGovernor()
         self.candidates: list[dict] = []       # the candidate ledger
         self.equity_curve: list[dict] = []
+        # gap accounting (review directive 2026-08-26): universe members
+        # producing NO candidate because signal inputs are missing at the
+        # boundary (absent 4h bar / non-finite ATR or channel from gaps).
+        self.stats = {"missing_input_skips": 0}
         self._series: dict[str, SymbolSeries] = {}
         self._bars15: dict[str, dict] = {}
-        self._bar_index: dict[str, dict[int, int]] = {}
+        # run() iterates t monotonically, so per-symbol cursors replace the
+        # timestamp->index dicts (identical behavior, O(1) memory — the
+        # dicts were ~35M entries on the real lake).
+        self._cursor: dict[str, int] = {}
         for sym in provider.symbols():
             d = provider.bars_15m(sym)
             self._bars15[sym] = d
             self._series[sym] = SymbolSeries(d["open_time"], d["open"],
                                              d["high"], d["low"], d["close"])
-            self._bar_index[sym] = {int(t): i
-                                    for i, t in enumerate(d["open_time"])}
+            self._cursor[sym] = 0
         self._last_close: dict[str, float] = {}
 
     # ---------------------------------------------------------------- bars
     def _bars_at(self, t: int) -> dict[str, Bar]:
         out = {}
-        for sym, idx in self._bar_index.items():
-            i = idx.get(t)
-            if i is not None:
-                d = self._bars15[sym]
+        for sym, d in self._bars15.items():
+            ot = d["open_time"]
+            i = self._cursor[sym]
+            n = len(ot)
+            while i < n and ot[i] < t:
+                i += 1
+            self._cursor[sym] = i
+            if i < n and ot[i] == t:
                 out[sym] = Bar(t, float(d["open"][i]), float(d["high"][i]),
                                float(d["low"][i]), float(d["close"][i]))
         return out
@@ -148,6 +158,7 @@ class ArmARunner:
             sig = series.at_boundary(t) if series else None
             if sig is None or not np.isfinite(sig["atr"]) or sig["atr"] <= 0 \
                     or not np.isfinite(sig["hh_entry"]):
+                self.stats["missing_input_skips"] += 1
                 continue                       # missing inputs -> no candidate
             side = 0
             if sig["close"] > sig["hh_entry"]:
