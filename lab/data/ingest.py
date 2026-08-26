@@ -44,6 +44,9 @@ from lab.data import seal as SL
 log = logging.getLogger("lab.ingest")
 
 VISION = "https://data.binance.vision"
+# Bucket LISTING must hit the S3 endpoint itself — data.binance.vision
+# serves the website HTML for query URLs (probe run 1 finding, 2026-08-26).
+VISION_LIST = "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision"
 S3NS = "{http://s3.amazonaws.com/doc/2006-03-01/}"
 
 KLINE_COLS_RAW = ["open_time", "open", "high", "low", "close", "volume",
@@ -107,7 +110,12 @@ def parse_funding_csv(raw: bytes) -> pd.DataFrame:
 
 def parse_s3_listing(xml_bytes: bytes) -> tuple[list[str], list[str], bool, str]:
     """Return (common_prefixes, keys, truncated, next_marker)."""
-    root = ElementTree.fromstring(xml_bytes)
+    try:
+        root = ElementTree.fromstring(xml_bytes)
+    except ElementTree.ParseError as e:
+        raise RuntimeError(
+            f"listing response is not S3 XML ({e}); first bytes: "
+            f"{xml_bytes[:160]!r}") from e
     prefixes = [el.findtext(f"{S3NS}Prefix") for el in root.iter(f"{S3NS}CommonPrefixes")]
     keys = [el.findtext(f"{S3NS}Key") for el in root.iter(f"{S3NS}Contents")]
     truncated = (root.findtext(f"{S3NS}IsTruncated") or "false") == "true"
@@ -203,7 +211,7 @@ def list_perp_symbols(registry: dict | None = None,
     record)."""
     registry = registry or load_exclusion_registry()
     prefix = "data/futures/um/monthly/klines/"
-    url = f"{VISION}?delimiter=/&prefix={prefix}"
+    url = f"{VISION_LIST}?delimiter=/&prefix={prefix}"
     symbols, marker = [], ""
     while True:
         u = url + (f"&marker={marker}" if marker else "")
