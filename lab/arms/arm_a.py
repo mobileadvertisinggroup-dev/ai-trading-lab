@@ -115,7 +115,28 @@ class ArmARunner:
     # ------------------------------------------------------ decision round
     def _boundary_exits(self, t: int):
         """Trailing-channel and time exits (protocol §2.4), queued for the
-        next 15m open."""
+        next 15m open. Delisted/permanently-halted symbols (no bar within
+        the frozen §4 tradability lookback) are force-closed at the last
+        traded 15m close with 2x slip — protocol §2 `forced_delist_close`.
+        Detection is point-in-time: only the ABSENCE of recent bars is
+        used, never future knowledge."""
+        for p in self.engine.open_positions():
+            d = self._bars15.get(p.symbol)
+            if d is None:
+                continue
+            ot = d["open_time"]
+            i = self._cursor.get(p.symbol, 0)
+            n = len(ot)
+            # last bar strictly before t (cursor sits at the first bar
+            # >= previous step's timestamp)
+            while i < n and ot[i] < t:
+                i += 1
+            last_seen = int(ot[i - 1]) if i > 0 else None
+            if last_seen is not None and \
+                    last_seen < t - P.TRADABLE_LOOKBACK_MS:
+                self.engine.force_close(
+                    t, p.pos_id, self._last_close.get(p.symbol, p.last_mark),
+                    "forced_delist_close", slip_mult=P.STOP_SLIPPAGE_MULT)
         for p in self.engine.open_positions():
             sig = self._series[p.symbol].at_boundary(t)
             bars_held = (t - p.decision_ts) // P.BAR_4H_MS

@@ -166,3 +166,34 @@ def test_arm_a_missing_indicator_inputs_no_candidate():
     end = T0 + (len(levels) * 16 - 1) * B15
     r.run(T0, end)
     assert r.candidates == []
+
+
+def test_forced_delist_close_and_no_deferral_flood():
+    """Protocol §2 (Phase-1 frozen): a position whose symbol stops trading
+    permanently is closed at the last traded 15m close with 2x slip,
+    logged forced_delist_close. Detection uses only the ABSENCE of bars
+    within the frozen §4 tradability lookback (no lookahead). Before this
+    rule was wired into the runner, a delisted open position re-queued a
+    time-exit every boundary and deferred every one of them at every 15m
+    step — the official v2 run OOMed on ~14 GB of exit_deferred events."""
+    levels = [100.0] * HIST + [105.0, 105.0]   # breakout, then data ENDS
+    data = build_symbol(levels)
+    n_days_after = 4                            # > TRADABLE_LOOKBACK (2d)
+    end = int(data["open_time"][-1]) + n_days_after * 24 * 3600 * 1000
+    end -= end % P.BAR_15M_MS
+    prov = ArrayProvider({"AAAUSDT": data})
+    r = ArmARunner(prov, 10_000, universe_fn=lambda t: ["AAAUSDT"])
+    r.run(T0, end)
+    closes = [e for e in r.engine.events if e["kind"] == "fill_close"]
+    assert closes, "position must have been force-closed"
+    assert closes[-1]["reason"] == "forced_delist_close"
+    assert not r.engine.open_positions()
+    # bounded deferral logging: the flood was ~1 event per 15m step per
+    # queued exit for the whole remaining run
+    deferred = [e for e in r.engine.events if e["kind"] == "exit_deferred"]
+    assert len(deferred) < 1000
+    # close happened within the tradability lookback + one round of the
+    # last traded bar, at the last traded close (100.0 base level... the
+    # breakout bar closes at 105.0)
+    assert closes[-1]["t"] - int(data["open_time"][-1]) \
+        <= P.TRADABLE_LOOKBACK_MS + P.BAR_4H_MS

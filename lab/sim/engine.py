@@ -386,3 +386,14 @@ class Engine:
             ref = marks.get(p.symbol, p.last_mark)
             fill = self._exit_fill_price(ref, p.side, p.costs, slip_mult)
             self._fill_close(t, p, p.open_qty, fill, reason)
+
+    def force_close(self, t: int, pos_id: int, mark: float, reason: str,
+                    slip_mult: float = 1.0):
+        """Single-position forced close (protocol §2: forced_delist_close
+        at the last traded 15m close, 2x slip per §5). Pending exits for
+        the position drop naturally as exit_dropped."""
+        p = self.positions.get(pos_id)
+        if p is None or p.closed:
+            return
+        fill = self._exit_fill_price(mark, p.side, p.costs, slip_mult)
+        self._fill_close(t, p, p.open_qty, fill, reason)
