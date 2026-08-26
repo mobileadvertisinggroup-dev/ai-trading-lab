@@ -1,0 +1,14 @@
+{
+  "holdout_end_ms": 1787572800000,
+  "holdout_start_ms": 1752134400000,
+  "i_t": 7386,
+  "i_v": 9848,
+  "ingestion_freeze_ms": 1787751848282,
+  "n_boundaries": 12310,
+  "quarantine_start_ms": 1752134400000,
+  "release_version": "raw-v1",
+  "train_end_ms": 1716667200000,
+  "train_start_ms": 1610323200000,
+  "validation_end_ms": 1752120000000,
+  "validation_start_ms": 1716681600000
+}

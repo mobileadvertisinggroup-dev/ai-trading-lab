@@ -1,0 +1,13 @@
+{
+  "endpoint": "GET /repos/{owner}/{repo}/immutable-releases",
+  "http_status": "unknown",
+  "interpretation": "UNVERIFIED: permission or API ambiguity - never inferred as enabled; continue relying on tamper-evident git-pinned hashes",
+  "repository": "mobileadvertisinggroup-dev/ai-trading-lab",
+  "response_body": {
+    "documentation_url": "https://docs.github.com/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository",
+    "message": "Resource not accessible by integration",
+    "status": "403"
+  },
+  "utc_timestamp": "2026-08-26T13:44:07Z",
+  "workflow_commit": "f7f25e6d6ba8a6d0045f6112710ad87f32a32dfc"
+}
