@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "probe (verify parser assumptions) or full ingestion"
+        description: "probe (verify parser assumptions), full ingestion, or post-ingestion coverage audit"
         required: true
         default: probe
         type: choice
-        options: [probe, full]
+        options: [probe, full, audit]
       release_version:
         description: "immutable data release tag (raw-vN)"
         required: true
@@ -130,6 +130,51 @@ jobs:
           # (5) publish — reached only if every prior step succeeded;
           # on any failure above the release remains an unofficial draft
           gh release edit "${{ inputs.release_version }}" --draft=false
+      - name: Coverage audit (user directive 2026-08-26; acceptance gate)
+        if: inputs.mode == 'audit'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Downloads the PUBLISHED release, verifies every asset hash and
+          # every lake file against the git-pinned manifest, audits
+          # coverage per symbol with archive probing, preserves the audit
+          # + its sha256 in the dataset manifest, and pushes both. A
+          # FAIL_COVERAGE_LOSS verdict fails this job AFTER the audit and
+          # verdict are committed: the release is then NOT accepted for
+          # training and a corrected new data version is required.
+          set -euo pipefail
+          V="${{ inputs.release_version }}"
+          mkdir -p "$RUNNER_TEMP/audit" && cd "$RUNNER_TEMP/audit"
+          gh release download "$V" -p '*'
+          sha256sum -c SHA256SUMS
+          cat lake-$V.tar.zst.part* > lake.tar.zst
+          tar --zstd -xf lake.tar.zst
+          cd "$GITHUB_WORKSPACE"
+          set +e
+          python -m lab.data.audit \
+            --lake "$RUNNER_TEMP/audit/lake" \
+            --manifests-dir data/manifests \
+            --release-version "$V" \
+            --verify-manifest
+          RC=$?
+          set -e
+          git config user.name "akra-lab-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/manifests
+          git commit -m "coverage audit $V: audit + verdict + manifest addendum (metadata only)"
+          git pull --rebase origin main
+          git push
+          exit $RC
+      - name: Verified destruction of audit staging
+        if: always() && inputs.mode == 'audit'
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/audit"
+          if [ -e "$RUNNER_TEMP/audit" ]; then
+            echo "FATAL: audit staging still present after destruction" >&2
+            exit 1
+          fi
+          echo "audit staging destroyed and verified absent"
       - name: Verified destruction of acquisition staging (PC-1)
         if: always() && inputs.mode == 'full'
         run: |
