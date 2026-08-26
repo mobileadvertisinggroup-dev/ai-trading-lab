@@ -12,7 +12,7 @@ from lab import protocol as P
 from lab.data import lake as L
 from lab.data.access import GuardedLake, HoldoutAccessError
 from lab.data.authz import verify_authorization
-from lab.data.unseal import UnsealRefused, unseal
+from lab.data.unseal import UnsealRefused, evaluate_holdout
 
 H4 = P.BAR_4H_MS
 Q, END = 100 * H4, 130 * H4
@@ -62,13 +62,16 @@ def test_fabricated_nonempty_hashes_never_grant_read_access(guarded):
     assert "REFUSED" in audit
 
 
-def test_fabricated_auth_never_grants_unseal(guarded, tmp_path):
+def test_fabricated_auth_never_grants_evaluation(guarded, tmp_path):
     fabricated_auth(guarded["manifests"])
     artifact = tmp_path / "holdout.tar.age"
     artifact.write_bytes(b"not-a-real-artifact")
     with pytest.raises(UnsealRefused) as exc:
-        unseal(str(artifact), guarded["manifests"],
-               out_dir=str(tmp_path / "out"), repo_root=str(guarded["tmp"]))
+        evaluate_holdout(str(artifact), guarded["manifests"],
+                         lambda d: {}, str(tmp_path / "r.json"),
+                         out_dir=str(tmp_path / "out"),
+                         repo_root=str(guarded["tmp"]),
+                         identity_provider=lambda: "never-reached")
     msg = str(exc.value)
     assert "refused" in msg.lower()
     assert "recorded in the audit log" in msg
@@ -107,9 +110,11 @@ def test_even_correct_current_values_fail_without_locked_manifest(tmp_path, guar
     assert "integrity_manifest" in joined and "external_root" in joined
 
 
-def test_unseal_refuses_output_inside_project_tree(guarded):
+def test_evaluation_refuses_fabricated_auth_before_anything_else(guarded):
     fabricated_auth(guarded["manifests"])
-    with pytest.raises(UnsealRefused):
-        unseal("x.age", guarded["manifests"],
-               out_dir=os.path.join(str(guarded["tmp"]), "lake", "sneak"),
-               repo_root=str(guarded["tmp"]))
+    with pytest.raises(UnsealRefused, match="authorization gate refused"):
+        evaluate_holdout("x.age", guarded["manifests"], lambda d: {},
+                         "/dev/null",
+                         out_dir=os.path.join(str(guarded["tmp"]), "elsewhere"),
+                         repo_root=str(guarded["tmp"]),
+                         identity_provider=lambda: "never-reached")

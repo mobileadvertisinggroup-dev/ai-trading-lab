@@ -157,8 +157,30 @@ awaiting explicit user approval; real ingestion is prohibited until then.
 
 ## 7. Decryption gate (Checkpoint 2)
 
-IMPLEMENTED (`lab/data/unseal.py` + `lab/data/authz.py`, review verdict
-§7): decryption refuses unless ALL of the following match EXACTLY against
+COMPLETED per the delta review correction B (`lab/data/unseal.py` +
+`lab/data/authz.py` + `lab/data/holdout_ledger.py`): there is NO
+general-purpose decrypt operation — the single sanctioned path is the
+controlled one-time evaluation `evaluate_holdout`, which additionally to
+the gate below: resolves the exact holdout artifact FILENAME and SHA-256
+from the approved dataset manifest and refuses any supplied artifact whose
+basename or recomputed hash differs; records an append-only hash-chained
+OPENING_STARTED event before decryption; decrypts only into a fresh
+protected tmpfs directory (pre-existing directories and any path inside
+the project tree are refused); runs the exact frozen holdout evaluator
+(a deterministic dummy until the real frozen evaluator exists — the gate
+is NOT declared implementation-complete until it is plugged in); exports
+only the evaluator's returned result ledgers; wipes decrypted material on
+success AND failure with verified absence; records CONSUMED or
+FAILED_CLOSED in the chained state ledger (`holdout_state.jsonl`) —
+consumption is established by that LEDGER, never by rewriting the
+authorization JSON, which remains an input record only; and refuses any
+second opening unless a formal integrity adjudication records
+RECOVERY_AUTHORIZED. A corrupted state ledger blocks all holdout access
+(fail closed). Negative-tested: wrong/renamed/tampered artifact, second
+opening, cleanup on both evaluator outcomes with residue checks,
+pre-existing output directory, corrupted chain (tests/test_holdout_gate.py).
+
+Underlying gate (unchanged): decryption refuses unless ALL of the following match EXACTLY against
 independently recomputed current values — protocol hash (recomputed from
 EXPERIMENT_PROTOCOL.md), current Git commit (`git rev-parse HEAD`), dataset
 manifest hash (of the named manifest file), model manifest hash, locked

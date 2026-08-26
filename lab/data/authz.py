@@ -51,7 +51,8 @@ def verify_authorization(manifests_dir: str,
         return False, [f"unreadable authorization record: {e}"]
 
     if auth.get("consumed"):
-        failures.append("holdout already consumed (single-use, SPEC §22)")
+        # legacy input-record flag only; the LEDGER below is authoritative
+        failures.append("authorization record marked consumed")
     if not auth.get("user_authorization_utc"):
         failures.append("missing user_authorization_utc")
 
@@ -93,5 +94,16 @@ def verify_authorization(manifests_dir: str,
     if not root_hash or auth.get("external_root_hash") != root_hash:
         failures.append("external_root_hash does not match the most "
                         "recently approved externally preserved root")
+
+    # holdout state ledger (delta review corr. B): consumption is
+    # established by the append-only hash-chained ledger, never by the
+    # (mutable) authorization JSON; a corrupt chain blocks access.
+    from lab.data import holdout_ledger as HL
+    try:
+        permitted, why = HL.opening_permitted(manifests_dir)
+        if not permitted:
+            failures.append(f"holdout state ledger: {why}")
+    except HL.LedgerCorrupt as e:
+        failures.append(f"holdout state ledger corrupt — access blocked: {e}")
 
     return not failures, failures

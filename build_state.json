@@ -66,7 +66,10 @@
     "D30",
     "D31",
     "D32",
-    "D33"
+    "D33",
+    "D34",
+    "D35",
+    "D36"
   ],
   "active_blockers": [
     {
@@ -79,12 +82,10 @@
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "execute the two final security corrections once received",
-    "return FINAL_DELTA_RESPONSE.zip",
-    "still blocked: age key, real ingestion, constitutional lock, shakedown"
+    "STOPPED \u2014 blocked: age key, real ingestion, constitutional lock, shakedown, holdout access"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-26T00:20:00Z",
+  "updated": "2026-08-26T01:20:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
@@ -107,11 +108,11 @@
     "no repo rename during active workflow unless atomic"
   ],
   "pending_user_inputs": [
-    "paste the full 'INDEPENDENT DELTA REVIEW \u2014 FINAL CORRECTIONS' message"
+    "final narrow review of FINAL_DELTA_RESPONSE.zip"
   ],
   "tests": {
-    "dev_suite": "111 passed (exact differential equality, strict layer-1 rule)",
-    "last_run": "2026-08-25"
+    "dev_suite": "120 passed",
+    "last_run": "2026-08-26"
   },
   "closed_blockers": [
     {
@@ -181,5 +182,20 @@
     "pc1": "approved by user; adopted as FINAL-1.2.1",
     "outstanding": "two final security corrections \u2014 reviewer message 'INDEPENDENT DELTA REVIEW \u2014 FINAL CORRECTIONS' not received; requested from user verbatim",
     "owed": "FINAL_DELTA_RESPONSE.zip after corrections are executed"
+  },
+  "final_corrections": {
+    "received": "2026-08-26",
+    "verbatim": "reviews/REVIEW_FINAL_CORRECTIONS.md",
+    "approvals": [
+      "PC-1 (adopted as FINAL-1.2.1)",
+      "G03 v2",
+      "111-test rerun",
+      "full-SHA pinning",
+      "release transaction ordering",
+      "exclusion registry for first ingestion"
+    ],
+    "correction_A": "authoritative immutable-releases evidence endpoint \u2014 implemented",
+    "correction_B": "complete one-time holdout evaluation gate \u2014 implemented, 9 negative tests passing; implementation-complete only when the real frozen evaluator is plugged in",
+    "owed": "FINAL_DELTA_RESPONSE.zip \u2014 produced; stopped for final narrow review"
   }
 }
