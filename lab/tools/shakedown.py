@@ -38,7 +38,8 @@ from lab.arms.regime import RegimeModel
 from lab.arms.rl_train import LinearPolicy
 from lab.data import partition as PT
 from lab.data.access import GuardedLake
-from lab.features.build import FeatureSeries, build_features
+from lab.features.build import FEATURE_NAMES, FeatureSeries, \
+    build_features
 from lab.orchestration.competition import ARMS, Competition
 
 SHAKEDOWN_DAYS = 180
@@ -132,7 +133,7 @@ class FrozenFilter:
         self.ctx = ctx
         self.threshold = threshold
         self.version = "B-lgbm-draft-frozen"
-        self.fnames = self.booster.feature_name()
+        self.fnames = FEATURE_NAMES          # SD-FEATNAMES fix
 
     def _x(self, cand):
         f = self.ctx.features(cand)
@@ -149,7 +150,7 @@ class FrozenRanker:
             model_file=os.path.join(model_dir, "arm_c.txt"))
         self.ctx = ctx
         self.version = "C-lgbm-draft-frozen"
-        self.fnames = self.booster.feature_name()
+        self.fnames = FEATURE_NAMES          # SD-FEATNAMES fix
 
     def score(self, cand, _features):
         f = self.ctx.features(cand)
@@ -166,7 +167,7 @@ class FrozenSizer:
         self.cuts = np.load(os.path.join(model_dir, "arm_e_cuts.npz"))["cuts"]
         self.ctx = ctx
         self.version = "E-lgbm-draft-frozen"
-        self.fnames = self.booster.feature_name()
+        self.fnames = FEATURE_NAMES          # SD-FEATNAMES fix
 
     def bucket(self, cand, _features):
         f = self.ctx.features(cand)

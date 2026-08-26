@@ -20,6 +20,22 @@ from lab import protocol as P
 
 FEATURE_SET_VERSION = "features-v1-draft"
 
+# Canonical training-time column order: the sorted (zero-padded) F-names.
+# Model artifacts are fitted on matrices in exactly this order; adapters
+# must bind by THIS list, never by booster.feature_name() (which is
+# generic Column_N when fitted from bare arrays) — shakedown defect
+# SD-FEATNAMES.
+FEATURE_NAMES = [
+    "F01_side", "F02_atr_pct", "F03_breakout_strength", "F04_channel_width",
+    "F05_rank_frac", "F06_n_eligible", "F07_ret_1", "F08_ret_5",
+    "F09_ret_20", "F10_ret_60", "F11_rvol_20", "F12_rvol_ratio",
+    "F13_trend_sma20", "F14_trend_sma60", "F15_dist_opposite",
+    "F16_breakout_run", "F17_btc_ret_5", "F18_btc_ret_20", "F19_btc_ret_60",
+    "F20_btc_rvol_20", "F21_breadth_sma20", "F22_round_side_count",
+    "F23_regime_code", "F24_log_liq", "F25_funding_last",
+    "F26_funding_mean_3d", "F27_hour_slot", "F28_dow",
+]
+
 
 class FeatureSeries:
     """Per-symbol derived arrays over completed 4h bars, indexed by the
