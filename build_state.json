@@ -21,7 +21,7 @@
  "current_phase": "CHECKPOINT 1 \u2014 STOPPED, awaiting user approval (spec \u00a721)",
  "phase_0_status": "complete_pending_user_items",
  "last_completed_gate": "invalid shakedown complete (runs preserved); constitutional lock c423f782...",
- "checkpoint_1": "REACHED 2026-08-26; package: CHECKPOINT1_REPORT.md; root hash 80c7c5b578ce168a4a391812e560aa451a3f2dc20af8993d950158d11dcabcaf (preserve externally)",
+ "checkpoint_1": "REACHED; root hash PRESERVED BY USER (NOT APPROVED); CHECKPOINT1_REVIEW_BUNDLE.zip submitted; HOLDING for independent adjudication",
  "checkpoint_2": "not_reached",
  "holdout": {
   "defined": true,
@@ -118,7 +118,8 @@
   "D47",
   "D48",
   "D49",
-  "D50"
+  "D50",
+  "D51"
  ],
  "active_blockers": [
   {
@@ -131,11 +132,11 @@
  "invalidated_artifacts": [],
  "required_retraining": [],
  "pending_actions": [
-  "STOPPED at Checkpoint 1: user reviews CHECKPOINT1_REPORT.md + LIMITATIONS.md, preserves the root hash externally, and explicitly approves or directs changes",
-  "post-approval: SD-RLOBS fix + Arm F retraining assessment; then official candidate reset per spec"
+  "HOLD at Checkpoint 1: awaiting independent adjudication of CHECKPOINT1_REVIEW_BUNDLE.zip",
+  "prohibited until adjudication: SD-RLOBS fix, Arm F retraining, new constitutional root, shakedown reset, Checkpoint-2 steps, holdout access, private-key requests"
  ],
  "safe_resume": "Clone repo; read SPEC_FINAL-1.2.1.md (authoritative, sha256 84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8), BUILD_STATE.md, build_state.json; verify that sha256; continue from pending_actions. Do not re-decide frozen choices.",
- "updated": "2026-08-26T20:45:00Z",
+ "updated": "2026-08-26T21:00:00Z",
  "phase_1_status": "frozen",
  "protocol": {
   "file": "EXPERIMENT_PROTOCOL.md",
