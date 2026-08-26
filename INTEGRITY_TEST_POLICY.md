@@ -1,6 +1,6 @@
 # INTEGRITY_TEST_POLICY — AKRA AI TRADING LAB
 
-Status: **DRAFT — NOTHING IS LOCKED.** Per the user's 2026-08-25 directive
+Status: LOCKED 2026-08-26 (step 11 of the pre-Checkpoint-1 assignment; review decision of 2026-08-26 lifted the temporary lock prohibition for this scheduled position). The locked set and hashes live in data/manifests/integrity_manifest.json; the manifest hash is recorded in build_state.json. Any post-lock change to a locked file is a material change (spec §16).
 the constitutional lock happens only after the independent fixture review
 completes and the reviewer approves the exact-equality differential policy
 (REVIEW_ISSUES_PHASE6.md issue A). This document defines the governance so

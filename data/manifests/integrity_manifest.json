@@ -1,0 +1,185 @@
+{
+ "constitutional_properties": [
+  "exact-equality differential gate vs the Independent Reference Ledger (first-divergence adjudication; 1e-9 diagnostic only)",
+  "golden fixtures G01-G12 (layer-1 Decimal-quantize exact + 1e-8 bound)",
+  "property-based accounting invariants incl. randomized differential fuzzing",
+  "holdout refusal at the read layer for exact/partial/point/funding/universe queries (GuardedLake)",
+  "authorization strictness: fabricated or merely nonempty hashes never grant access (read layer AND unseal gate)",
+  "one-time holdout gate: manifest-bound artifact, atomic single opening, tmpfs-only, FAILED_CLOSED on every post-claim failure, permanent second-opening block, corrupt chain fails closed",
+  "deliberate-leak battery: label-in-features, off-dictionary column, purge violation, post-t feature, holdout contamination all fail loudly",
+  "no-lookahead feature proof: mutating every post-t bar leaves all 28 features bit-identical",
+  "G-shadow identity through entry",
+  "synchronized-round invalidation: any arm failure voids the round for every arm",
+  "risk-governor pauses/limits incl. trailing-window drawdown release",
+  "forced_delist_close conformance with bounded deferral logging"
+ ],
+ "files": [
+  {
+   "path": "DATA_DICTIONARY.md",
+   "sha256": "ce7c47d641a7ca1fbf62451bc4879d54c394b61493e7ee8569b9c53ccca663a4"
+  },
+  {
+   "path": "EXPERIMENT_PROTOCOL.md",
+   "sha256": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590"
+  },
+  {
+   "path": "HOLDOUT_POLICY.md",
+   "sha256": "58b94feefde19c1c43be18564e059ab78169c621942deaa06960e8b5702f2ca2"
+  },
+  {
+   "path": "INTEGRITY_TEST_POLICY.md",
+   "sha256": "275ddcefe3a7d239d8d5333378f17a3eef54c120bf9288bb4979be63870c8de7"
+  },
+  {
+   "path": "RISK_POLICY.md",
+   "sha256": "80ce3949c19ebcefba7dbc2f9d911b5fa1fb71080c1e9696cc6f8558e3412a93"
+  },
+  {
+   "path": "SIMULATOR_SEMANTICS.md",
+   "sha256": "2edceb990a3c3ea6b7f5ebf65339a2065ef5b18f5be008ac62afe1a4d333a449"
+  },
+  {
+   "path": "SPEC_FINAL-1.2.1.md",
+   "sha256": "84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8"
+  },
+  {
+   "path": "fixtures/golden/G01_long_plus_2R.json",
+   "sha256": "1079c188bdeeb9014e43277ef91adc517f385849d30f9144ec25123a3f1dc13c"
+  },
+  {
+   "path": "fixtures/golden/G02_short_minus_1R.json",
+   "sha256": "8ccf3353ae455226f3df7381f3c24c86d46b83b8e31ec5a60e542940f8f2c021"
+  },
+  {
+   "path": "fixtures/golden/G03_gross_winner_net_loser_v2.json",
+   "sha256": "8bb5363d9321480301b34c010e072c78d838515507c619ce61bf6f672366586e"
+  },
+  {
+   "path": "fixtures/golden/G04_funding_long_pays.json",
+   "sha256": "22e1daae99c29fe64d58fd34c9bf908aa5fd486bd5b167520cd953278baccf61"
+  },
+  {
+   "path": "fixtures/golden/G05_capital_competition.json",
+   "sha256": "bef3c0f777e05d89d3c48fcb98aaa28e388768519c293c9943901985cf219724"
+  },
+  {
+   "path": "fixtures/golden/G06_ambiguity_stop_first.json",
+   "sha256": "ed155a9b4f2a24737a460cbff61cd839d44bf948fba17f4e8bf716cfa7090b93"
+  },
+  {
+   "path": "fixtures/golden/G07_insolvency_ruin.json",
+   "sha256": "ce687c05847e760429d9461fb2ae2eb461c45e93661a0da8a83283bf431a8d18"
+  },
+  {
+   "path": "fixtures/golden/G08_missing_data.json",
+   "sha256": "d6fcf4f403555051a29a2bd4794ac62af087bd6b959793828d5bfc774647afe9"
+  },
+  {
+   "path": "fixtures/golden/G09_loss_limit_rejection.json",
+   "sha256": "f8141c2ab1aaa302d135a3dc94283560822dfe5eb8eaf2dd7eab683b28bd4f51"
+  },
+  {
+   "path": "fixtures/golden/G10_invalid_rl_action.json",
+   "sha256": "2eb2dae2393052ce35fcae7ff8eb4a47cda5bd3f172d90996cda6732370754e0"
+  },
+  {
+   "path": "fixtures/golden/G11_partial_exit_breakeven.json",
+   "sha256": "364f7ed6270dc5e3d923fa5f8a9a023545da723e3b5c7d4c7e3e9690b6d09521"
+  },
+  {
+   "path": "fixtures/golden/G12_synchronized_round_failure.json",
+   "sha256": "4f2ccf57c1455327e1da1b657b12258129e3b63243e4dd319acb3e0aa5f303fa"
+  },
+  {
+   "path": "fixtures/golden/superseded/G03_gross_winner_net_loser_v1.json",
+   "sha256": "dc1add29ecf69bce81d1e61b3d369c2dd3e28701f0e624fd86df1c8ba0247d28"
+  },
+  {
+   "path": "lab/protocol.py",
+   "sha256": "c6920b68120ab201bcd151b4cc6be546fe9a3fdba0d40af9f6eaa04f846ba89e"
+  },
+  {
+   "path": "tests/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "tests/test_arm_a.py",
+   "sha256": "da7c9031c4d9f7b25fa600da8f6c35b70fbb293c75080f1769185b6a90eb13e8"
+  },
+  {
+   "path": "tests/test_audit.py",
+   "sha256": "01aa52cd868f1f2182cdcae8d84c10593f000b5acb44d9acbd1731251a425521"
+  },
+  {
+   "path": "tests/test_authz_negative.py",
+   "sha256": "7678f1463e8136c6cfbff82dbe8d405de89a6ee94671394c4e349b353378fee7"
+  },
+  {
+   "path": "tests/test_competition.py",
+   "sha256": "52dfecb121bdef90fbb689bc983aac2529f7731b381bd05a279b0d717fc32a90"
+  },
+  {
+   "path": "tests/test_dashboard.py",
+   "sha256": "99080072e8bbfa1e4249e6d31dbfcdaa040d846d77c00b6c1d0ad90dcbba6dd3"
+  },
+  {
+   "path": "tests/test_differential.py",
+   "sha256": "7b70cb1d964c474db89fb97742c93c9a65bb20adf967447d0d69a3de4e55e883"
+  },
+  {
+   "path": "tests/test_engine.py",
+   "sha256": "c4cf1981f1336c4b9189d18d9eff324a69ad1fdac643891a1b2809a8c8345740"
+  },
+  {
+   "path": "tests/test_features.py",
+   "sha256": "db4230410d74d4b9536d68d653f134fb9b3a5385edfeeee94eab24784d6fc343"
+  },
+  {
+   "path": "tests/test_golden_fixtures.py",
+   "sha256": "eb71e800ffd8189aa05e34591a4f94ddf2126539f7dff11d3c66294016dce36c"
+  },
+  {
+   "path": "tests/test_governor.py",
+   "sha256": "fb6426a1b07e6b1435a7936228aa7e71e2191b56682f2e9226e6c0a7d011ed1d"
+  },
+  {
+   "path": "tests/test_holdout_gate.py",
+   "sha256": "b28bca43f498042e44559d3fb8a459bb5cdc4ca25b9f1fb24c4402f637c5a26b"
+  },
+  {
+   "path": "tests/test_ingest_parsers.py",
+   "sha256": "6aff97ab6677bf2a0509d2e59bb0e5f8dbb3d9df9cef1f631f183a19bec3dfb3"
+  },
+  {
+   "path": "tests/test_invariants.py",
+   "sha256": "1c8ce5ca8a5c2f8fd325698cfcaaef5822ecded1fbfa73ddd4c1ab34b018b473"
+  },
+  {
+   "path": "tests/test_labels.py",
+   "sha256": "3a04f327adec43193a31c5c104b660d4687003841549eeb9f65dd2bd5b013c39"
+  },
+  {
+   "path": "tests/test_partition.py",
+   "sha256": "7da5e3af2c04f2e13bdc1e45c110802378a96c3474eddc2a4c5d1dc175e9ee4a"
+  },
+  {
+   "path": "tests/test_pipelines_leaks.py",
+   "sha256": "11da950c98fa0de1a672e922f901954a30f78c9486d8cfe3cbec808fb9df68c0"
+  },
+  {
+   "path": "tests/test_regime_rl.py",
+   "sha256": "455b61b04551ce281d97335d54543a73a9bbce3f25841293c9e74bc1c1a9674a"
+  },
+  {
+   "path": "tests/test_rounds.py",
+   "sha256": "8f9dcbc4e4957487a3897c8a32377c6c4d1ce974d87dc4200e6e00e3e9cbfd14"
+  },
+  {
+   "path": "tests/test_seal_access.py",
+   "sha256": "103464d411bca3d3de732783dbdfae249a238ff03cef5fe90a2694d1e75f0533"
+  }
+ ],
+ "integrity_manifest_hash": "c423f7826d0e3c667681a981f75e69d553c619022f17cdf2eea62c48ae01afb6",
+ "locked_utc": "2026-08-26T17:30:17Z",
+ "material_change_rule": "spec \u00a716: any post-lock change to a listed file requires a documented amendment, review, and retraining assessment; never silent."
+}
