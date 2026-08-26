@@ -1,17 +1,22 @@
 {
   "project": "AKRA AI TRADING LAB",
   "spec": {
-    "file": "SPEC_FINAL-1.2.md",
-    "version": "FINAL-1.2",
-    "sha256": "a29b6c9eb942cb56f7bfe44b1d3a861436875762ded37fbc37ecf96f5a369cc8",
-    "supersedes": {
-      "file": "SPEC_FINAL-1.1.md",
-      "version": "FINAL-1.1",
-      "sha256": "5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a",
-      "preserved_at_commit": "16ec585e6ab281aece7c705a2073f1a02e5ec7ef"
-    },
-    "change_authorized_by_user": "2026-08-25",
-    "change_summary": "Engine v7 gate replaced by Independent Reference Ledger gate; total independence from previous projects; property-based invariant tests added; B2 permanently closed"
+    "file": "SPEC_FINAL-1.2.1.md",
+    "version": "FINAL-1.2.1",
+    "sha256": "84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8",
+    "supersedes": [
+      {
+        "file": "SPEC_FINAL-1.2.md",
+        "version": "FINAL-1.2",
+        "sha256": "a29b6c9eb942cb56f7bfe44b1d3a861436875762ded37fbc37ecf96f5a369cc8"
+      },
+      {
+        "file": "SPEC_FINAL-1.1.md",
+        "version": "FINAL-1.1",
+        "sha256": "5a7a3f5ce27d76ce97af5adf4b5a59e4f69a4ffd2b968195add7ae80f70c380a"
+      }
+    ],
+    "pc1": "adopted 2026-08-25 with explicit user approval after independent review"
   },
   "current_phase": "6",
   "phase_0_status": "complete_pending_user_items",
@@ -59,7 +64,9 @@
     "D28",
     "D29",
     "D30",
-    "D31"
+    "D31",
+    "D32",
+    "D33"
   ],
   "active_blockers": [
     {
@@ -72,10 +79,12 @@
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "STOPPED per verdict \u00a78 \u2014 awaiting delta review and PC-1 decision"
+    "execute the two final security corrections once received",
+    "return FINAL_DELTA_RESPONSE.zip",
+    "still blocked: age key, real ingestion, constitutional lock, shakedown"
   ],
   "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-25T23:30:00Z",
+  "updated": "2026-08-26T00:20:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
@@ -98,8 +107,7 @@
     "no repo rename during active workflow unless atomic"
   ],
   "pending_user_inputs": [
-    "review of REVIEW_DELTA_PACKAGE_PHASE6.zip",
-    "explicit APPROVE/REJECT of PROPOSED_CLARIFICATION_PC1.md"
+    "paste the full 'INDEPENDENT DELTA REVIEW \u2014 FINAL CORRECTIONS' message"
   ],
   "tests": {
     "dev_suite": "111 passed (exact differential equality, strict layer-1 rule)",
@@ -164,5 +172,14 @@
       "independent review of delta package",
       "explicit user approval of PC-1"
     ]
+  },
+  "delta_review_outcome": {
+    "accepted": [
+      "111-test rerun",
+      "G03 v2 correction"
+    ],
+    "pc1": "approved by user; adopted as FINAL-1.2.1",
+    "outstanding": "two final security corrections \u2014 reviewer message 'INDEPENDENT DELTA REVIEW \u2014 FINAL CORRECTIONS' not received; requested from user verbatim",
+    "owed": "FINAL_DELTA_RESPONSE.zip after corrections are executed"
   }
 }
