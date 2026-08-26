@@ -7,9 +7,10 @@ action but can never increase risk; a failed AI arm is never silently
 replaced by Arm A. Every governor decision (approve / restrict / reject)
 is recorded with its reason.
 
-Status: numeric limits set 2026-08-25 (decision D15); FROZEN no later than
-the constitutional lock. Changing any limit after freezing is a material
-change (spec §16).
+Status: numeric limits set 2026-08-25 (decision D15), amended to v2 on
+2026-08-26 (decision D46, drawdown reference — see changelog); FROZEN no
+later than the constitutional lock. Changing any limit after freezing is a
+material change (spec §16).
 
 ## Numeric limits (per arm account)
 
@@ -21,7 +22,7 @@ change (spec §16).
 | Maximum correlated exposure | 120% of equity per direction | all USDT-perps are treated as one correlated class; cap applies to the sum of long notionals and, separately, short notionals. |
 | Maximum concurrent positions | 10 | equal to protocol §2.6. |
 | Daily loss limit | 3% of UTC-day-start equity | breached → no new entries until the next UTC day; open-position protection continues. |
-| Portfolio drawdown safety limit | 25% from peak equity | while exceeded → no new entries; protective management continues. |
+| Portfolio drawdown safety limit | 25% from the TRAILING 90-DAY peak equity (v2, D46) | while exceeded → no new entries; protective management continues; the pause horizon is bounded by the trailing window. |
 | Valid protective order | always | every open position must carry a stop; a position observed without one is a critical integrity failure (recorded; emergency pause). |
 | Emergency pause | manual flag | while set → no new entries. |
 | Missing-data fail-safe | no new trade | any missing/invalid required input at decision time → the entry is refused, never guessed. |
@@ -45,3 +46,22 @@ change (spec §16).
    `governor_*` records; an entry blocked by the governor is an external
    restriction (relevant to Arm E rule 6: it is not the sizing model
    choosing zero).
+
+## Changelog
+
+- **v1 (2026-08-25, D15)**: drawdown measured from the all-time peak.
+- **v2 (2026-08-26, D46)**: drawdown measured from the trailing 90-day
+  peak. Reason (observed, not hypothetical): on the official Arm A run
+  over raw-v1, equity peaked +69% on 2021-02-14, drew down 26.4% in the
+  March-2021 crash, and the v1 pause then became an ABSORBING state —
+  new entries blocked → equity flat → drawdown never recovers → the
+  account stayed frozen for 9,220 of 9,848 pre-holdout rounds (final
+  equity a permanent 0.4% below the release level). The policy text
+  ("while exceeded → no new entries" — a PAUSE) never intended a
+  permanent halt. v2 preserves the crash behavior exactly (a ≥25% fall
+  within any 90-day window still blocks entries immediately) and bounds
+  the halt horizon: after ~90 flat days the reference peak decays to
+  current equity and trading resumes. The pause can never be gamed to
+  increase risk. This is a PRE-LOCK amendment of a draft policy,
+  recorded as a material decision for Checkpoint-1 review; the frozen
+  EXPERIMENT_PROTOCOL.md is untouched.

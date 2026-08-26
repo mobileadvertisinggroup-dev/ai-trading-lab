@@ -209,3 +209,24 @@ def test_golden_G11_partial_exit_then_breakeven():
         assert got["pnl"] == pytest.approx(want["pnl"])
         assert got["reason"] == want["reason"]
     assert g["review_status"] == "REVIEWED"
+
+
+def test_drawdown_pause_releases_after_trailing_window(  # v2, D46
+):
+    """v1's all-time-peak rule made the pause an absorbing state (a frozen
+    flat account can never recover). v2 measures drawdown from the
+    trailing 90-day peak: the crash still pauses immediately, and after
+    the peak leaves the window the pause releases."""
+    g = RiskGovernor()
+    g.observe(T0, 10_000)                              # peak
+    g.observe(T0 + DAY_MS, 7_400)                      # -26% crash
+    dec, _, reason = g.check_entry(req(t=T0 + DAY_MS + 60_000),
+                                   flat_state(equity=7_400))
+    assert (dec, reason) == ("reject", "drawdown_limit")
+
+    # frozen flat at 7,400 for the whole window; peak ages out
+    for d in range(2, 92):
+        g.observe(T0 + d * DAY_MS, 7_400)
+    dec, _, reason = g.check_entry(req(t=T0 + 91 * DAY_MS + 60_000),
+                                   flat_state(equity=7_400))
+    assert dec == "approve", reason

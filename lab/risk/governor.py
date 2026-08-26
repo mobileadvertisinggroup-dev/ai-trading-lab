@@ -17,7 +17,13 @@ class RiskLimits:
     max_directional_exposure: float = 1.20  # x equity, per direction
     max_positions: int = 10
     daily_loss_limit: float = 0.03         # fraction of day-start equity
-    drawdown_limit: float = 0.25           # from peak equity
+    drawdown_limit: float = 0.25           # from trailing-window peak equity
+    drawdown_window_days: int = 90         # RISK_POLICY v2 (D46): trailing
+    # peak window. v1 measured from the ALL-TIME peak, which made the pause
+    # an absorbing state: entries blocked -> equity flat -> drawdown never
+    # recovers -> permanent halt (observed on the official Arm A run:
+    # frozen for 9,220 of 9,848 rounds after 2021-03-05). A crash still
+    # pauses immediately; the pause horizon is now bounded by the window.
     min_notional: float = 50.0
 
 
@@ -49,7 +55,7 @@ class RiskGovernor:
         self.integrity_pause = False
         self._day: int | None = None
         self._day_start_equity: float | None = None
-        self._peak_equity: float = 0.0
+        self._day_peaks: dict[int, float] = {}   # day -> max observed equity
         self.events: list[dict] = []       # append-only decision ledger
 
     # ------------------------------------------------------------ state
@@ -60,7 +66,10 @@ class RiskGovernor:
         if day != self._day:
             self._day = day
             self._day_start_equity = equity
-        self._peak_equity = max(self._peak_equity, equity)
+        self._day_peaks[day] = max(self._day_peaks.get(day, equity), equity)
+        cutoff = day - self.limits.drawdown_window_days
+        for d in [d for d in self._day_peaks if d < cutoff]:
+            del self._day_peaks[d]
         if not positions_with_stop:
             self.integrity_pause = True
             self._rec(t, "integrity_failure",
@@ -80,10 +89,12 @@ class RiskGovernor:
                 / self._day_start_equity
             if day_loss >= self.limits.daily_loss_limit:
                 return "daily_loss_limit"
-        if self._peak_equity > 0:
-            dd = (self._peak_equity - state.equity) / self._peak_equity
-            if dd >= self.limits.drawdown_limit:
-                return "drawdown_limit"
+        if self._day_peaks:
+            peak = max(self._day_peaks.values())    # trailing-window peak
+            if peak > 0:
+                dd = (peak - state.equity) / peak
+                if dd >= self.limits.drawdown_limit:
+                    return "drawdown_limit"
         return None
 
     def check_entry(self, req: EntryRequest,
