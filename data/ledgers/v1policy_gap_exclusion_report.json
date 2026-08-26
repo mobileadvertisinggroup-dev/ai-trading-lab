@@ -1,0 +1,27 @@
+{
+  "btc_context": {
+    "complete_4h_bars": 12104,
+    "incomplete_4h_bars": 0,
+    "total_4h_bars": 12104
+  },
+  "candidates_total": 29255,
+  "decision_rounds_pre_holdout": 12103,
+  "invalid_rounds_btc_4h_incomplete": 0,
+  "invalid_rounds_skipped": 2255,
+  "invalid_rounds_too_few_eligible": 2255,
+  "label_exclusion_histogram": {
+    "capacity_rejected": 354,
+    "governor_rejected": 28564,
+    "labeled": 337
+  },
+  "note": "Invalid rounds are skipped for EVERY arm (synchronized rounds); completeness exclusions apply the frozen >=99% rule mechanically; missing OHLCV is never filled.",
+  "purge_embargo": {
+    "purged_train": 0,
+    "purged_validation": 0,
+    "train": 337,
+    "unlabeled": 28918,
+    "validation": 0
+  },
+  "symbol_boundary_exclusions_completeness_only": 12562,
+  "universe_member_missing_input_skips": 292
+}

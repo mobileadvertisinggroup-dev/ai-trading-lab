@@ -1,0 +1,108 @@
+{
+  "arm_b": {
+    "accepted_mean_net_r": -0.3343320577411796,
+    "rejected_mean_net_r": 0.07014575613135497,
+    "threshold": 0.5,
+    "validation_accept_rate": 0.010666666666666666,
+    "validation_auc": 0.5325713275928544,
+    "version": "B-lgbm-draft"
+  },
+  "arm_c": {
+    "validation_rank_ic": 0.01998500278212052,
+    "version": "C-lgbm-draft"
+  },
+  "arm_e": {
+    "bucket_counts": {
+      "0.25": 149,
+      "0.5": 240,
+      "0.75": 272,
+      "1.0": 89
+    },
+    "mean_net_r_by_bucket": {
+      "0.25": -0.18598886776773776,
+      "0.5": 0.1845787215289691,
+      "0.75": 0.15678205777661572,
+      "1.0": -0.11076153929509189
+    },
+    "version": "E-lgbm-draft"
+  },
+  "arm_f": {
+    "algorithm": "CEM-linear-softmax-v1",
+    "hyperparameters": {
+      "elite_frac": 0.2,
+      "episodes_per_gen": 128,
+      "generations": 20,
+      "population": 32,
+      "sigma0": 1.0
+    },
+    "selected_seed": 8,
+    "selection_rule": "highest mean validation reward (pre-specified)",
+    "validation_rewards_by_seed": {
+      "1": 0.03723764309846887,
+      "10": 0.019873813914480305,
+      "2": 0.026902042427186912,
+      "3": 0.02324740159228681,
+      "4": 0.03001424871011866,
+      "5": 0.04545280401810891,
+      "6": 0.059373210697387206,
+      "7": 0.022901981747676728,
+      "8": 0.07584993031349085,
+      "9": 0.04701534239007856
+    }
+  },
+  "arm_f_compute_profile": {
+    "budget_seconds": 10800,
+    "hyperparameters_final": {
+      "episodes_per_gen": 128,
+      "generations": 20,
+      "population": 32
+    },
+    "hyperparameters_initial": {
+      "episodes_per_gen": 128,
+      "generations": 20,
+      "population": 32
+    },
+    "projected_final_seconds": 1206.31103515625,
+    "projected_total_seconds": 1206.31103515625,
+    "seconds_per_episode": 0.0014725476503372192
+  },
+  "artifacts": {
+    "arm_b.txt": {
+      "path": "/home/user/lake-work/models/arm_b.txt",
+      "sha256": "61baa40ddb5cfaa9c9e1716d1583f60c1ed81273ff4e708badfa77da1e235978"
+    },
+    "arm_c.txt": {
+      "path": "/home/user/lake-work/models/arm_c.txt",
+      "sha256": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a"
+    },
+    "arm_e.txt": {
+      "path": "/home/user/lake-work/models/arm_e.txt",
+      "sha256": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a"
+    },
+    "arm_e_cuts.npz": {
+      "path": "/home/user/lake-work/models/arm_e_cuts.npz",
+      "sha256": "6a6ba2cc8a559d0c19e74c71d33bb2de54370d2167e918f437742d30c8a79d98"
+    },
+    "arm_f_policy.npz": {
+      "path": "/home/user/lake-work/models/arm_f_policy.npz",
+      "sha256": "9da5a4305c6aeec48156897ae214e18b43792793dfa29fcfcc937d4ab445392e"
+    },
+    "arm_f_seeds.json": {
+      "path": "/home/user/lake-work/models/arm_f_seeds.json",
+      "sha256": "6122a87b81fc3c6444205c3fe4df85faeeaac884b345f572c48967c72474bf33"
+    }
+  },
+  "official_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "selection_rules": "are PRE-SPECIFIED here, before any result is seen:\n  B threshold: the draft 0.5 (no search in this phase);\n  C/E: draft pipelines as-is;\n  F: among the official seeds, the policy with the highest MEAN VALIDATION\n     reward is frozen as THE Arm F policy; every seed's training history\n     and validation score is preserved (no silent discards)."
+}

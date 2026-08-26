@@ -1,0 +1,17 @@
+{
+  "artifact": {
+    "path": "/home/user/lake-work/ledgers/features_arm_a.parquet",
+    "sha256": "b406c5023aeb0612944855ac90bbb127d54a25b61885ae489409e4b7eb9b22cb"
+  },
+  "feature_set_version": "features-v1-draft",
+  "n_rows": 26023,
+  "regime_model_version": "regime-v1-draft",
+  "source_candidates_sha256": "2aeb7cbe488319b68e098e7abcee3661aef7139225d0ecf631e089a674978267",
+  "source_labels_sha256": "0da69ab64dcf5ae26677bba4d30a44d769c82a2ea3f2fac6c657e749ac943fb5",
+  "split_counts": {
+    "purged_train": 1,
+    "train": 2089,
+    "unlabeled": 23183,
+    "validation": 750
+  }
+}

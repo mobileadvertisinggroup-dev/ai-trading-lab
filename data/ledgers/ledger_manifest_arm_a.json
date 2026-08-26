@@ -1,0 +1,33 @@
+{
+  "artifacts": {
+    "candidates": {
+      "path": "/home/user/lake-work/ledgers/candidates_arm_a.parquet",
+      "sha256": "2aeb7cbe488319b68e098e7abcee3661aef7139225d0ecf631e089a674978267"
+    },
+    "equity": {
+      "path": "/home/user/lake-work/ledgers/equity_arm_a.parquet",
+      "sha256": "6d451e58198bea9b8de408ecc7394dc2ca6154d9b7df84cc72d3a2fa6d9e0a25"
+    },
+    "events": {
+      "path": "/home/user/lake-work/ledgers/events_arm_a.jsonl.gz",
+      "sha256": "3806a7ab52193d5b6892892d8704a73690f4df4ae3a70c7d93fe7699d45686c7"
+    },
+    "gap_report": {
+      "path": "/home/user/lake-work/ledgers/gap_exclusion_report.json",
+      "sha256": "cf20564e3902e8152e3936f9d5c860492a3b9fe12d0eb43461d2cf4b9963f26a"
+    },
+    "labels": {
+      "path": "/home/user/lake-work/ledgers/labels_arm_a.parquet",
+      "sha256": "0da69ab64dcf5ae26677bba4d30a44d769c82a2ea3f2fac6c657e749ac943fb5"
+    }
+  },
+  "elapsed_seconds": 132.0,
+  "end_ms": 1752133500000,
+  "final_equity": 4090.2240675064613,
+  "n_candidates": 26023,
+  "n_events": 36589,
+  "release_version": "raw-v1",
+  "run": "OFFICIAL Arm A",
+  "start_ms": 1610323200000,
+  "starting_cash": 10000.0
+}

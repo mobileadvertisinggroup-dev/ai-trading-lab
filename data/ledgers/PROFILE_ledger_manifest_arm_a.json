@@ -1,0 +1,33 @@
+{
+  "artifacts": {
+    "candidates": {
+      "path": "/home/user/lake-work/ledgers/PROFILE_candidates_arm_a.parquet",
+      "sha256": "e975c6c1277ab648c5489e58309617dc48ef9743ed7835513fff3db6ecfc279e"
+    },
+    "equity": {
+      "path": "/home/user/lake-work/ledgers/PROFILE_equity_arm_a.parquet",
+      "sha256": "f3c34c7c8e39cf5a34ab334b06978f12162e8721b3e9c6c798a907461361623e"
+    },
+    "events": {
+      "path": "/home/user/lake-work/ledgers/PROFILE_events_arm_a.jsonl.gz",
+      "sha256": "3a465aac6cebee42254745627c0f6ce423c1aacece6764987590f8546c311552"
+    },
+    "gap_report": {
+      "path": "/home/user/lake-work/ledgers/PROFILE_gap_exclusion_report.json",
+      "sha256": "885fa51ffccafff6e34afd90b7bd42a0da6ffac53b5898d9868131d9e04b7e92"
+    },
+    "labels": {
+      "path": "/home/user/lake-work/ledgers/PROFILE_labels_arm_a.parquet",
+      "sha256": "1c133586b124cf901175083a0527adcdd020bb49dcc89cd24f6a8023b7e73ad0"
+    }
+  },
+  "elapsed_seconds": 0.8,
+  "end_ms": 1612050300000,
+  "final_equity": 10668.135678700399,
+  "n_candidates": 78,
+  "n_events": 550,
+  "release_version": "raw-v1",
+  "run": "PROFILE (never official)",
+  "start_ms": 1610323200000,
+  "starting_cash": 10000.0
+}

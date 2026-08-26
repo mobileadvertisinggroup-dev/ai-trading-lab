@@ -1,0 +1,54 @@
+{
+ "decisions_per_arm": {
+  "A": 3720,
+  "B": 0,
+  "C": 0,
+  "D": 0,
+  "E": 0,
+  "F": 0,
+  "G": 0
+ },
+ "defects": [
+  {
+   "detail": "arm B recorded no decisions",
+   "id": "SD-NODECISIONS-B",
+   "severity": "blocking"
+  },
+  {
+   "detail": "arm C recorded no decisions",
+   "id": "SD-NODECISIONS-C",
+   "severity": "blocking"
+  },
+  {
+   "detail": "arm D recorded no decisions",
+   "id": "SD-NODECISIONS-D",
+   "severity": "blocking"
+  },
+  {
+   "detail": "arm E recorded no decisions",
+   "id": "SD-NODECISIONS-E",
+   "severity": "blocking"
+  },
+  {
+   "detail": "arm F recorded no decisions",
+   "id": "SD-NODECISIONS-F",
+   "severity": "blocking"
+  },
+  {
+   "detail": "arm G recorded no decisions",
+   "id": "SD-NODECISIONS-G",
+   "severity": "blocking"
+  },
+  {
+   "detail": "orchestrator supplies a 2-field management observation to a policy trained on the 10-dim env observation; remaining dims zero-filled (FrozenRLPolicy). Root cause: Competition._rl_management interface predates the trained env. Affected arms: F, G (management only). Fix scheduled post-Checkpoint-1 with retraining assessment under the material-change rule.",
+   "id": "SD-RLOBS",
+   "severity": "integration-defect"
+  }
+ ],
+ "marker": "SHAKEDOWN \u2014 INVALID FOR PERFORMANCE CONCLUSIONS",
+ "round_counts": {
+  "invalid": 611,
+  "total": 1080,
+  "valid": 469
+ }
+}

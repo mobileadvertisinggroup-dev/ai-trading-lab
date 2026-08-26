@@ -1,0 +1,24 @@
+{
+ "decisions_per_arm": {
+  "A": 3203,
+  "B": 3687,
+  "C": 3333,
+  "D": 3215,
+  "E": 2965,
+  "F": 2991,
+  "G": 3702
+ },
+ "defects": [
+  {
+   "detail": "orchestrator supplies a 2-field management observation to a policy trained on the 10-dim env observation; remaining dims zero-filled (FrozenRLPolicy). Root cause: Competition._rl_management interface predates the trained env. Affected arms: F, G (management only). Fix scheduled post-Checkpoint-1 with retraining assessment under the material-change rule.",
+   "id": "SD-RLOBS",
+   "severity": "integration-defect"
+  }
+ ],
+ "marker": "SHAKEDOWN \u2014 INVALID FOR PERFORMANCE CONCLUSIONS",
+ "round_counts": {
+  "invalid": 0,
+  "total": 1080,
+  "valid": 1080
+ }
+}

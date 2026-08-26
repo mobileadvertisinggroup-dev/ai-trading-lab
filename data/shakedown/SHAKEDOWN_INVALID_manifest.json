@@ -1,0 +1,134 @@
+{
+  "artifacts": {
+    "candidates.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_candidates.jsonl.gz",
+      "sha256": "ec65485222dc576e9977ef0228adf2a7580c0b85ebf8c77a9542ec92b76a30f1"
+    },
+    "decisions_A.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_decisions_A.jsonl.gz",
+      "sha256": "4c3e532cae27f1795a1b6bcfe0863c00406f8d3db179be2c56eac34383c1839c"
+    },
+    "decisions_B.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_decisions_B.jsonl.gz",
+      "sha256": "5b3de88db2f4042b66cd7be6759208e2a8e04635f2d9c29c1d32f673f278e549"
+    },
+    "decisions_C.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_decisions_C.jsonl.gz",
+      "sha256": "0d9044c5aa14dcf5585ed72088b37897cc32674052484a6ac8b5de5595f30ce8"
+    },
+    "decisions_D.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_decisions_D.jsonl.gz",
+      "sha256": "0e7a8959af9ce1f8652bc4e811ea760cffa06002ffdc8b49834a8d590ab1dcb8"
+    },
+    "decisions_E.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_decisions_E.jsonl.gz",
+      "sha256": "32e6b6eba7849fd9dfc58adf271f6620eb7cc03d3d984b9eabeba2b44631f484"
+    },
+    "decisions_F.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_decisions_F.jsonl.gz",
+      "sha256": "e0ea1eb1f85939745f706b2508a40621fec0aaf3a5bb437df47d3c7e7dc14bae"
+    },
+    "decisions_G.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_decisions_G.jsonl.gz",
+      "sha256": "43edc62239afa863d3ac82892fbb32001612318226075231d3ffd06d79bfc4d1"
+    },
+    "defects.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_defects.json",
+      "sha256": "3b96b1f96fe515923f1cbaea51e9befc618d1e510597196594efe32b64a0401d"
+    },
+    "equity_A.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_equity_A.json",
+      "sha256": "c3c118864b000766cce90449bb68f3c91ecc47d4fd2314a6364b6a4ac67bf300"
+    },
+    "equity_B.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_equity_B.json",
+      "sha256": "c22c3e00c119f1cd97e07adc624a20dff16dfe9d19e195de880dee187466f52a"
+    },
+    "equity_C.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_equity_C.json",
+      "sha256": "5667c9d90801a71a3b9f73f3aa8fd32a5ca4480d8569061f52eea507790f9125"
+    },
+    "equity_D.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_equity_D.json",
+      "sha256": "0a30939fbdaf6d663994cd4c90e1f0f9d77b24cf3992e631e1f002834b9b916c"
+    },
+    "equity_E.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_equity_E.json",
+      "sha256": "3ba927e230a0816bfdcc090fa634210c928954a059f6ccc303700e65e5bd7702"
+    },
+    "equity_F.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_equity_F.json",
+      "sha256": "83d229f3d04ec17253c8d9d6e98f11191ecb9b3aa3f09248549e5248c74bd361"
+    },
+    "equity_G.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_equity_G.json",
+      "sha256": "09d1376a2aec72460de9c1b03c86732218dcde935687183b64da3839204b593a"
+    },
+    "equity_G_shadow.json": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_equity_G_shadow.json",
+      "sha256": "6dc2cb834bb4818d1b74318992ae640e7f4bbf0bc8361c2cd01898e86e776dd2"
+    },
+    "events_A.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_events_A.jsonl.gz",
+      "sha256": "571c47ca03ea3b26b911da02eb3bff24c9004efc947674395cec9a34e8ce918e"
+    },
+    "events_B.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_events_B.jsonl.gz",
+      "sha256": "5d6fa8a06eef7b503f2e432e6e1606088bf895f884aa912e0399e0a4f118ff8f"
+    },
+    "events_C.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_events_C.jsonl.gz",
+      "sha256": "a9dd14b59527d930d4ff537729ec1b45c4df43c43900e01433137bb004e9355f"
+    },
+    "events_D.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_events_D.jsonl.gz",
+      "sha256": "d37d9a2a26092f1ec90eb9cb6297a307172e332eb0cc63d1a61071152285c217"
+    },
+    "events_E.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_events_E.jsonl.gz",
+      "sha256": "814aaa9bb2a7b4443288c40856180da358f22ac7e9ca291fd976da065e839637"
+    },
+    "events_F.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_events_F.jsonl.gz",
+      "sha256": "41bdf12d84fd25b6bb45fbd3bd5621097dfe499681878c23334484b29310ec9c"
+    },
+    "events_G.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_events_G.jsonl.gz",
+      "sha256": "4ba7ee5a2635122ddc62e2380347ca03766b39af8d8b3dac0ff1ea7e01c2e05c"
+    },
+    "events_G_shadow.jsonl.gz": {
+      "path": "/home/user/lake-work/shakedown/SHAKEDOWN_INVALID_events_G_shadow.jsonl.gz",
+      "sha256": "6f4824457f4e775b3e5cb8b3e138ec9d4a867b7013c99a9f54113fa31f2d3559"
+    }
+  },
+  "days": 180,
+  "decisions_per_arm": {
+    "A": 3203,
+    "B": 3687,
+    "C": 3333,
+    "D": 3215,
+    "E": 2965,
+    "F": 2991,
+    "G": 3702
+  },
+  "end_ms": 1752133500000,
+  "final_equity": {
+    "A": 8313.490173431916,
+    "B": 9692.70393867201,
+    "C": 8475.973581542541,
+    "D": 7977.597268335876,
+    "E": 10863.977478340554,
+    "F": 9547.879360735196,
+    "G": 9921.037495182512
+  },
+  "final_equity_G_shadow": 9970.522371706076,
+  "marker": "SHAKEDOWN \u2014 INVALID FOR PERFORMANCE CONCLUSIONS",
+  "n_candidates": 3720,
+  "n_defects": 1,
+  "round_counts": {
+    "invalid": 0,
+    "total": 1080,
+    "valid": 1080
+  },
+  "start_ms": 1736582400000
+}

@@ -1,0 +1,28 @@
+# AKRA AI TRADING LAB — forward paper competition (spec §14 phase).
+# NOT ENABLED: the forward phase begins only AFTER Checkpoint 2 (user
+# approval + holdout evaluation). This workflow is committed as the
+# operational scaffold (step 10 of the pre-Checkpoint-1 assignment) and is
+# manual-only; no schedule exists until the user authorizes the forward
+# phase. Paper-only: no trading credential exists anywhere in the project.
+name: forward-paper
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "type FORWARD-AUTHORIZED (post-Checkpoint-2 only)"
+        required: true
+permissions:
+  contents: write
+jobs:
+  forward-round:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - name: Refuse until authorized
+        run: |
+          if [ "${{ inputs.confirm }}" != "FORWARD-AUTHORIZED" ]; then
+            echo "forward phase not authorized" >&2; exit 1
+          fi
+          echo "Forward-phase implementation lands after Checkpoint 2." >&2
+          exit 1

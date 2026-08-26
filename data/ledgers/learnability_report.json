@@ -1,0 +1,94 @@
+{
+  "arm_b_permutation_p": 0.42,
+  "arm_b_validation_auc": 0.5239927387225293,
+  "arm_c_permutation_p": 0.67,
+  "arm_c_validation_rank_ic": 0.028817359880229907,
+  "btc_context_sufficiency": {
+    "complete_4h_bars": 12104,
+    "incomplete_4h_bars": 0,
+    "total_4h_bars": 12104
+  },
+  "gap_effects": {
+    "note": "All exclusions are mechanical applications of the frozen data-quality rules; missing OHLCV is never imputed. These exclusions shrink the labeled sample and are a stated limitation.",
+    "summary": {
+      "btc_context": {
+        "complete_4h_bars": 12104,
+        "incomplete_4h_bars": 0,
+        "total_4h_bars": 12104
+      },
+      "candidates_total": 26023,
+      "decision_rounds_pre_holdout": 12103,
+      "invalid_rounds_btc_4h_incomplete": 0,
+      "invalid_rounds_skipped": 2255,
+      "invalid_rounds_too_few_eligible": 2255,
+      "label_exclusion_histogram": {
+        "cancelled_missing_bar": 1,
+        "capacity_rejected": 4800,
+        "governor_rejected": 18382,
+        "labeled": 2840
+      },
+      "note": "Invalid rounds are skipped for EVERY arm (synchronized rounds); completeness exclusions apply the frozen >=99% rule mechanically; missing OHLCV is never filled.",
+      "purge_embargo": {
+        "purged_train": 1,
+        "purged_validation": 0,
+        "train": 2089,
+        "unlabeled": 23183,
+        "validation": 750
+      },
+      "symbol_boundary_exclusions_completeness_only": 12562,
+      "universe_member_missing_input_skips": 283
+    }
+  },
+  "honesty": "Learnability only \u2014 no profitability claim. DRAFT hyperparameters, no search. Fit on purged train; scored on purged validation; permutation nulls with deterministic seeds.",
+  "n_train": 2089,
+  "n_validation": 750,
+  "null_auc_abs_dev_q95": 0.059574203187250985,
+  "null_ic_abs_q95": 0.11069156745167544,
+  "permutations": 200,
+  "top_features_arm_b": [
+    [
+      "F06_n_eligible",
+      73
+    ],
+    [
+      "F18_btc_ret_20",
+      66
+    ],
+    [
+      "F12_rvol_ratio",
+      62
+    ],
+    [
+      "F21_breadth_sma20",
+      53
+    ],
+    [
+      "F20_btc_rvol_20",
+      50
+    ],
+    [
+      "F17_btc_ret_5",
+      49
+    ],
+    [
+      "F11_rvol_20",
+      48
+    ],
+    [
+      "F19_btc_ret_60",
+      48
+    ],
+    [
+      "F10_ret_60",
+      46
+    ],
+    [
+      "F07_ret_1",
+      44
+    ]
+  ],
+  "train_base_rate_pos": 0.286261369076113,
+  "train_mean_net_r": -0.035646318438047025,
+  "validation_base_rate_pos": 0.33066666666666666,
+  "validation_mean_net_r": 0.06583132611671459
+}
