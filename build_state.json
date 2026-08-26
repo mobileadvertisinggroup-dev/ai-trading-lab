@@ -71,7 +71,8 @@
   "D35",
   "D36",
   "D37",
-  "D38"
+  "D38",
+  "D39"
  ],
  "active_blockers": [
   {
@@ -84,12 +85,11 @@
  "invalidated_artifacts": [],
  "required_retraining": [],
  "pending_actions": [
-  "probe run 3 (concurrent-throughput projection) must print PROJECTION-OK",
-  "then trigger lab-ingest mode=full release_version=raw-v1 (user authorization 2026-08-26 stands) and monitor to release-transaction completion",
+  "full ingestion run 2 (raw-v1) after daily-fallback fix + 24 workers: monitor to release-transaction completion",
   "still prohibited: constitutional lock, shakedown, holdout access; paper-only; never request the private key"
  ],
  "safe_resume": "Clone repo; read SPEC_FINAL-1.2.1.md (authoritative, sha256 84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8), BUILD_STATE.md, build_state.json; verify that sha256; continue from pending_actions. Do not re-decide frozen choices.",
- "updated": "2026-08-26T06:05:00Z",
+ "updated": "2026-08-26T12:25:00Z",
  "phase_1_status": "frozen",
  "protocol": {
   "file": "EXPERIMENT_PROTOCOL.md",
@@ -104,7 +104,7 @@
    }
   ]
  },
- "phase_2_status": "ingestion_in_progress_probe2_passed_concurrent_acquisition_awaiting_probe3_projection",
+ "phase_2_status": "ingestion_in_progress_full_run1_timed_out_safely_at_505_of_824_daily_fallback_fixed_full_run2_pending",
  "repository_url": "https://github.com/mobileadvertisinggroup-dev/ai-trading-lab",
  "user_constraints_2026_08_25": [
   "engine_v7_location_must_be_established_not_assumed; requirements report before Phase 5",

@@ -58,7 +58,19 @@ S3NS = "{http://s3.amazonaws.com/doc/2006-03-01/}"
 # staging from ever leaving the runner as an artifact, so acquisition must
 # complete inside one RUNNER_TEMP lifetime. Any symbol failure still fails
 # the whole run — a partial dataset is never published (verdict §5.5).
-ACQ_WORKERS = int(os.environ.get("AKRA_ACQ_WORKERS", "12"))
+# Full run 1 (32937178748) timed out at 505/824 with 12 workers: the daily
+# fallback burned up to 26 sequential GETs for EVERY month a symbol had no
+# monthly file — including all pre-listing months — hundreds of thousands
+# of futile requests. Fixed by DAILY_FALLBACK_MONTHS below; workers raised.
+ACQ_WORKERS = int(os.environ.get("AKRA_ACQ_WORKERS", "24"))
+
+# The archive publishes a monthly zip for every complete month that had
+# trading; per-day files cover only recent days not yet rolled into a
+# monthly zip. So a monthly 404 for an OLD month means "no data existed"
+# (pre-listing or delisted) — daily files won't exist either. The daily
+# fallback is attempted only for months within this many months of the
+# acquisition end date (current + previous month covers publication lag).
+DAILY_FALLBACK_MONTHS = 2
 
 KLINE_COLS_RAW = ["open_time", "open", "high", "low", "close", "volume",
                   "close_time", "quote_volume", "count", "taker_buy_volume",
@@ -255,18 +267,22 @@ def download_symbol(symbol: str, start: dt.date, end: dt.date,
         if csv is not None:
             dfs.append(parse_kline_csv(csv))
         else:
-            # month absent as monthly file; try daily files (current month or
-            # partial listing months)
+            # Month absent as a monthly file. Daily fallback ONLY near the
+            # acquisition end (monthly zip not yet published); an old month
+            # with no monthly zip had no data at all (see
+            # DAILY_FALLBACK_MONTHS note) — full run 1 timeout root cause.
             y, m = map(int, month.split("-"))
-            for day in range(1, _cal.monthrange(y, m)[1] + 1):
-                d = dt.date(y, m, day)
-                if d > end:
-                    break
-                du = (f"{VISION}/data/futures/um/daily/klines/{symbol}/15m/"
-                      f"{symbol}-15m-{d.isoformat()}.zip")
-                dcsv = _get_zip_csv(du)
-                if dcsv is not None:
-                    dfs.append(parse_kline_csv(dcsv))
+            months_from_end = (end.year - y) * 12 + (end.month - m)
+            if months_from_end < DAILY_FALLBACK_MONTHS:
+                for day in range(1, _cal.monthrange(y, m)[1] + 1):
+                    d = dt.date(y, m, day)
+                    if d > end:
+                        break
+                    du = (f"{VISION}/data/futures/um/daily/klines/{symbol}"
+                          f"/15m/{symbol}-15m-{d.isoformat()}.zip")
+                    dcsv = _get_zip_csv(du)
+                    if dcsv is not None:
+                        dfs.append(parse_kline_csv(dcsv))
         if dfs:
             df = pd.concat(dfs, ignore_index=True).drop_duplicates("open_time")
             L.write_parquet(df, L.klines_path(staging_dir, symbol, month))
