@@ -101,10 +101,24 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh release view "${{ inputs.release_version }}" >/dev/null 2>&1; then
-            echo "release ${{ inputs.release_version }} already exists — data releases are never overwritten (HOLDOUT_POLICY §3); bump the version" >&2
+          # gh must know the repo even from directories outside the
+          # checkout (RUNNER_TEMP/verify) — full run 2 failed here.
+          export GH_REPO="$GITHUB_REPOSITORY"
+          V="${{ inputs.release_version }}"
+          # PUBLISHED release with this tag => never overwritten (§3).
+          # A leftover DRAFT from a previously failed transaction is
+          # explicitly unofficial (§5.2 order) and is deleted before retry.
+          PUB=$(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate \
+            -q "[.[] | select(.tag_name==\"$V\" and (.draft|not))] | length")
+          if [ "$PUB" != "0" ]; then
+            echo "release $V already published — data releases are never overwritten (HOLDOUT_POLICY §3); bump the version" >&2
             exit 1
           fi
+          for id in $(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate \
+            -q ".[] | select(.tag_name==\"$V\" and .draft) | .id"); do
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$id"
+            echo "deleted leftover unofficial DRAFT release $id for $V"
+          done
           # (1) DRAFT release — a partial upload is never visible as published
           gh release create "${{ inputs.release_version }}" \
             --draft \
@@ -143,6 +157,7 @@ jobs:
           # verdict are committed: the release is then NOT accepted for
           # training and a corrected new data version is required.
           set -euo pipefail
+          export GH_REPO="$GITHUB_REPOSITORY"   # gh outside the checkout
           V="${{ inputs.release_version }}"
           mkdir -p "$RUNNER_TEMP/audit" && cd "$RUNNER_TEMP/audit"
           gh release download "$V" -p '*'
