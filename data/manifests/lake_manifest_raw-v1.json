@@ -1,4 +1,7 @@
 {
+  "coverage_audit_file": "coverage_audit_raw-v1.json",
+  "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
+  "coverage_audit_verdict": "PASS",
   "exclusion_registry_sha256": "8954c0d75a98cb3ec6e7518b3fed8c3d05fda98be49fd8835d56fe24a16cd376",
   "exclusion_registry_version": "exclusions-v1",
   "files": [
@@ -66211,6 +66214,7 @@
   "holdout_artifact": "holdout-raw-v1.tar.age",
   "holdout_artifact_sha256": "47795aa6a9775e6f191def5c121212c00642eb666daf3cb8df46bf3a495a1067",
   "manifest_sha256": "22a82e7a677be98ffb5bc6ac60cd5710067ce23e4f85d2cc8b32ddfcabcb48ea",
+  "manifest_sha256_with_audit": "59520f6f26df857cae1894d551fca66e672ec147fa8703b727247dad239e8ec6",
   "symbol_classifications": [
     {
       "category": null,
