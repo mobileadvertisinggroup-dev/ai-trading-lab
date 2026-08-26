@@ -9,11 +9,13 @@ either path, corrupted chain blocks access.
 """
 import hashlib
 import json
+import multiprocessing
 import os
 import shutil
 import subprocess
 import tarfile
 import io
+import uuid
 
 import pytest
 import pyrage
@@ -96,8 +98,13 @@ def dummy_evaluator(decrypted_dir):
             "files": files}
 
 
+def shm_dir():
+    """A fresh, not-yet-created path on VERIFIED tmpfs (final review §2)."""
+    return f"/dev/shm/akra-test-{uuid.uuid4().hex}"
+
+
 def run_gate(env, artifact=None, out_dir=None):
-    out_dir = out_dir or str(env["tmp"] / "shm-out")
+    out_dir = out_dir or shm_dir()
     results = str(env["tmp"] / "results.json")
     return evaluate_holdout(artifact or env["artifact"], env["manifests"],
                             dummy_evaluator, results, out_dir=out_dir,
@@ -128,7 +135,7 @@ def test_success_path_evaluates_wipes_and_consumes(env):
 def test_second_opening_refused_after_success(env):
     run_gate(env)
     with pytest.raises(UnsealRefused, match="consumed|opening"):
-        run_gate(env, out_dir=str(env["tmp"] / "shm-out2"))
+        run_gate(env, out_dir=shm_dir())
     # and the read-layer verifier now refuses too
     ok, failures = verify_authorization(env["manifests"], env["root"])
     assert not ok and any("ledger" in f for f in failures)
@@ -165,7 +172,7 @@ def test_tampered_artifact_wrong_hash_refused(env):
 
 
 def test_cleanup_and_failed_closed_after_evaluator_failure(env):
-    out_dir = str(env["tmp"] / "shm-fail")
+    out_dir = shm_dir()
     results = str(env["tmp"] / "r.json")
 
     def exploding_evaluator(d):
@@ -180,23 +187,78 @@ def test_cleanup_and_failed_closed_after_evaluator_failure(env):
     # cleanup executed after evaluator FAILURE; nothing remains
     assert not os.path.exists(out_dir)
     assert events(env) == ["OPENING_STARTED", "FAILED_CLOSED"]
-    # second opening refused without formal adjudication...
-    with pytest.raises(UnsealRefused, match="adjudication|opening"):
-        run_gate(env, out_dir=str(env["tmp"] / "shm-fail2"))
-    # ...and permitted after RECOVERY_AUTHORIZED (formal adjudication)
-    HL.append_event(env["manifests"], "RECOVERY_AUTHORIZED",
-                    {"adjudication": "test-recovery"})
-    results2, out2, _ = run_gate(env, out_dir=str(env["tmp"] / "shm-rec"))
-    assert results2["verdict"] == "DUMMY-EVALUATION-ONLY"
-    assert not os.path.exists(out2)
+    # PERMANENT block: no self-authorized recovery in this experiment
+    # version (final narrow review §3)
+    with pytest.raises(UnsealRefused, match="permanently blocked"):
+        run_gate(env, out_dir=shm_dir())
+
+
+def test_recovery_is_not_self_authorizing(env):
+    # application code cannot create RECOVERY_AUTHORIZED at all...
+    with pytest.raises(ValueError, match="RECOVERY_AUTHORIZED"):
+        HL.append_event(env["manifests"], "RECOVERY_AUTHORIZED",
+                        {"adjudication": "self-serve attempt"})
+    # ...nor OPENING_STARTED outside the atomic claim
+    with pytest.raises(ValueError, match="claim_opening"):
+        HL.append_event(env["manifests"], "OPENING_STARTED", {})
+    # and even if the string were present, opening_permitted ignores it:
+    # (simulate by writing a correctly-CHAINED rogue event directly)
+    HL._append_locked(env["manifests"], "OPENING_STARTED", {"rogue": True})
+    HL._append_locked(env["manifests"], "RECOVERY_AUTHORIZED",
+                      {"rogue": True})
+    permitted, why = HL.opening_permitted(env["manifests"])
+    assert not permitted and "permanently blocked" in why
+
+
+def test_disk_backed_output_directory_refused(env):
+    # fresh, nonexistent, outside the repo — but DISK-backed: refused
+    disk_dir = str(env["tmp"] / "fresh-disk-dir")
+    assert not os.path.exists(disk_dir)
+    with pytest.raises(UnsealRefused, match="memory-backed"):
+        run_gate(env, out_dir=disk_dir)
+    assert events(env) == []                   # refused BEFORE the claim
+
+
+def test_identity_failure_after_claim_is_failed_closed(env):
+    def bad_identity():
+        raise RuntimeError("user aborted identity entry")
+    out_dir = shm_dir()
+    with pytest.raises(RuntimeError, match="user aborted"):
+        evaluate_holdout(env["artifact"], env["manifests"],
+                         dummy_evaluator, str(env["tmp"] / "r.json"),
+                         out_dir=out_dir, repo_root=env["root"],
+                         identity_provider=bad_identity)
+    assert events(env) == ["OPENING_STARTED", "FAILED_CLOSED"]
+    assert not os.path.exists(out_dir)
+
+
+def _claim_worker(args):
+    manifests, barrier_ignored = args
+    try:
+        HL.claim_opening(manifests, {"proc": os.getpid()})
+        return "opened"
+    except HL.OpeningRefused:
+        return "refused"
+
+
+def test_concurrent_claims_exactly_one_opens(env):
+    with multiprocessing.Pool(2) as pool:
+        outcomes = pool.map(_claim_worker,
+                            [(env["manifests"], None)] * 2)
+    assert sorted(outcomes) == ["opened", "refused"]
+    evs = events(env)
+    assert evs.count("OPENING_STARTED") == 1
 
 
 def test_preexisting_output_directory_refused(env):
-    out_dir = env["tmp"] / "exists-already"
-    out_dir.mkdir()
-    with pytest.raises(UnsealRefused, match="already exists"):
-        run_gate(env, out_dir=str(out_dir))
-    assert events(env) == []
+    out_dir = shm_dir()
+    os.makedirs(out_dir)
+    try:
+        with pytest.raises(UnsealRefused, match="already exists"):
+            run_gate(env, out_dir=out_dir)
+        assert events(env) == []
+    finally:
+        os.rmdir(out_dir)
 
 
 def test_output_inside_project_tree_refused(env):
@@ -217,4 +279,4 @@ def test_corrupted_chain_blocks_all_access(env):
     ok, failures = verify_authorization(env["manifests"], env["root"])
     assert not ok and any("corrupt" in f for f in failures)
     with pytest.raises(UnsealRefused, match="corrupt|ledger"):
-        run_gate(env, out_dir=str(env["tmp"] / "shm-c"))
+        run_gate(env, out_dir=shm_dir())

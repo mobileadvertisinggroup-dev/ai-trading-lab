@@ -36,7 +36,7 @@ def test_golden_G12_synchronized_round_failure():
         for rnd in s["rounds"]:
             with pytest.raises(RoundError):
                 rc.begin_round(int(rnd["t"]))
-    assert g["review_status"] == "PENDING INDEPENDENT REVIEW"
+    assert g["review_status"] == "REVIEWED"
 
 
 def test_round_protocol_misuse_raises():

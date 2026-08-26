@@ -173,10 +173,20 @@ only the evaluator's returned result ledgers; wipes decrypted material on
 success AND failure with verified absence; records CONSUMED or
 FAILED_CLOSED in the chained state ledger (`holdout_state.jsonl`) —
 consumption is established by that LEDGER, never by rewriting the
-authorization JSON, which remains an input record only; and refuses any
-second opening unless a formal integrity adjudication records
-RECOVERY_AUTHORIZED. A corrupted state ledger blocks all holdout access
-(fail closed). Negative-tested: wrong/renamed/tampered artifact, second
+authorization JSON, which remains an input record only. Hardened per the
+final narrow review (2026-08-26): the decrypted working directory must be
+on a VERIFIED memory-backed filesystem (tmpfs/ramfs, checked against
+/proc/mounts — disk-backed paths are refused even outside the repository);
+the single opening is claimed ATOMICALLY (exclusive OS file lock + chain
+verification + no-prior-opening check + fsync), so concurrent attempts
+cannot both open; every exception after the claim — identity entry and
+parsing included — closes with FAILED_CLOSED where possible, and even a
+failed FAILED_CLOSED append leaves the holdout blocked by OPENING_STARTED;
+and recovery is NOT self-authorizing — no application code can create
+RECOVERY_AUTHORIZED, opening_permitted does not honor the string if
+present, and ANY prior opening permanently blocks another until a future
+versioned, explicitly user-approved integrity procedure exists. A
+corrupted state ledger blocks all holdout access (fail closed). Negative-tested: wrong/renamed/tampered artifact, second
 opening, cleanup on both evaluator outcomes with residue checks,
 pre-existing output directory, corrupted chain (tests/test_holdout_gate.py).
 

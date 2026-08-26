@@ -85,4 +85,4 @@ def test_golden(path):
     if "exit_deferred_then_filled_at" in exp:
         closes = [e for e in norm if e["kind"] == "close"]
         assert closes and closes[0]["t"] == exp["exit_deferred_then_filled_at"]
-    assert g["review_status"] in ("PENDING INDEPENDENT REVIEW", "REVIEWED")
+    assert g["review_status"] == "REVIEWED"

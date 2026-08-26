@@ -1,6 +1,6 @@
-# PROPOSED PROTOCOL CLARIFICATION PC-1 — awaiting explicit user approval
+# PROTOCOL CLARIFICATION PC-1 — ADOPTED as FINAL-1.2.1
 
-Status: **ADOPTED as FINAL-1.2.1** (explicit user approval 2026-08-25: "PC-1 is approved by us", after independent review). Originally: Required by the independent review
+Status: **ADOPTED as FINAL-1.2.1** (explicit user approval 2026-08-25: "PC-1 is approved by us"; independent reviewer approval confirmed 2026-08-26). Authoritative text now lives in SPEC_FINAL-1.2.1.md §9.3a; this document is the preserved proposal history. Original proposal context: Required by the independent review
 verdict §4 (2026-08-25). Real ingestion is prohibited until the user
 explicitly approves or rejects this clarification. If approved it becomes a
 versioned amendment recorded in the spec lineage (FINAL-1.2 → FINAL-1.2.1);
@@ -88,5 +88,6 @@ verification failure fails the run. These protections are binding for any
 future ingestion regardless of PC-1's outcome; PC-1 itself changes only
 the spec's wording to match.
 
-**Decision requested from the user:** APPROVE PC-1 (adopting the amendment
-text above as FINAL-1.2.1) or REJECT with direction.
+**Resolution:** APPROVED and ADOPTED as FINAL-1.2.1 (user approval
+2026-08-25; reviewer approval 2026-08-26). The original APPROVE/REJECT
+request is preserved above only as proposal history.

@@ -150,7 +150,7 @@ def test_golden_G09_daily_loss_limit_rejection():
     dec, qty, reason = gov.check_entry(
         EntryRequest(**s["entry_request"]), PortfolioState(**s["state"]))
     assert [dec, qty, reason] == g["expected"]["decision"]
-    assert g["review_status"] == "PENDING INDEPENDENT REVIEW"
+    assert g["review_status"] == "REVIEWED"
 
 
 def test_golden_G10_invalid_rl_action():
@@ -174,7 +174,7 @@ def test_golden_G10_invalid_rl_action():
     assert e.positions[1].open_qty == s["qty"]
     n_invalid = sum(1 for ev in e.events if ev["kind"] == "invalid_action")
     assert n_invalid == len(s["invalid_actions"])
-    assert g["review_status"] == "PENDING INDEPENDENT REVIEW"
+    assert g["review_status"] == "REVIEWED"
 
 
 def test_golden_G11_partial_exit_then_breakeven():
@@ -208,4 +208,4 @@ def test_golden_G11_partial_exit_then_breakeven():
         assert got["price"] == pytest.approx(want["price"])
         assert got["pnl"] == pytest.approx(want["pnl"])
         assert got["reason"] == want["reason"]
-    assert g["review_status"] == "PENDING INDEPENDENT REVIEW"
+    assert g["review_status"] == "REVIEWED"

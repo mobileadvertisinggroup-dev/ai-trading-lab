@@ -9,11 +9,15 @@ The single sanctioned path is `evaluate_holdout`, which:
   2. resolves the exact expected holdout artifact FILENAME and SHA-256 from
      the approved dataset manifest and refuses any supplied artifact whose
      basename or recomputed hash differs;
-  3. records an append-only OPENING_STARTED event (chained);
+  3. atomically CLAIMS the single opening (OS file lock + chain verify +
+     no-prior-opening + fsync via holdout_ledger.claim_opening — two
+     concurrent attempts cannot both open);
   4. accepts the private identity only via secure interactive TTY entry
      (tests inject an identity provider; the gate itself is unchanged);
-  5. decrypts ONLY into a fresh protected tmpfs directory (pre-existing
-     output directories are refused; never inside the project tree);
+  5. decrypts ONLY into a fresh directory on a VERIFIED memory-backed
+     filesystem (tmpfs/ramfs — checked against /proc/mounts; disk-backed
+     paths are refused even outside the repository; pre-existing
+     directories are refused; never inside the project tree);
   6. runs the exact frozen holdout evaluator (a deterministic dummy until
      the real frozen evaluator exists — the gate is NOT
      implementation-complete until that evaluator is plugged in here);
@@ -23,8 +27,13 @@ The single sanctioned path is `evaluate_holdout`, which:
   9. records CONSUMED (success) or FAILED_CLOSED (failure) in the chained
      ledger — consumption is established by the LEDGER, never by rewriting
      the authorization JSON (which remains an input record only);
- 10. refuses a second opening after OPENING_STARTED unless a formal
-     integrity adjudication has recorded RECOVERY_AUTHORIZED.
+ 10. permanently refuses a second opening after OPENING_STARTED —
+     recovery is NOT self-authorizing; it would require a future
+     versioned, explicitly user-approved integrity procedure (final
+     narrow review §3). Every exception after the claim — including
+     identity-entry or identity-parsing failure — is closed with
+     FAILED_CLOSED where possible; even if that append fails, the
+     OPENING_STARTED itself keeps the holdout blocked.
 """
 from __future__ import annotations
 
@@ -108,6 +117,37 @@ def _expected_artifact(manifests_dir: str) -> tuple[str, str]:
     return name, digest
 
 
+MEMORY_FSTYPES = {"tmpfs", "ramfs"}
+
+
+def _is_memory_backed(path: str) -> bool:
+    """True iff path resides on a verified memory-backed filesystem.
+    Resolves the deepest EXISTING ancestor, then matches the longest
+    mount-point prefix in /proc/mounts and checks its fstype."""
+    p = os.path.realpath(path)
+    while not os.path.exists(p):
+        parent = os.path.dirname(p)
+        if parent == p:
+            return False
+        p = parent
+    best_len, best_type = -1, None
+    try:
+        with open("/proc/mounts") as f:
+            for line in f:
+                parts = line.split()
+                if len(parts) < 3:
+                    continue
+                mnt, fstype = parts[1], parts[2]
+                mnt_dec = mnt.encode().decode("unicode_escape")
+                if (p == mnt_dec or p.startswith(mnt_dec.rstrip("/") + "/")
+                        or mnt_dec == "/"):
+                    if len(mnt_dec) > best_len:
+                        best_len, best_type = len(mnt_dec), fstype
+    except OSError:
+        return False
+    return best_type in MEMORY_FSTYPES
+
+
 def _wipe_and_verify(path: str):
     if os.path.exists(path):
         for root, _dirs, files in os.walk(path):
@@ -156,30 +196,43 @@ def evaluate_holdout(artifact_path: str, manifests_dir: str, evaluator,
                 f"artifact sha256 {got_sha} does not match the approved "
                 f"dataset manifest's {exp_sha}")
 
-    # -- 5. fresh protected tmpfs output only
+    # -- 5. fresh, memory-backed (tmpfs/ramfs) output only
     out_dir = out_dir or f"/dev/shm/akra-holdout-eval-{os.getpid()}"
     root = repo_root or os.path.dirname(os.path.dirname(
         os.path.abspath(manifests_dir)))
     if os.path.abspath(out_dir).startswith(os.path.abspath(root)):
-        raise UnsealRefused("decrypted holdout must never be written into "
-                            "the project tree (SPEC §9.8)")
+        _refuse(manifests_dir, {"stage": "out_dir", "out_dir": out_dir},
+                "decrypted holdout must never be written into the project "
+                "tree (SPEC §9.8)")
     if os.path.exists(out_dir):
-        raise UnsealRefused(f"output directory {out_dir!r} already exists — "
-                            f"a fresh protected directory is required")
+        _refuse(manifests_dir, {"stage": "out_dir", "out_dir": out_dir},
+                f"output directory {out_dir!r} already exists — a fresh "
+                f"protected directory is required")
+    if not _is_memory_backed(out_dir):
+        _refuse(manifests_dir, {"stage": "out_dir", "out_dir": out_dir},
+                f"output directory {out_dir!r} is not on a verified "
+                f"memory-backed filesystem (tmpfs/ramfs) — disk-backed "
+                f"paths are refused (final narrow review §2)")
 
-    # -- 3. OPENING_STARTED (chained; from here on the holdout is opened)
-    HL.append_event(manifests_dir, "OPENING_STARTED",
-                    {"artifact": exp_name, "artifact_sha256": exp_sha})
-
-    # -- 4. identity via interactive TTY (tests inject a provider)
-    identity_line = (identity_provider or _interactive_identity)()
+    # -- 3. ATOMIC single-opening claim (lock + chain verify + fsync)
     try:
-        import pyrage
-        identity = pyrage.x25519.Identity.from_str(identity_line)
-    finally:
-        del identity_line
+        HL.claim_opening(manifests_dir,
+                         {"artifact": exp_name, "artifact_sha256": exp_sha})
+    except HL.OpeningRefused as e:
+        _refuse(manifests_dir, {"stage": "claim"}, f"opening refused: {e}")
 
+    # From here the single opening is spent. EVERY failure — including
+    # identity entry/parsing — closes with FAILED_CLOSED where possible;
+    # even if that append fails, OPENING_STARTED keeps the holdout blocked.
     try:
+        # -- 4. identity via interactive TTY (tests inject a provider)
+        identity_line = (identity_provider or _interactive_identity)()
+        try:
+            import pyrage
+            identity = pyrage.x25519.Identity.from_str(identity_line)
+        finally:
+            del identity_line
+
         with open(artifact_path, "rb") as f:
             tar_bytes = pyrage.decrypt(f.read(), [identity])
         del identity
@@ -194,10 +247,17 @@ def evaluate_holdout(artifact_path: str, manifests_dir: str, evaluator,
         with open(results_path, "w") as f:
             json.dump(results, f, indent=2, sort_keys=True, default=str)
     except Exception as e:
-        _wipe_and_verify(out_dir)                       # -- 8. (failure)
-        HL.append_event(manifests_dir, "FAILED_CLOSED",
-                        {"artifact": exp_name, "error": str(e)[:300],
-                         "wiped_and_verified": True})   # -- 9.
+        try:
+            _wipe_and_verify(out_dir)                   # -- 8. (failure)
+            wiped = True
+        finally:
+            try:
+                HL.append_event(manifests_dir, "FAILED_CLOSED",
+                                {"artifact": exp_name,
+                                 "error": str(e)[:300],
+                                 "wiped_and_verified": True})   # -- 9.
+            except Exception:
+                pass    # OPENING_STARTED still blocks the holdout
         raise
     _wipe_and_verify(out_dir)                           # -- 8. (success)
     HL.append_event(manifests_dir, "CONSUMED",

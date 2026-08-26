@@ -1,28 +1,43 @@
-"""Holdout state ledger — append-only, hash-chained (delta review corr. B).
+"""Holdout state ledger — append-only, hash-chained (delta review corr. B,
+hardened per the final narrow review, 2026-08-26).
 
 Consumption of the one-time holdout evaluation is established HERE, by
 chained events, never by rewriting a mutable JSON file. Events:
 
-  OPENING_STARTED   — the controlled evaluation began (gate passed)
-  CONSUMED          — evaluation completed; holdout permanently consumed
+  OPENING_STARTED   — the controlled evaluation began. Created ONLY by the
+                      atomic claim_opening() (OS file lock + chain verify +
+                      no-prior-opening check + fsync); append_event refuses
+                      it.
+  CONSUMED          — evaluation completed; holdout permanently consumed.
   FAILED_CLOSED     — evaluation failed; decrypted material wiped; the
-                      holdout remains closed and a second opening is
-                      refused pending formal adjudication
-  RECOVERY_AUTHORIZED — recorded ONLY through a formal integrity
-                      adjudication (never by this code path on its own);
-                      permits exactly one further opening attempt
+                      holdout remains closed.
+
+RECOVERY IS NOT SELF-AUTHORIZING (final narrow review §3): no application
+function may create a RECOVERY_AUTHORIZED event, and opening_permitted
+does NOT honor one even if the string appears in the ledger. For this
+experiment version, ANY prior OPENING_STARTED permanently blocks another
+opening, whether the first attempt succeeded or failed. Recovery would
+require a future versioned, explicitly user-approved integrity procedure
+with preserved hashes and external approval evidence — which does not
+exist yet.
 
 A corrupted chain (broken hash link, malformed row) BLOCKS all holdout
 access — fail closed, never open.
 """
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
 import os
 import time
 
 LEDGER = "holdout_state.jsonl"
+LOCKFILE = "holdout_state.lock"
+
+# events ordinary appends may create; OPENING_STARTED only via
+# claim_opening(); RECOVERY_AUTHORIZED never (no procedure exists)
+_APPENDABLE = frozenset({"CONSUMED", "FAILED_CLOSED"})
 
 
 class LedgerCorrupt(RuntimeError):
@@ -59,7 +74,24 @@ def read_events(manifests_dir: str) -> list[dict]:
     return events
 
 
-def append_event(manifests_dir: str, event: str, detail: dict) -> dict:
+class _LedgerLock:
+    """Exclusive OS file lock serializing every ledger mutation."""
+
+    def __init__(self, manifests_dir: str):
+        self._path = os.path.join(manifests_dir, LOCKFILE)
+
+    def __enter__(self):
+        self._f = open(self._path, "a+")
+        fcntl.flock(self._f.fileno(), fcntl.LOCK_EX)
+        return self
+
+    def __exit__(self, *exc):
+        fcntl.flock(self._f.fileno(), fcntl.LOCK_UN)
+        self._f.close()
+
+
+def _append_locked(manifests_dir: str, event: str, detail: dict) -> dict:
+    """Append under an already-held lock: verify chain, write, flush, fsync."""
     events = read_events(manifests_dir)          # verifies chain first
     prev = events[-1]["hash"] if events else "0" * 64
     body = {"ts_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -67,31 +99,56 @@ def append_event(manifests_dir: str, event: str, detail: dict) -> dict:
     body["hash"] = _chain_hash(prev, {k: body[k] for k in body if k != "hash"})
     with open(os.path.join(manifests_dir, LEDGER), "a") as f:
         f.write(json.dumps(body, sort_keys=True) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
     return body
 
 
+def append_event(manifests_dir: str, event: str, detail: dict) -> dict:
+    """Ordinary append: CONSUMED / FAILED_CLOSED only. OPENING_STARTED is
+    created solely by the atomic claim_opening(); RECOVERY_AUTHORIZED can
+    never be created by application code (final narrow review §3)."""
+    if event not in _APPENDABLE:
+        raise ValueError(
+            f"event {event!r} may not be appended by application code: "
+            f"OPENING_STARTED only via claim_opening(); RECOVERY_AUTHORIZED "
+            f"requires a future versioned, user-approved integrity "
+            f"procedure that does not exist")
+    with _LedgerLock(manifests_dir):
+        return _append_locked(manifests_dir, event, detail)
+
+
+class OpeningRefused(RuntimeError):
+    pass
+
+
+def claim_opening(manifests_dir: str, detail: dict) -> dict:
+    """ATOMIC single-opening claim (final narrow review §4): under an
+    exclusive OS file lock — verify the complete chain, confirm no previous
+    opening exists, append OPENING_STARTED with flush+fsync. Exactly one of
+    any set of concurrent claimants succeeds."""
+    with _LedgerLock(manifests_dir):
+        permitted, why = opening_permitted(manifests_dir)   # raises on corrupt
+        if not permitted:
+            raise OpeningRefused(why)
+        return _append_locked(manifests_dir, "OPENING_STARTED", detail)
+
+
 def opening_permitted(manifests_dir: str) -> tuple[bool, str]:
-    """(permitted, reason). Fail closed on corruption. A prior
-    OPENING_STARTED/CONSUMED/FAILED_CLOSED refuses unless a LATER
-    RECOVERY_AUTHORIZED event (formal adjudication) permits one retry
-    that has not itself been used."""
+    """(permitted, reason). Fail closed on corruption. ANY prior
+    OPENING_STARTED (or CONSUMED) permanently refuses — a
+    RECOVERY_AUTHORIZED string in the ledger is NOT honored (final narrow
+    review §3: recovery requires a future versioned, explicitly
+    user-approved integrity procedure that does not exist yet)."""
     try:
         events = read_events(manifests_dir)
     except LedgerCorrupt as e:
         return False, f"state ledger corrupt — access blocked: {e}"
-    openings = 0
-    recoveries = 0
     for e in events:
         if e["event"] == "CONSUMED":
             return False, "holdout permanently consumed (single-use)"
-        if e["event"] in ("OPENING_STARTED", "FAILED_CLOSED"):
-            if e["event"] == "OPENING_STARTED":
-                openings += 1
-        elif e["event"] == "RECOVERY_AUTHORIZED":
-            recoveries += 1
-    if openings == 0:
-        return True, "no prior opening"
-    if recoveries >= openings:
-        return True, "recovery formally authorized"
-    return False, ("a prior opening exists; a second opening requires a "
-                   "formal integrity adjudication (RECOVERY_AUTHORIZED)")
+        if e["event"] == "OPENING_STARTED":
+            return False, ("a prior opening exists — permanently blocked; "
+                           "no self-authorized recovery is possible in this "
+                           "experiment version")
+    return True, "no prior opening"

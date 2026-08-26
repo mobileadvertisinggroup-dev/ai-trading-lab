@@ -69,7 +69,8 @@
     "D33",
     "D34",
     "D35",
-    "D36"
+    "D36",
+    "D37"
   ],
   "active_blockers": [
     {
@@ -82,10 +83,12 @@
   "invalidated_artifacts": [],
   "required_retraining": [],
   "pending_actions": [
-    "STOPPED \u2014 blocked: age key, real ingestion, constitutional lock, shakedown, holdout access"
+    "receive age PUBLIC key -> commit to data/manifests/holdout_recipient.txt",
+    "run lab-ingest probe on Actions; full ingestion only after probe passes",
+    "still prohibited: constitutional lock, shakedown, holdout access; paper-only"
   ],
-  "safe_resume": "Clone repo; read SPEC_FINAL-1.1.md, BUILD_STATE.md, build_state.json; verify spec sha256; continue from pending_actions. Do not re-decide frozen choices.",
-  "updated": "2026-08-26T01:20:00Z",
+  "safe_resume": "Clone repo; read SPEC_FINAL-1.2.1.md (authoritative, sha256 84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8), BUILD_STATE.md, build_state.json; verify that sha256; continue from pending_actions. Do not re-decide frozen choices.",
+  "updated": "2026-08-26T02:30:00Z",
   "phase_1_status": "frozen",
   "protocol": {
     "file": "EXPERIMENT_PROTOCOL.md",
@@ -108,7 +111,7 @@
     "no repo rename during active workflow unless atomic"
   ],
   "pending_user_inputs": [
-    "final narrow review of FINAL_DELTA_RESPONSE.zip"
+    "age PUBLIC key (age1...) for the holdout seal recipient"
   ],
   "tests": {
     "dev_suite": "120 passed",
@@ -123,7 +126,7 @@
   ],
   "phase_3_status": "engine_built_semantics_frozen_doc_authored",
   "phase_4_status": "arm_a_code_complete",
-  "phase_5_status": "gate_built_passing_dev_level_fixtures_pending_independent_review",
+  "phase_5_status": "gate_built_and_passing; fixtures G01-G12 independently REVIEWED and APPROVED (G03 as corrected v2)",
   "phase_6_status": "governor_labels_purge_done; arms B-G modeling blocked on ingested data",
   "review_gate_2026_08_25": {
     "no_constitutional_lock": true,
@@ -133,7 +136,8 @@
     "until": "independent fixture review complete",
     "bundle": "INDEPENDENT_REVIEW_BUNDLE_PHASE6.zip",
     "bundle_source_commit": "70605dfe65654c1ba24dc53e0e56f37db405875d",
-    "issues_report": "REVIEW_ISSUES_PHASE6.md"
+    "issues_report": "REVIEW_ISSUES_PHASE6.md",
+    "status": "SATISFIED (final narrow review, 2026-08-26)"
   },
   "review_verdict_phase6": {
     "received": "2026-08-25",
@@ -169,10 +173,7 @@
       "holdout-key request",
       "shakedown"
     ],
-    "awaiting": [
-      "independent review of delta package",
-      "explicit user approval of PC-1"
-    ]
+    "awaiting": "resolved \u2014 delta reviewed, PC-1 adopted (see final_corrections and final_narrow_review)"
   },
   "delta_review_outcome": {
     "accepted": [
@@ -180,7 +181,7 @@
       "G03 v2 correction"
     ],
     "pc1": "approved by user; adopted as FINAL-1.2.1",
-    "outstanding": "two final security corrections \u2014 reviewer message 'INDEPENDENT DELTA REVIEW \u2014 FINAL CORRECTIONS' not received; requested from user verbatim",
+    "outstanding": "resolved \u2014 corrections A and B executed and approved (final narrow review, 2026-08-26)",
     "owed": "FINAL_DELTA_RESPONSE.zip after corrections are executed"
   },
   "final_corrections": {
@@ -197,5 +198,28 @@
     "correction_A": "authoritative immutable-releases evidence endpoint \u2014 implemented",
     "correction_B": "complete one-time holdout evaluation gate \u2014 implemented, 9 negative tests passing; implementation-complete only when the real frozen evaluator is plugged in",
     "owed": "FINAL_DELTA_RESPONSE.zip \u2014 produced; stopped for final narrow review"
-  }
+  },
+  "final_narrow_review": {
+    "received": "2026-08-26",
+    "verbatim": "reviews/REVIEW_FINAL_NARROW.md",
+    "result": "APPROVED SUBJECT TO MECHANICAL CLEANUP",
+    "approved": [
+      "PC-1 adoption as FINAL-1.2.1",
+      "correction A endpoint",
+      "manifest-bound artifact verification",
+      "controlled evaluation architecture",
+      "hash-chained holdout state ledger",
+      "success/failure cleanup structure",
+      "corrupt-ledger fail-closed",
+      "120-test run"
+    ],
+    "mechanical_corrections": [
+      "state consistency",
+      "tmpfs enforcement",
+      "recovery not self-authorizing",
+      "atomic single-opening claim"
+    ],
+    "note": "no further review ZIP required; after corrections pass, the independent review gate is satisfied and Phase 2 may proceed"
+  },
+  "independent_review_gate": "SATISFIED (final narrow review 2026-08-26; mechanical corrections D37 executed)"
 }

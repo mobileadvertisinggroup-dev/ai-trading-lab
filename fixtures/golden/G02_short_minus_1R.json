@@ -49,6 +49,6 @@
     },
     "starting_cash": 10000.0
   },
-  "review_status": "PENDING INDEPENDENT REVIEW",
-  "reviewed_by": null
+  "review_status": "REVIEWED",
+  "reviewed_by": "independent reviewer (ChatGPT): approved in the Phase-6 verdict (2026-08-25) and confirmed in the FINAL CORRECTIONS approvals (2026-08-26)"
 }
