@@ -30,6 +30,7 @@ import os
 import re
 import time
 import zipfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.request import Request, urlopen
 from xml.etree import ElementTree
 
@@ -48,6 +49,16 @@ VISION = "https://data.binance.vision"
 # serves the website HTML for query URLs (probe run 1 finding, 2026-08-26).
 VISION_LIST = "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision"
 S3NS = "{http://s3.amazonaws.com/doc/2006-03-01/}"
+
+# Probe run 2 (2026-08-26) measured 0.68s/symbol-month sequential => ~9.3h
+# for 824 symbols x ~60 months, over the 5.8h job budget. Acquisition is
+# therefore CONCURRENT within the single ingestion job (downloads are
+# independent per symbol and network-bound). Multi-job sharding was
+# rejected: PC-1 (SPEC §9.3a / HOLDOUT_POLICY §4a) forbids holdout-range
+# staging from ever leaving the runner as an artifact, so acquisition must
+# complete inside one RUNNER_TEMP lifetime. Any symbol failure still fails
+# the whole run — a partial dataset is never published (verdict §5.5).
+ACQ_WORKERS = int(os.environ.get("AKRA_ACQ_WORKERS", "12"))
 
 KLINE_COLS_RAW = ["open_time", "open", "high", "low", "close", "volume",
                   "close_time", "quote_volume", "count", "taker_buy_volume",
@@ -331,11 +342,20 @@ def run_ingestion(out_dir: str, manifests_dir: str, recipient_path: str,
     log.info("discovered %d included USDT perp symbols (%d classified, "
              "registry %s)", len(symbols), len(classifications),
              registry["registry_version"])
-    for i, sym in enumerate(symbols):
-        st = download_symbol(sym, start, end, staging)
-        log.info("[%d/%d] %s months=%d rows=%d funding=%d",
-                 i + 1, len(symbols), sym, st["months"], st["rows"],
-                 st["funding_rows"])
+    # Concurrent acquisition (see ACQ_WORKERS note): symbols are fully
+    # independent (distinct staging paths, pure parsers); fut.result()
+    # re-raises any worker failure so the run fails rather than publishing
+    # a partial dataset.
+    done = 0
+    with ThreadPoolExecutor(max_workers=ACQ_WORKERS) as pool:
+        futs = {pool.submit(download_symbol, sym, start, end, staging): sym
+                for sym in symbols}
+        for fut in as_completed(futs):
+            st = fut.result()
+            done += 1
+            log.info("[%d/%d] %s months=%d rows=%d funding=%d",
+                     done, len(symbols), st["symbol"], st["months"],
+                     st["rows"], st["funding_rows"])
 
     cals, btc_map = calendars_from_staging(staging)
     if P.CONTEXT_SYMBOL not in cals or cals[P.CONTEXT_SYMBOL].first_bar_ms < 0:
@@ -400,20 +420,27 @@ def probe() -> None:
     syms = list_perp_symbols()
     print("archive symbols (included):", len(syms), "first:", syms[:5],
           "last:", syms[-5:])
-    # measured chunking plan (verdict §5.5): time one representative
-    # symbol-month and project the full acquisition against the Actions
-    # timeout; NEVER publish a partial dataset as complete — if the
-    # projection exceeds the budget, ingestion is redesigned (sharded
-    # acquisition with encrypted intermediates), not truncated.
+    # measured chunking plan (verdict §5.5): time a representative batch and
+    # project the full acquisition against the Actions timeout; NEVER
+    # publish a partial dataset as complete — if the projection exceeds the
+    # budget, ingestion is redesigned, not truncated. Probe run 2 measured
+    # 0.68s/symbol-month SEQUENTIAL (~9.3h > 5.8h budget), so acquisition
+    # is now concurrent (ACQ_WORKERS); this measures the REAL concurrent
+    # throughput on a 2022 (guaranteed non-holdout) batch.
+    batch = [f"{VISION}/data/futures/um/monthly/klines/BTCUSDT/15m/"
+             f"BTCUSDT-15m-2022-{m:02d}.zip" for m in range(1, 13)]
     t0 = time.time()
-    _get_zip_csv(f"{VISION}/data/futures/um/monthly/klines/BTCUSDT/15m/"
-                 f"BTCUSDT-15m-2022-06.zip")
-    per_month = time.time() - t0
+    with ThreadPoolExecutor(max_workers=ACQ_WORKERS) as pool:
+        for fut in [pool.submit(_get_zip_csv, u) for u in batch]:
+            fut.result()
+    per_month_eff = (time.time() - t0) / len(batch)
     est_months = len(syms) * 60          # ~5 years average history
-    hours = per_month * est_months / 3600
-    print(f"timing: {per_month:.2f}s per symbol-month; projected "
-          f"~{hours:.1f}h for {len(syms)} symbols x ~60 months "
-          f"(budget: 5.8h job timeout; sequential)")
+    hours = per_month_eff * est_months / 3600
+    print(f"timing: {per_month_eff:.3f}s per symbol-month effective with "
+          f"{ACQ_WORKERS} workers ({len(batch)}-month measured batch); "
+          f"projected ~{hours:.1f}h for {len(syms)} symbols x ~60 months "
+          f"(budget: 5.8h job timeout)")
+    print("PROJECTION-OK" if hours <= 5.8 else "PROJECTION-EXCEEDS-BUDGET")
 
 
 def main() -> None:
