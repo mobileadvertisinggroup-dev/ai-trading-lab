@@ -238,7 +238,11 @@ class ArmARunner:
             for sym, b in bars.items():
                 self._last_close[sym] = b.close
             if t % P.BAR_4H_MS == 0:
+                marks = self._marks()
                 self.equity_curve.append(
-                    {"t": t, "equity": self.engine.equity(self._marks())})
+                    {"t": t, "equity": self.engine.equity(marks),
+                     # recorded for obs-v2 training episodes (exposure
+                     # fraction provenance); pure recording, no behavior
+                     "gross_exposure": self.engine.gross_exposure(marks)})
             t += P.BAR_15M_MS
         return self.engine
