@@ -7,7 +7,11 @@
   }
  ],
  "branch": "main",
- "checkpoint_1": "NOT APPROVED 2026-08-27; corrections directed (6 blockers); original root preserved as historical not-approved lineage",
+ "checkpoint_1": {
+  "root_hash_v1_not_approved": "80c7c5b578ce168a4a391812e560aa451a3f2dc20af8993d950158d11dcabcaf",
+  "root_hash_v2": "695823719461ef15b6adf2e3f3cdbcd74bbb76cf58b63da8db67f11680a88346",
+  "status": "REPLACEMENT SUBMITTED \u2014 awaiting adjudication"
+ },
  "checkpoint_2": "not_reached",
  "closed_blockers": [
   {
@@ -16,7 +20,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "CHECKPOINT 1 NOT APPROVED \u2014 executing directed corrections (D52); replacement Checkpoint 1 will follow",
+ "current_phase": "REPLACEMENT CHECKPOINT 1 REACHED (2026-08-27, D53-D60) \u2014 STOPPED, awaiting independent adjudication; root hash v2 6958237194\u2026 to be preserved externally; predecessor 80c7c5b5\u2026 preserved NOT APPROVED",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -84,7 +88,8 @@
   "D56",
   "D57",
   "D58",
-  "D59"
+  "D59",
+  "D60"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -199,8 +204,7 @@
   }
  },
  "pending_actions": [
-  "execute D52 blockers 1-6, wording corrections, constitutional manifest v2, full rerun, new INVALID shakedown",
-  "then replacement Checkpoint-1 package + new external root hash; STOP for approval",
+  "await independent adjudication of replacement Checkpoint 1",
   "prohibited: private key, holdout, Checkpoint-2, real money, evidence deletion, silent changes"
  ],
  "pending_user_inputs": [
@@ -302,8 +306,7 @@
   "version": "FINAL-1.2.1"
  },
  "tests": {
-  "dev_suite": "120 passed",
-  "last_run": "2026-08-26"
+  "dev_suite": "141/141 (worktree 76a1c2e, verbatim output preserved)"
  },
  "updated": "2026-08-27",
  "user_constraints_2026_08_25": [

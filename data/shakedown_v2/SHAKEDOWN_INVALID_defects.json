@@ -1,0 +1,24 @@
+{
+ "decisions_per_arm": {
+  "A": 3203,
+  "B": 3221,
+  "C": 3249,
+  "D": 3215,
+  "E": 2967,
+  "F": 3014,
+  "G": 3498
+ },
+ "defects": [
+  {
+   "detail": "G/shadow entry mismatch: 328 vs 260",
+   "id": "SD-GSHADOW",
+   "severity": "constitutional"
+  }
+ ],
+ "marker": "SHAKEDOWN \u2014 INVALID FOR PERFORMANCE CONCLUSIONS",
+ "round_counts": {
+  "invalid": 0,
+  "total": 1080,
+  "valid": 1080
+ }
+}

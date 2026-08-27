@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>AKRA AI TRADING LAB — REPLACEMENT SHAKEDOWN (INVALID FOR PERFORMANCE CONCLUSIONS)</title>
+<style>
+ body{font-family:system-ui,sans-serif;margin:2rem;background:#0e1117;color:#e6e6e6}
+ table{border-collapse:collapse;margin:1rem 0;width:100%}
+ td,th{border:1px solid #333;padding:.4rem .6rem;text-align:right}
+ th{background:#1a1f2b} td:first-child,th:first-child{text-align:left}
+ .banner{background:#3a2f00;border:1px solid #665500;padding:.6rem 1rem;
+   border-radius:6px;margin-bottom:1rem}
+ code{color:#9ecbff}
+</style></head><body>
+<h1>AKRA AI TRADING LAB — REPLACEMENT SHAKEDOWN (INVALID FOR PERFORMANCE CONCLUSIONS)</h1>
+<div class="banner">governor_labels_purge_done; arms B-G modeling blocked on ingested data</div>
+<h2>Leaderboard</h2>
+<table><tr><th>Arm</th><th>Equity</th><th>Net return</th><th>Max DD</th>
+<th>Trades</th><th>Win rate</th><th>Fees</th><th>Rejections</th></tr>
+<tr><td>Arm A — frozen baseline</td><td>8,313.49</td><td>-16.87%</td><td>27.10%</td><td>359</td><td>31.20%</td><td>341.83</td><td>801</td></tr>
+<tr><td>Arm B — filter (final 0.30)</td><td>8,265.75</td><td>-17.34%</td><td>26.23%</td><td>290</td><td>34.48%</td><td>282.52</td><td>150</td></tr>
+<tr><td>Arm C — ranker (top-3)</td><td>7,262.83</td><td>-27.37%</td><td>29.67%</td><td>354</td><td>29.94%</td><td>312.04</td><td>88</td></tr>
+<tr><td>Arm D — regime</td><td>7,977.60</td><td>-20.22%</td><td>27.27%</td><td>361</td><td>28.25%</td><td>257.55</td><td>782</td></tr>
+<tr><td>Arm E — sizer (M3)</td><td>10,291.27</td><td>2.91%</td><td>16.87%</td><td>467</td><td>32.76%</td><td>248.42</td><td>956</td></tr>
+<tr><td>Arm F — RL mgmt (SB3 seed 4)</td><td>9,464.09</td><td>-5.36%</td><td>24.06%</td><td>1278</td><td>50.00%</td><td>1,354.04</td><td>993</td></tr>
+<tr><td>Arm G — composite</td><td>10,095.11</td><td>0.95%</td><td>5.88%</td><td>325</td><td>50.77%</td><td>199.83</td><td>0</td></tr></table>
+<h2>Research integrity</h2>
+<table><tr><td>experiment_status</td><td><code>governor_labels_purge_done; arms B-G modeling blocked on ingested data</code></td></tr>
+<tr><td>current_phase</td><td><code>CHECKPOINT 1 NOT APPROVED — executing directed corrections (D52); replacement Checkpoint 1 will follow</code></td></tr>
+<tr><td>spec_version</td><td><code>FINAL-1.2.1</code></td></tr>
+<tr><td>spec_sha256</td><td><code>84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8</code></td></tr>
+<tr><td>protocol_sha256</td><td><code>da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590</code></td></tr>
+<tr><td>tests</td><td><code>120 passed</code></td></tr>
+<tr><td>holdout</td><td><code>{&quot;artifact&quot;: &quot;holdout-raw-v1.tar.age&quot;, &quot;artifact_sha256&quot;: &quot;47795aa6a9775e6f191def5c121212c00642eb666daf3cb8df46bf3a495a1067&quot;, &quot;consumed&quot;: false, &quot;defined&quot;: true, &quot;quarantine_start_ms&quot;: 1752134400000, &quot;sealed&quot;: true}</code></td></tr>
+<tr><td>integrity_manifest</td><td><code>2268007d9b7ac16071bf140fcb7fd8d43b1a67e004c63ccfebafa30e06f1d130</code></td></tr>
+<tr><td>updated</td><td><code>2026-08-27</code></td></tr></table>
+<p>Every number on this page derives from immutable ledger records; this
+generator reads no market data and cannot access the sealed holdout.</p>
+</body></html>

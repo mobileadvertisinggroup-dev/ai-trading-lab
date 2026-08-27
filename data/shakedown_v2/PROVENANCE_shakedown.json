@@ -1,0 +1,326 @@
+{
+ "certified": true,
+ "command": {
+  "args": [
+   "--lake",
+   "/home/user/lake-work/lake",
+   "--manifests-dir",
+   "data/manifests",
+   "--model-dir",
+   "/home/user/lake-work/official_v2/models",
+   "--sb3-dir",
+   "/home/user/lake-work/official_v2/models_sb3",
+   "--out-dir",
+   "/home/user/lake-work/official_v2/shakedown"
+  ],
+  "module": "lab.tools.shakedown",
+  "wrapper_argv": [
+   "/home/user/worktrees/atl-final/lab/tools/provenance_run.py",
+   "--module",
+   "lab.tools.shakedown",
+   "--out-dir",
+   "/home/user/lake-work/official_v2/shakedown",
+   "--input-dir",
+   "/home/user/lake-work/official_v2/models",
+   "--input-dir",
+   "/home/user/lake-work/official_v2/models_sb3",
+   "--input-dir",
+   "data/manifests",
+   "--",
+   "--lake",
+   "/home/user/lake-work/lake",
+   "--manifests-dir",
+   "data/manifests",
+   "--model-dir",
+   "/home/user/lake-work/official_v2/models",
+   "--sb3-dir",
+   "/home/user/lake-work/official_v2/models_sb3",
+   "--out-dir",
+   "/home/user/lake-work/official_v2/shakedown"
+  ]
+ },
+ "dependencies": {
+  "age": "not installed",
+  "gymnasium": "1.2.3",
+  "lightgbm": "4.7.0",
+  "numpy": "2.4.6",
+  "pandas": "3.0.5",
+  "pyarrow": "25.0.1",
+  "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+  "sklearn": "1.9.0",
+  "stable_baselines3": "2.7.0",
+  "torch": "2.13.0+cu130"
+ },
+ "elapsed_seconds": 330.9,
+ "ended_utc": "2026-08-27T17:18:20Z",
+ "environment": {
+  "LC_CTYPE": "C.UTF-8",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "error": null,
+ "gate": "provenance_run v1 (reviewer directive 2026-08-27)",
+ "git": {
+  "commit": "76a1c2ea44b5e44a27cb7c59c75150daf8311892",
+  "describe": "76a1c2ea44b5e44a27cb7c59c75150daf8311892 2026-08-27 17:11:50 +0000 Constitutional integrity manifest v2 (D52 lineage): verified, v1 preserved as NOT-APPROVED history",
+  "root": "/home/user/worktrees/atl-final",
+  "status_porcelain_post": "",
+  "status_porcelain_pre": ""
+ },
+ "host": {
+  "cpu_count": 4,
+  "hostname": "vm",
+  "platform": "Linux-6.18.44-fc-v21-x86_64-with-glibc2.39"
+ },
+ "inputs": {
+  "/home/user/lake-work/official_v2/models": {
+   "census_sha256": "32c7408d1bd41325d471c831b8aaa96c5db5052824a17566d6cdb599d947602d",
+   "files": {
+    "PROVENANCE_finalize_bce.json": "4302cb1b38c5a26d80585f1c036845f518c4b32ebc5c335acd306503da4c77e6",
+    "arm_b.txt": "61baa40ddb5cfaa9c9e1716d1583f60c1ed81273ff4e708badfa77da1e235978",
+    "arm_c.txt": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a",
+    "arm_e.txt": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a",
+    "arm_e_cuts.npz": "6a6ba2cc8a559d0c19e74c71d33bb2de54370d2167e918f437742d30c8a79d98",
+    "bce_finalization.json": "6ec782bbb7a0705e6a854a976a6a8b5a7d8fa57c7522a6782530358c190834c5"
+   },
+   "n_files": 6
+  },
+  "/home/user/lake-work/official_v2/models_sb3": {
+   "census_sha256": "fb1ae3a2804b259a370e8307f347a7cd4e28f24d67856b455846f9ce92e3e6ee",
+   "files": {
+    "PROVENANCE_train_arm_f_sb3.json": "c4d1463dfb37894a71e9d373743e68711938c54acd1d65b2647886f569fe8e9d",
+    "arm_f_sb3_manifest.json": "c7e650f8a68258d37fc34990546c025ad74acb4f2fb9c8aaa64431c96283f8a5",
+    "arm_f_sb3_seed1.zip": "989b3ba62bcd3b9cf8219412164a47739f24ebb90832af5033d6446514b7756b",
+    "arm_f_sb3_seed10.zip": "08911cdbe26465636683a19433024cdafeb6bfe4ed0f0e1baeed68a843068183",
+    "arm_f_sb3_seed2.zip": "1e5fdc0e91b8b940c02e4cd5f6c0a1bb31fa644b2050d3c407ffac8af6be6e7e",
+    "arm_f_sb3_seed3.zip": "0836edfc708c3cd09e23684511ab90ba58ef78d3912d6899285f599496874d07",
+    "arm_f_sb3_seed4.zip": "5112d080dd276ef5ad781d04014421c632db49d754b1a5a92db10f06ca4f663c",
+    "arm_f_sb3_seed5.zip": "8b73666507243826864dbd6d6058d16660bd500417121575329b0ab125517523",
+    "arm_f_sb3_seed6.zip": "07b3a15fd48f231ee3942139b9b410aaed805d7d5233f21df2d16f3ddd2448af",
+    "arm_f_sb3_seed7.zip": "78ea0d8542c4953402fe72d3f40f2610284fff1aefc0bf46b260b775d1034f6a",
+    "arm_f_sb3_seed8.zip": "07298214544afe88e68c3d441553682884d7dce1dff4617fb3f11d66a8e908c0",
+    "arm_f_sb3_seed9.zip": "9e4c1a0ad08762e0a938eb24ef5faafda524c88fa1fe83543e2863e41cb45af8"
+   },
+   "n_files": 12
+  },
+  "data/manifests": {
+   "census_sha256": "58d61a66c4abac72e325cb1dc5d343c19ebfc4108d2c2126dc363eeb18509370",
+   "files": {
+    "checkpoint1_root_hash.json": "7db9188ba82c351b3549ee907247a3d8df8540c9c9ff0c97d512e7375e4b929e",
+    "coverage_audit_raw-v1.json": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
+    "exclusion_registry_v1.json": "8954c0d75a98cb3ec6e7518b3fed8c3d05fda98be49fd8835d56fe24a16cd376",
+    "holdout_recipient.txt": "57d18b5d52389740b7bce03de0aa8332dd4d062e526a56fdf98f77c1342f93ca",
+    "holdout_seal.json": "f01a63e86e4744f2b6feebd09aeec6d15545961aaa15d35a03b234b21c7e210c",
+    "immutable_release_evidence_raw-v1.json": "a25698becabf734e2c35438391b46989072e7f0976022094d2a5710e4c25fe9d",
+    "integrity_manifest.json": "d836bfdf2f76dbc024b905f349f3b0ac1605ad0b944816f71aa98d5fc1b63388",
+    "integrity_manifest_v2.json": "ee5b4c002c40bf6c9a9732931180c678155a3acc5b568fa74c285d00d83ef774",
+    "lake_manifest_raw-v1.json": "c1ef7262f62b9cbb1cc12b6405ecc21c1898233e8e699c89bd16d31e8e2211ac",
+    "lake_verification_raw-v1.json": "65bfc0020f709f0ce23b923b3345bff3dca9b60597d964676f60e5801186234a",
+    "partition_meta.json": "735f0ecaef51c17deeebd95e543c7f272220f5d730f2780f7c7ecb1f7dd69305",
+    "round_validity.json": "da2f7ac93c15f76c2cb2f7628ca785df2e501a0a5c8cd8ac81492977d290459f"
+   },
+   "n_files": 12
+  }
+ },
+ "loaded_lab_modules": {
+  "lab": {
+   "file": "lab/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.arms": {
+   "file": "lab/arms/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.arms.arm_a": {
+   "file": "lab/arms/arm_a.py",
+   "sha256": "8b7d26317b84c68f8a0997bafa7a4ec0a601914b97e51319d21e0de1fe384f99"
+  },
+  "lab.arms.indicators": {
+   "file": "lab/arms/indicators.py",
+   "sha256": "bf1446de8f723fd654643f70a8488fbcf640ad4fdc5bf3fb594ee442df1b6cb9"
+  },
+  "lab.arms.observation": {
+   "file": "lab/arms/observation.py",
+   "sha256": "8e8b719eaa93157d689cd29f89a90510de03fc4a93b7310ae97a9973da81a5da"
+  },
+  "lab.arms.regime": {
+   "file": "lab/arms/regime.py",
+   "sha256": "3d96fc8b13ac59d471487ba65a09912660c572f2772de5aa8032a4d5f43ce7fb"
+  },
+  "lab.arms.rl_env": {
+   "file": "lab/arms/rl_env.py",
+   "sha256": "e83c4a47781bd7f2ef45905435559e7e55634e37281ea6ea4ca946be30edc2fc"
+  },
+  "lab.arms.rl_sb3": {
+   "file": "lab/arms/rl_sb3.py",
+   "sha256": "937c3ce1caf0603b26e57e38cddd92388a38efaa0cefbc6c7d3d09866365d793"
+  },
+  "lab.data": {
+   "file": "lab/data/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.data.access": {
+   "file": "lab/data/access.py",
+   "sha256": "8feea30357346fe1e0171bca100d012d0f7eb5c1530a8672d27efd13cc248803"
+  },
+  "lab.data.lake": {
+   "file": "lab/data/lake.py",
+   "sha256": "d4f35da1d45912149454513ed52f69e2b79bf0b917eb807fb1c3db5549f7270e"
+  },
+  "lab.data.partition": {
+   "file": "lab/data/partition.py",
+   "sha256": "9cb704365ab729ec012ec6305c442ddf35f6cc2184293c69a27c3004b93203bd"
+  },
+  "lab.features": {
+   "file": "lab/features/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.features.build": {
+   "file": "lab/features/build.py",
+   "sha256": "bb7114bc139b2cef26def1decd035acf02848fa6cee36e13c72a7fc2c88e2f51"
+  },
+  "lab.orchestration": {
+   "file": "lab/orchestration/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.orchestration.competition": {
+   "file": "lab/orchestration/competition.py",
+   "sha256": "38e395bf216277d575965b32914d1449be77fce89f874e42d527ca299aef366f"
+  },
+  "lab.orchestration.rounds": {
+   "file": "lab/orchestration/rounds.py",
+   "sha256": "233674a96ea986b931d6892f6cd2c16dccb799e4c3a22216bf763b0c8409eabc"
+  },
+  "lab.protocol": {
+   "file": "lab/protocol.py",
+   "sha256": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2"
+  },
+  "lab.risk": {
+   "file": "lab/risk/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.risk.governor": {
+   "file": "lab/risk/governor.py",
+   "sha256": "3a6b368dc076570207186fb18377ae8a2bcb28cc232d0e88cc1e45414110a210"
+  },
+  "lab.sim": {
+   "file": "lab/sim/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.sim.engine": {
+   "file": "lab/sim/engine.py",
+   "sha256": "5222e21024a7c2ce0d733b76cf33f007dae4154a152506203bed541159b9902d"
+  },
+  "lab.tools": {
+   "file": "lab/tools/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+ },
+ "outputs": {
+  "dir": "/home/user/lake-work/official_v2/shakedown",
+  "files": {
+   "SHAKEDOWN_INVALID_candidates.jsonl.gz": "1c109caadbf9112db90b515bf4275be8736b0cfe57c1d6ba857a5d732940392d",
+   "SHAKEDOWN_INVALID_decisions_A.jsonl.gz": "d8f02edcc4edd5980938cfffdb4b420f9a91b6403e33325b115c803ac89e3718",
+   "SHAKEDOWN_INVALID_decisions_B.jsonl.gz": "28b82775c68f991eda2bab6ca65d8e630ef832ea0d748cbac70e1e638911a9f3",
+   "SHAKEDOWN_INVALID_decisions_C.jsonl.gz": "4e93736628b62d8b4f94b01ab73e3415c8184574dc54b31b7795504c614d1b56",
+   "SHAKEDOWN_INVALID_decisions_D.jsonl.gz": "5a652c1a770957f5cf420878d4ee7077c87cd40f848d3f2d91cfb7cb38105d8e",
+   "SHAKEDOWN_INVALID_decisions_E.jsonl.gz": "76be2f8d3f3f0f8ed31248cee254144f3f2ed9301842a2d7dc114f607b095cc5",
+   "SHAKEDOWN_INVALID_decisions_F.jsonl.gz": "0ca8ef8442b5ea1743281c9642ebb321298bb5cdd3f7b6274efefbcd877bcefa",
+   "SHAKEDOWN_INVALID_decisions_G.jsonl.gz": "55933ca2ea2406ec88f8b9cb8650c86ca1d3e03b964cfd4a98f56f187d48bb22",
+   "SHAKEDOWN_INVALID_defects.json": "c92cb00ebb82c5b6b018c516117d877f70b6ffdf08815ea90a4dfdd45524bc67",
+   "SHAKEDOWN_INVALID_equity_A.json": "c3c118864b000766cce90449bb68f3c91ecc47d4fd2314a6364b6a4ac67bf300",
+   "SHAKEDOWN_INVALID_equity_B.json": "b8647e423500948b2554d799f4f80543e6714c030c4a90cea5feaba3616f6515",
+   "SHAKEDOWN_INVALID_equity_C.json": "ed887fae8b2ef93edb4bc85b2eba8ceae458986db88729aa553d598cfe0c4337",
+   "SHAKEDOWN_INVALID_equity_D.json": "0a30939fbdaf6d663994cd4c90e1f0f9d77b24cf3992e631e1f002834b9b916c",
+   "SHAKEDOWN_INVALID_equity_E.json": "2c462d7c54508c591339d34a22522b7d987087589cfb8183f86b1555eafa28d0",
+   "SHAKEDOWN_INVALID_equity_F.json": "a5b585ed6781e816a418f186cf854c0d8a283dbe99f32c7ee5fe600dc22b2b87",
+   "SHAKEDOWN_INVALID_equity_G.json": "c5cc0df29f1525f1828e51d53a79eb7db3ccef75dc52a502bd97d74e8ab47dcb",
+   "SHAKEDOWN_INVALID_equity_G_shadow.json": "d6ab7785f822bc104230924e307a8d4324f5ca7113a2e58b002a0869d3078b58",
+   "SHAKEDOWN_INVALID_events_A.jsonl.gz": "a2f5c25deaf8faaf7d7267a20a3ef64dc68c76ec990c2d86a5cc04186bf87b3d",
+   "SHAKEDOWN_INVALID_events_B.jsonl.gz": "99b34b343f9468d482d8d6a92147e9b14b0caed1f49f62929f2e4a7906203759",
+   "SHAKEDOWN_INVALID_events_C.jsonl.gz": "e358e1b209f361ac742abd6e8cd20352c01c88dedafe2ee5afebea2e5ade1799",
+   "SHAKEDOWN_INVALID_events_D.jsonl.gz": "e22e790d326a76273d2e5b42c37f99bc6d2015ba10f98c537e9c4a651183d576",
+   "SHAKEDOWN_INVALID_events_E.jsonl.gz": "753af4ddb2f819ce2711fdd7f74d3dfef2075b6a1658a19a0526f9ca0f87ec62",
+   "SHAKEDOWN_INVALID_events_F.jsonl.gz": "178124dc07e81620a9580a67d6eff798ae02fbeedfee792a40b358da4818f96e",
+   "SHAKEDOWN_INVALID_events_G.jsonl.gz": "e851b953bb87f4d06366c019ac4c8473f28f00d1496d9b587a9c05d52492316f",
+   "SHAKEDOWN_INVALID_events_G_shadow.jsonl.gz": "8d785400f181828f7d787a4432c9cbbd40efe7b498a1591680b272e5230e654a",
+   "SHAKEDOWN_INVALID_governor_A.jsonl.gz": "b2c501f01b9dca007307a072e51773249f89abf65c3302e0d6ca99f483503af5",
+   "SHAKEDOWN_INVALID_governor_B.jsonl.gz": "32dc82660d8a64fcd9ed06935e45992523db42756a115854b29279b0ce00bc16",
+   "SHAKEDOWN_INVALID_governor_C.jsonl.gz": "052216ed0e9978fe9296c4981f52a8bf45cf6a7526290e53c699d6d912e47e8a",
+   "SHAKEDOWN_INVALID_governor_D.jsonl.gz": "6e13777526b5e387b8f1dc45a9875e36802fb8baa881e9ff0fb1568528286ebf",
+   "SHAKEDOWN_INVALID_governor_E.jsonl.gz": "f79731660ba06865a18c1e971c70fd3ddb24b26963c9008e2c2ebc32f3e483f9",
+   "SHAKEDOWN_INVALID_governor_F.jsonl.gz": "8c2a441d9191a8292b217b6288c86450c8ebfbe4dde04e41b90ab890bf02c0aa",
+   "SHAKEDOWN_INVALID_governor_G.jsonl.gz": "18b2d67caca654cfe97f790e95e14c6c5610036a2fc2f766f090a09aedbc51e9",
+   "SHAKEDOWN_INVALID_manifest.json": "b875b9c0ec8774729dd62fd081ef2ca07693dfc7a3e93d4dbefb16e69f275944",
+   "SHAKEDOWN_INVALID_rl_decisions_F.jsonl.gz": "ac194b2d98b1cc87918e8a7645f1e2ddebde2b76c136c91ee116191942c271e3",
+   "SHAKEDOWN_INVALID_rl_decisions_G.jsonl.gz": "8c5293268c172c410ea4864eb2aceed818cb5828c3ca04e8d92b2ff5fcd24888",
+   "SHAKEDOWN_INVALID_rl_observability.json": "469cb180eb6f38daed239f9aa4a63ddedb9f45b8a5728b895b3fae889f351294",
+   "SHAKEDOWN_INVALID_round_records.jsonl.gz": "78d581242222f3d4790ca1d6e1b9d07fe975bb95f384369b69aea8fc04c65fce"
+  },
+  "n_files": 37
+ },
+ "problems": [],
+ "source_census": {
+  "census_sha256_post": "d41f423796e75af7c29a735603dce9563f1c0356d0c6c91ed041697afe54e334",
+  "census_sha256_pre": "d41f423796e75af7c29a735603dce9563f1c0356d0c6c91ed041697afe54e334",
+  "changed_during_run": [],
+  "files": {
+   "lab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/arms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/arms/arm_a.py": "8b7d26317b84c68f8a0997bafa7a4ec0a601914b97e51319d21e0de1fe384f99",
+   "lab/arms/indicators.py": "bf1446de8f723fd654643f70a8488fbcf640ad4fdc5bf3fb594ee442df1b6cb9",
+   "lab/arms/observation.py": "8e8b719eaa93157d689cd29f89a90510de03fc4a93b7310ae97a9973da81a5da",
+   "lab/arms/regime.py": "3d96fc8b13ac59d471487ba65a09912660c572f2772de5aa8032a4d5f43ce7fb",
+   "lab/arms/rl_env.py": "e83c4a47781bd7f2ef45905435559e7e55634e37281ea6ea4ca946be30edc2fc",
+   "lab/arms/rl_sb3.py": "937c3ce1caf0603b26e57e38cddd92388a38efaa0cefbc6c7d3d09866365d793",
+   "lab/arms/rl_train.py": "90b22199f3a3378ba111544b1543f3f7e7e40c8f113d43e2b1d1e0e428f97b3e",
+   "lab/dashboard/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/dashboard/build.py": "d81086e18efc1b2b3200d51e0d50d4c4877cc2742524a2dca0e7ea3a5cd37f58",
+   "lab/data/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/data/access.py": "8feea30357346fe1e0171bca100d012d0f7eb5c1530a8672d27efd13cc248803",
+   "lab/data/audit.py": "ce59c682d2c3cfda66e4ee003454ab1e1d1b4646fea2e6272eb0e0f57e1c84fe",
+   "lab/data/authz.py": "272ba02cff01b52ccae1a2b67717e313f05647d99803071fda5dbc02d79d6cd8",
+   "lab/data/holdout_ledger.py": "1b4bc66d9cd1a3dcf757ddf45a458ff4e479cbf3ced4433bdbf0deaef6a5e2e3",
+   "lab/data/ingest.py": "ffb7f705df8dde63ea8a103fff734dfb229d36c121a685df9f8038ffaa205c1d",
+   "lab/data/lake.py": "d4f35da1d45912149454513ed52f69e2b79bf0b917eb807fb1c3db5549f7270e",
+   "lab/data/partition.py": "9cb704365ab729ec012ec6305c442ddf35f6cc2184293c69a27c3004b93203bd",
+   "lab/data/seal.py": "aab1732b9e0ffc1eba793dc5cf988996827a76ab60930a7b61196908abe670a5",
+   "lab/data/unseal.py": "eec21b8279588b5773790c825291c9c21daf08ca4021bec1c5ad2434b61e6598",
+   "lab/features/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/features/build.py": "bb7114bc139b2cef26def1decd035acf02848fa6cee36e13c72a7fc2c88e2f51",
+   "lab/labels/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/labels/labels.py": "4044ef8ab6347ae9dfcacafee62075b346798abffcc2226818b82d4c5511d3c9",
+   "lab/labels/purge.py": "3c0d392d800477853c8e7c65d8326adc2a249f6e9383ee3b07abe9888f3df247",
+   "lab/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/models/pipelines.py": "bfe918f43fa2151c454044311d3188f3afe26d7e410cd3f484a8216a82d9c790",
+   "lab/orchestration/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/orchestration/competition.py": "38e395bf216277d575965b32914d1449be77fce89f874e42d527ca299aef366f",
+   "lab/orchestration/rounds.py": "233674a96ea986b931d6892f6cd2c16dccb799e4c3a22216bf763b0c8409eabc",
+   "lab/protocol.py": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2",
+   "lab/refledger/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/refledger/ledger.py": "16415d6ea969fe8893fc14088ac8e427acc1597aface8a1e80951565610aa202",
+   "lab/risk/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/risk/governor.py": "3a6b368dc076570207186fb18377ae8a2bcb28cc232d0e88cc1e45414110a210",
+   "lab/sim/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/sim/engine.py": "5222e21024a7c2ce0d733b76cf33f007dae4154a152506203bed541159b9902d",
+   "lab/tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/tools/build_features.py": "7201973cc0d34fd40a56463788bfe9904e3c711df64223ed11410ac040d9e9ca",
+   "lab/tools/finalize_bce.py": "34e5b2db90d8f10191a3e3b5d8d35c7d790afdabc105541d3cbee6b99a9962f4",
+   "lab/tools/immutable_evidence.py": "b55b02a1f4f81aaffefd180463f6a5a364848c1e6310e54daeb85349cff4b5f7",
+   "lab/tools/learnability.py": "fa99548326d5d535eee7c727d92512bd010b982e3df473d71516bbe884e71d81",
+   "lab/tools/learnability_v2.py": "d61527faad54abfc725adc8515c038d02ea15ee2bf0fdcda4ea811a9da5eeb51",
+   "lab/tools/lock_integrity.py": "432b486c2833b4a94f32c6df9a879ae1e4beb04787a44275239e8458e7af34c8",
+   "lab/tools/lock_integrity_v2.py": "bc38c7016d22c1e4c16d12b6ad6dd8cca735a6ce35b073a0910c8ac0f16bf9d8",
+   "lab/tools/provenance_run.py": "7618b9ac1a8eb6b779522501d5c305dda97d9b86ecaeb3e48255cd4267962a5e",
+   "lab/tools/run_arm_a.py": "6b5c069ccf0744a60f16c6621facd01c30d586c3adee70f6f305ce268be43c45",
+   "lab/tools/shakedown.py": "324abc3ae91a18ba1bb943392da12795d47a2e8c122d6429f4c4461ce48ecf9a",
+   "lab/tools/train_arm_f_sb3.py": "373fbc225db00e19e72bfdcbbd9fb1f5061a13858a1d6d0ac1e5f56d0569eabc",
+   "lab/tools/train_arms.py": "af2b04240b7dcb17e3db0daffd089c00ce08815227588d2d778b50c066cb1404",
+   "lab/tools/verify_lake.py": "73089d4556d6c689b38ccba82ddfa25b6ac8cc95caa6e0de0a26604ed6a489d4",
+   "lab/verify/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/verify/differential.py": "656b33937d50de29f5ac79a1845f784b577ac7bbafb691e141c9f1cbfa75dfef",
+   "requirements.txt": "4c750face755892d4bb37c1e0e2ce875fcef1b6a2034a3e33b503b2511e159e9"
+  },
+  "n_files": 55
+ },
+ "started_utc": "2026-08-27T17:12:49Z"
+}
