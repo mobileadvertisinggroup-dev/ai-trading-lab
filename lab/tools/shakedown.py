@@ -7,11 +7,21 @@ official results, never backfilled, never reused.
 
 The run exercises the full production pipeline: shared single-pass
 candidate generation, all seven arms with their own engines and governors,
-the FROZEN model artifacts (B/C/E LightGBM, D regime, F CEM policy),
+the FROZEN model artifacts (B/C/E LightGBM with the pre-registered
+finalized decision rules from bce_finalization.json, D regime, F = the
+selected SB3 PPO policy consuming the CANONICAL obs-v2 observation),
 G composed strictly as filter -> rank -> min(E, D) x A-size -> governor,
-G-shadow entry identity, synchronized-round invalidation, and the
-dashboard build. Defect detection per spec §20 is written into
-SHAKEDOWN_INVALID_defects.json for the Checkpoint-1 inventory.
+G-shadow entry identity, TRANSACTIONAL synchronized-round invalidation,
+and the dashboard build. Defect detection per spec §20 is written into
+SHAKEDOWN_INVALID_defects.json.
+
+Full RL observability (adjudication blocker 4): every F/G management
+decision is exported with its obs-v2 vector + schema hash, raw and
+executed actions, governor outcome, and before/after stop+quantity;
+per-arm governor event streams are exported; the manifest carries HOLD
+counts, an executed-action reconciliation against the engine event
+stream, and a per-boundary coverage check (every valid round in which an
+arm held an open position has a matching RL decision record).
 
 Window: the final SHAKEDOWN_DAYS days of readable (pre-quarantine) data;
 provider arrays carry FULL history so indicator warm-up matches official
@@ -35,7 +45,7 @@ from lab import protocol as P
 from lab.arms.arm_a import MarketProvider
 from lab.arms.indicators import SymbolSeries
 from lab.arms.regime import RegimeModel
-from lab.arms.rl_train import LinearPolicy
+from lab.arms.rl_sb3 import load_policy
 from lab.data import partition as PT
 from lab.data.access import GuardedLake
 from lab.features.build import FEATURE_NAMES, FeatureSeries, \
@@ -127,12 +137,14 @@ class FeatureContext:
 
 
 class FrozenFilter:
-    def __init__(self, model_dir, ctx, threshold=0.5):
+    def __init__(self, model_dir, ctx, threshold: float):
+        """threshold = the pre-registered FINALIZED value from
+        bce_finalization.json (blocker 6) — never a default."""
         self.booster = lgb.Booster(
             model_file=os.path.join(model_dir, "arm_b.txt"))
         self.ctx = ctx
         self.threshold = threshold
-        self.version = "B-lgbm-draft-frozen"
+        self.version = f"B-lgbm-final-th{threshold}"
         self.fnames = FEATURE_NAMES          # SD-FEATNAMES fix
 
     def _x(self, cand):
@@ -159,43 +171,35 @@ class FrozenRanker:
 
 
 class FrozenSizer:
+    """Arm E with the pre-registered FINALIZED mapping (blocker 6):
+    the frozen regressor's prediction bucketed by the mapping recorded in
+    bce_finalization.json (mapping id + frozen train-prediction
+    quantiles). E may never choose zero."""
     E_BUCKETS = (0.25, 0.50, 0.75, 1.00)
 
-    def __init__(self, model_dir, ctx):
+    def __init__(self, model_dir, ctx, mapping: str, quantiles: dict):
         self.booster = lgb.Booster(
             model_file=os.path.join(model_dir, "arm_e.txt"))
-        self.cuts = np.load(os.path.join(model_dir, "arm_e_cuts.npz"))["cuts"]
+        q = quantiles
+        cuts_by_mapping = {
+            "M1": [q["q25"], q["q50"], q["q75"]],
+            "M2": [0.0, q["q50"], q["q75"]],
+            "M3": [q["q25"], q["q75"], q["q90"]],
+            "M4": None,
+        }
+        self.mapping = mapping
+        self.cuts = cuts_by_mapping[mapping]
         self.ctx = ctx
-        self.version = "E-lgbm-draft-frozen"
+        self.version = f"E-lgbm-final-{mapping}"
         self.fnames = FEATURE_NAMES          # SD-FEATNAMES fix
 
     def bucket(self, cand, _features):
+        if self.cuts is None:                # M4 flat control
+            return 1.0
         f = self.ctx.features(cand)
         x = np.array([[f[fn] for fn in self.fnames]], float)
         p = float(self.booster.predict(x)[0])
         return self.E_BUCKETS[int(np.searchsorted(self.cuts, p))]
-
-
-class FrozenRLPolicy:
-    """Adapter from the orchestrator's management-observation dict to the
-    trained 10-dim policy. KNOWN INTEGRATION DEFECT (recorded for the
-    Checkpoint-1 inventory): the orchestrator supplies only
-    {unrealized_r, bars_held}, a strict subset of the 10-dim training
-    observation; the remaining dims are fed as 0. The shakedown exists to
-    surface exactly this class of mismatch."""
-    ACTIONS = ("hold", "reduce_25", "reduce_50", "close", "tighten_stop",
-               "move_stop_breakeven")
-
-    def __init__(self, model_dir):
-        z = np.load(os.path.join(model_dir, "arm_f_policy.npz"))
-        self.policy = LinearPolicy(z["theta"])
-        self.version = f"F-cem-seed{int(z['seed'])}-frozen"
-
-    def action(self, obs: dict) -> str:
-        v = np.zeros(10)
-        v[0] = obs.get("unrealized_r", 0.0)
-        v[1] = min(1.0, obs.get("bars_held", 0) / P.MAX_HOLD_BARS_4H)
-        return self.ACTIONS[self.policy.act(v)]
 
 
 class RegimeAdapter:
@@ -239,9 +243,27 @@ def main() -> None:  # pragma: no cover — the shakedown run
     ap.add_argument("--lake", required=True)
     ap.add_argument("--manifests-dir", default="data/manifests")
     ap.add_argument("--model-dir", required=True)
+    ap.add_argument("--sb3-dir", required=True,
+                    help="dir with arm_f_sb3_manifest.json + seed zips")
     ap.add_argument("--out-dir", required=True)
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
+
+    # pre-registered FINALIZED B/C/E decision rules (blocker 6)
+    with open(os.path.join(args.model_dir, "bce_finalization.json")) as f:
+        fin = json.load(f)
+    b_threshold = float(fin["arm_b"]["final"]["threshold"])
+    c_top_k = int(fin["arm_c"]["final"]["top_k"])
+    e_mapping = fin["arm_e"]["final"]["mapping"]
+    e_quantiles = fin["arm_e"]["final"]["train_pred_quantiles"]
+
+    # the selected SB3 Arm F policy (blocker 1), canonical obs-v2 only
+    with open(os.path.join(args.sb3_dir, "arm_f_sb3_manifest.json")) as f:
+        sb3m = json.load(f)
+    sel_seed = int(sb3m["selected_seed"])
+    rl = load_policy(
+        os.path.join(args.sb3_dir, f"arm_f_sb3_seed{sel_seed}.zip"),
+        version=f"F-sb3-ppo-seed{sel_seed}-frozen")
 
     lake = GuardedLake(args.lake, args.manifests_dir)
     part = lake.partition
@@ -286,11 +308,14 @@ def main() -> None:  # pragma: no cover — the shakedown run
     comp = ShakedownCompetition(
         provider, 10_000.0, universe_fn,
         valid_round_fn=lambda t: validity.get(int(t), False),
-        filter_model=FrozenFilter(args.model_dir, ctx),
+        filter_model=FrozenFilter(args.model_dir, ctx,
+                                  threshold=b_threshold),
         ranker_model=FrozenRanker(args.model_dir, ctx),
-        sizer_model=FrozenSizer(args.model_dir, ctx),
-        rl_policy=FrozenRLPolicy(args.model_dir),
+        sizer_model=FrozenSizer(args.model_dir, ctx, mapping=e_mapping,
+                                quantiles=e_quantiles),
+        rl_policy=rl,
         regime_model=RegimeAdapter(regime),
+        ranker_top_k=c_top_k,
         feature_ctx=ctx)
 
     print(f"SHAKEDOWN run {start} .. {end} "
@@ -329,15 +354,78 @@ def main() -> None:  # pragma: no cover — the shakedown run
             defects.append({"id": f"SD-RLACTION-{a}", "severity": "info",
                             "detail": f"{len(rej)} RL actions rejected by "
                                       f"the governor (filter working)"})
-    defects.append({
-        "id": "SD-RLOBS", "severity": "integration-defect",
-        "detail": ("orchestrator supplies a 2-field management observation "
-                   "to a policy trained on the 10-dim env observation; "
-                   "remaining dims zero-filled (FrozenRLPolicy). Root "
-                   "cause: Competition._rl_management interface predates "
-                   "the trained env. Affected arms: F, G (management "
-                   "only). Fix scheduled post-Checkpoint-1 with retraining "
-                   "assessment under the material-change rule.")})
+    # ---- blocker-4 observability: coverage + reconciliation --------------
+    valid_rounds = {int(t) for t, ok in validity.items()
+                    if ok and start <= t <= end
+                    and comp.coordinator.is_valid(t)}
+    rl_observability = {}
+    for a in ("F", "G"):
+        st = comp.arms[a]
+        recs = st.rl_decisions
+        by_t: dict[int, int] = {}
+        for r in recs:
+            by_t[r["t"]] = by_t.get(r["t"], 0) + 1
+        # coverage: every valid round at which the arm HELD an open
+        # position must have >= 1 RL decision record. Open intervals are
+        # reconstructed from the engine event stream (decision-time info).
+        opens = {}
+        intervals = []
+        for e in st.engine.events:
+            if e["kind"] == "fill_open":
+                opens[e["pos_id"]] = e["t"]
+            elif e["kind"] == "position_closed" and e["pos_id"] in opens:
+                intervals.append((opens.pop(e["pos_id"]), e["t"]))
+        intervals += [(t0_, end) for t0_ in opens.values()]
+        uncovered = sorted(
+            t for t in valid_rounds
+            if any(o < t <= c for o, c in intervals)
+            and t not in by_t)
+        n_exec_tighten = sum(
+            1 for r in recs
+            if r.get("executed_action") in ("tighten_stop",
+                                            "move_stop_breakeven"))
+        n_engine_tighten = sum(1 for e in st.engine.events
+                               if e["kind"] == "stop_tightened")
+        recon_ok = n_exec_tighten == n_engine_tighten
+        missing_obs = [r["t"] for r in recs
+                       if r.get("backstop") is None
+                       and r.get("observation") is None]
+        rl_observability[a] = {
+            "n_rl_decisions": len(recs),
+            "hold_count": sum(1 for r in recs
+                              if r.get("executed_action") == "hold"),
+            "executed_action_counts": {
+                act: sum(1 for r in recs
+                         if r.get("executed_action") == act)
+                for act in sorted({r.get("executed_action")
+                                   for r in recs} - {None})},
+            "governor_rejects": sum(
+                1 for r in recs if r.get("governor") == "reject"),
+            "boundaries_with_decisions": len(by_t),
+            "uncovered_open_boundaries": uncovered,
+            "tighten_reconciliation":
+                {"rl_records": n_exec_tighten,
+                 "engine_events": n_engine_tighten, "match": recon_ok},
+            "obs_schema_hashes": sorted({r["obs_schema_hash"]
+                                         for r in recs
+                                         if "obs_schema_hash" in r}),
+        }
+        if uncovered:
+            defects.append({"id": f"SD-RLCOVERAGE-{a}",
+                            "severity": "blocking",
+                            "detail": f"{len(uncovered)} valid rounds with "
+                                      f"an open position but no RL "
+                                      f"decision record"})
+        if not recon_ok:
+            defects.append({"id": f"SD-RLRECON-{a}", "severity": "blocking",
+                            "detail": "executed tighten_stop counts differ "
+                                      "between RL records and engine "
+                                      "events"})
+        if missing_obs:
+            defects.append({"id": f"SD-RLOBSNULL-{a}",
+                            "severity": "blocking",
+                            "detail": f"{len(missing_obs)} non-backstop RL "
+                                      f"records missing the obs vector"})
 
     marker = "SHAKEDOWN — INVALID FOR PERFORMANCE CONCLUSIONS"
     paths = {}
@@ -359,9 +447,18 @@ def main() -> None:  # pragma: no cover — the shakedown run
         save(f"decisions_{a}.jsonl.gz", st.decisions)
         save(f"events_{a}.jsonl.gz", st.engine.events)
         save(f"equity_{a}.json", st.equity_curve)
+        # blocker 4: per-arm governor event stream (all arms, not F/G only)
+        save(f"governor_{a}.jsonl.gz", st.governor.events)
+    for a in ("F", "G"):
+        # blocker 4: full RL decision ledger — obs vectors + schema hash,
+        # raw/executed actions, governor outcomes, before/after stop+qty
+        save(f"rl_decisions_{a}.jsonl.gz", comp.arms[a].rl_decisions)
+    save("rl_observability.json", {"marker": marker,
+                                   "per_arm": rl_observability})
     save("events_G_shadow.jsonl.gz", comp.shadow.engine.events)
     save("equity_G_shadow.json", comp.shadow.equity_curve)
     save("candidates.jsonl.gz", comp.candidates)
+    save("round_records.jsonl.gz", comp.coordinator.records)
     save("defects.json", {"marker": marker, "defects": defects,
                           "round_counts": rc,
                           "decisions_per_arm": n_dec})
@@ -375,6 +472,13 @@ def main() -> None:  # pragma: no cover — the shakedown run
                 "final_equity_G_shadow":
                     comp.shadow.equity_curve[-1]["equity"],
                 "n_defects": len(defects),
+                "model_wiring": {
+                    "arm_b_threshold": b_threshold,
+                    "arm_c_top_k": c_top_k,
+                    "arm_e_mapping": e_mapping,
+                    "arm_f_policy": rl.version,
+                    "obs_schema": rl.obs_schema},
+                "rl_observability": rl_observability,
                 "artifacts": {n: {"path": p, "sha256": sha256_file(p)}
                               for n, p in paths.items()}}
     mp = os.path.join(args.out_dir, "SHAKEDOWN_INVALID_manifest.json")
