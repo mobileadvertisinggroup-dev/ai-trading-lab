@@ -1,0 +1,211 @@
+{
+ "compute_profile": {
+  "formula": "min(150000, floor(0.9*(4h/10)*sps)) rounded down to a multiple of n_steps=512",
+  "probe_seconds": 2.3,
+  "probe_timesteps": 2048,
+  "steps_per_second": 891.7,
+  "total_timesteps_per_seed": 149504
+ },
+ "episode_order": "(t, symbol) ascending, cycled",
+ "hyperparameters": {
+  "batch_size": 128,
+  "device": "cpu",
+  "gamma": 1.0,
+  "n_steps": 512,
+  "others": "SB3 2.7.0 PPO defaults",
+  "policy": "MlpPolicy"
+ },
+ "obs_schema": {
+  "actions": [
+   "hold",
+   "reduce_25",
+   "reduce_50",
+   "close",
+   "tighten_stop",
+   "move_stop_breakeven"
+  ],
+  "dim": 10
+ },
+ "official_seeds": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "pins": {
+  "stable_baselines3": "2.7.0",
+  "torch": "2.13.0+cu130"
+ },
+ "preregistration": "PREREGISTRATION_ARM_F_SB3.md",
+ "seed_results": [
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed1.zip",
+   "artifact_sha256": "989b3ba62bcd3b9cf8219412164a47739f24ebb90832af5033d6446514b7756b",
+   "convergence": {
+    "final_ma": 0.027300198287771738,
+    "median_ma_last_25pct": -0.026635221196820602,
+    "n_episodes": 134894,
+    "non_converged": false
+   },
+   "seed": 1,
+   "total_timesteps": 149504,
+   "train_mean_reward": -0.02312792057124085,
+   "train_seconds": 220.2,
+   "validation_mean_reward": -0.008867861039038015
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed2.zip",
+   "artifact_sha256": "1e5fdc0e91b8b940c02e4cd5f6c0a1bb31fa644b2050d3c407ffac8af6be6e7e",
+   "convergence": {
+    "final_ma": -0.07389704694833747,
+    "median_ma_last_25pct": -0.0070894514343460705,
+    "n_episodes": 90011,
+    "non_converged": true
+   },
+   "seed": 2,
+   "total_timesteps": 149504,
+   "train_mean_reward": -0.0031751407128286753,
+   "train_seconds": 201.7,
+   "validation_mean_reward": -0.009778705604734926
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed3.zip",
+   "artifact_sha256": "0836edfc708c3cd09e23684511ab90ba58ef78d3912d6899285f599496874d07",
+   "convergence": {
+    "final_ma": 0.08878476611118256,
+    "median_ma_last_25pct": -0.010805342234318683,
+    "n_episodes": 85862,
+    "non_converged": false
+   },
+   "seed": 3,
+   "total_timesteps": 149504,
+   "train_mean_reward": -0.003676919369295414,
+   "train_seconds": 190.8,
+   "validation_mean_reward": -0.016012521794978783
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed4.zip",
+   "artifact_sha256": "5112d080dd276ef5ad781d04014421c632db49d754b1a5a92db10f06ca4f663c",
+   "convergence": {
+    "final_ma": -0.022671094096306944,
+    "median_ma_last_25pct": -0.005074082758738587,
+    "n_episodes": 91860,
+    "non_converged": true
+   },
+   "seed": 4,
+   "total_timesteps": 149504,
+   "train_mean_reward": 0.0006465024500196481,
+   "train_seconds": 201.2,
+   "validation_mean_reward": 0.004489695994022424
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed5.zip",
+   "artifact_sha256": "8b73666507243826864dbd6d6058d16660bd500417121575329b0ab125517523",
+   "convergence": {
+    "final_ma": -0.04219112190845785,
+    "median_ma_last_25pct": -0.0054940545480560606,
+    "n_episodes": 90872,
+    "non_converged": true
+   },
+   "seed": 5,
+   "total_timesteps": 149504,
+   "train_mean_reward": -0.0010065049630041463,
+   "train_seconds": 200.7,
+   "validation_mean_reward": -0.011210006437496811
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed6.zip",
+   "artifact_sha256": "07b3a15fd48f231ee3942139b9b410aaed805d7d5233f21df2d16f3ddd2448af",
+   "convergence": {
+    "final_ma": -0.04813518247130292,
+    "median_ma_last_25pct": -0.002414127008996995,
+    "n_episodes": 89486,
+    "non_converged": true
+   },
+   "seed": 6,
+   "total_timesteps": 149504,
+   "train_mean_reward": 0.001408999299161748,
+   "train_seconds": 191.0,
+   "validation_mean_reward": -0.004751528315304373
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed7.zip",
+   "artifact_sha256": "78ea0d8542c4953402fe72d3f40f2610284fff1aefc0bf46b260b775d1034f6a",
+   "convergence": {
+    "final_ma": -0.06402163932244154,
+    "median_ma_last_25pct": -0.008868979873169255,
+    "n_episodes": 97840,
+    "non_converged": true
+   },
+   "seed": 7,
+   "total_timesteps": 149504,
+   "train_mean_reward": -0.001662031568015809,
+   "train_seconds": 201.3,
+   "validation_mean_reward": -0.004695007977618019
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed8.zip",
+   "artifact_sha256": "07298214544afe88e68c3d441553682884d7dce1dff4617fb3f11d66a8e908c0",
+   "convergence": {
+    "final_ma": -0.06385092962520265,
+    "median_ma_last_25pct": -0.007998249840289053,
+    "n_episodes": 87728,
+    "non_converged": true
+   },
+   "seed": 8,
+   "total_timesteps": 149504,
+   "train_mean_reward": -0.0008068389615681871,
+   "train_seconds": 198.4,
+   "validation_mean_reward": -0.0010678056651016216
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed9.zip",
+   "artifact_sha256": "9e4c1a0ad08762e0a938eb24ef5faafda524c88fa1fe83543e2863e41cb45af8",
+   "convergence": {
+    "final_ma": -0.088895354323444,
+    "median_ma_last_25pct": -0.011388405554551761,
+    "n_episodes": 94297,
+    "non_converged": true
+   },
+   "seed": 9,
+   "total_timesteps": 149504,
+   "train_mean_reward": -4.676957232688913e-05,
+   "train_seconds": 196.7,
+   "validation_mean_reward": 0.0012481268742534511
+  },
+  {
+   "algorithm": "SB3-PPO-MlpPolicy",
+   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed10.zip",
+   "artifact_sha256": "08911cdbe26465636683a19433024cdafeb6bfe4ed0f0e1baeed68a843068183",
+   "convergence": {
+    "final_ma": 0.023482483033612084,
+    "median_ma_last_25pct": -0.009243895968387842,
+    "n_episodes": 87865,
+    "non_converged": false
+   },
+   "seed": 10,
+   "total_timesteps": 149504,
+   "train_mean_reward": -0.004479739822519377,
+   "train_seconds": 198.2,
+   "validation_mean_reward": -0.007798643150354873
+  }
+ ],
+ "selected_seed": 4,
+ "selection_rule": "highest mean validation reward; ties -> lower seed (pre-registered)",
+ "validation_isolation": "training episodes = purged TRAIN split only (disjointness asserted at load); validation consumed ONLY by the pre-registered selection rule; all evaluation predictions deterministic=True"
+}

@@ -83,7 +83,8 @@
   "D55",
   "D56",
   "D57",
-  "D58"
+  "D58",
+  "D59"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -183,6 +184,13 @@
   "arm_f_policy.npz": {
    "path": "/home/user/lake-work/models/arm_f_policy.npz",
    "sha256": "9da5a4305c6aeec48156897ae214e18b43792793dfa29fcfcc937d4ab445392e"
+  },
+  "arm_f_sb3": {
+   "artifact": "data/models_sb3/arm_f_sb3_seed4.zip",
+   "manifest_sha256": "c7e650f8a68258d37fc34990546c025ad74acb4f2fb9c8aaa64431c96283f8a5",
+   "provenance_sha256": "c4d1463dfb37894a71e9d373743e68711938c54acd1d65b2647886f569fe8e9d",
+   "selected_seed": 4,
+   "sha256": "5112d080dd276ef5ad781d04014421c632db49d754b1a5a92db10f06ca4f663c"
   },
   "arm_f_seeds.json": {
    "path": "/home/user/lake-work/models/arm_f_seeds.json",
