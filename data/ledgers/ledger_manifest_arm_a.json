@@ -1,33 +1,54 @@
 {
-  "artifacts": {
-    "candidates": {
-      "path": "/home/user/lake-work/ledgers/candidates_arm_a.parquet",
-      "sha256": "2aeb7cbe488319b68e098e7abcee3661aef7139225d0ecf631e089a674978267"
-    },
-    "equity": {
-      "path": "/home/user/lake-work/ledgers/equity_arm_a.parquet",
-      "sha256": "6d451e58198bea9b8de408ecc7394dc2ca6154d9b7df84cc72d3a2fa6d9e0a25"
-    },
-    "events": {
-      "path": "/home/user/lake-work/ledgers/events_arm_a.jsonl.gz",
-      "sha256": "3806a7ab52193d5b6892892d8704a73690f4df4ae3a70c7d93fe7699d45686c7"
-    },
-    "gap_report": {
-      "path": "/home/user/lake-work/ledgers/gap_exclusion_report.json",
-      "sha256": "cf20564e3902e8152e3936f9d5c860492a3b9fe12d0eb43461d2cf4b9963f26a"
-    },
-    "labels": {
-      "path": "/home/user/lake-work/ledgers/labels_arm_a.parquet",
-      "sha256": "0da69ab64dcf5ae26677bba4d30a44d769c82a2ea3f2fac6c657e749ac943fb5"
-    }
+ "amendments": [
+  {
+   "behavior_neutrality_proof": {
+    "candidates_sha256": "bit-identical to original",
+    "equity_t_and_equity_columns": "identical; only gross_exposure added",
+    "events_stream_decompressed_sha256": "bit-identical to original (4ec4332ffa44a4b87f7abbc4c4f1d4578a05f56c3147ff466556638f35543843)",
+    "final_equity": 4090.2240675064613,
+    "labels_sha256": "bit-identical to original"
+   },
+   "date": "2026-08-27",
+   "equity_sha256_new": "fe8dea69ac12ef574e61da2ae5e4afadcc6b4191912c7265083d8b447b9cb1fc",
+   "equity_sha256_old": "6d451e58198bea9b8de408ecc7394dc2ca6154d9b7df84cc72d3a2fa6d9e0a25",
+   "id": "EQUITY-EXPOSURE-COLUMN",
+   "original_preserved_as": "equity_arm_a_v1_noexposure.parquet",
+   "reason": "Adjudication blocker 2 (obs-v2): training episodes need the RECORDED official-run exposure fraction per boundary. The official Arm A run was re-executed with equity_curve additionally recording gross_exposure (pure recording)."
+  }
+ ],
+ "artifacts": {
+  "candidates": {
+   "path": "/home/user/lake-work/ledgers/candidates_arm_a.parquet",
+   "sha256": "2aeb7cbe488319b68e098e7abcee3661aef7139225d0ecf631e089a674978267"
   },
-  "elapsed_seconds": 132.0,
-  "end_ms": 1752133500000,
-  "final_equity": 4090.2240675064613,
-  "n_candidates": 26023,
-  "n_events": 36589,
-  "release_version": "raw-v1",
-  "run": "OFFICIAL Arm A",
-  "start_ms": 1610323200000,
-  "starting_cash": 10000.0
+  "equity": {
+   "path": "/home/user/lake-work/ledgers/equity_arm_a.parquet",
+   "sha256": "fe8dea69ac12ef574e61da2ae5e4afadcc6b4191912c7265083d8b447b9cb1fc"
+  },
+  "equity_v1_noexposure": {
+   "path": "/home/user/lake-work/ledgers/equity_arm_a_v1_noexposure.parquet",
+   "sha256": "6d451e58198bea9b8de408ecc7394dc2ca6154d9b7df84cc72d3a2fa6d9e0a25"
+  },
+  "events": {
+   "path": "/home/user/lake-work/ledgers/events_arm_a.jsonl.gz",
+   "sha256": "3806a7ab52193d5b6892892d8704a73690f4df4ae3a70c7d93fe7699d45686c7"
+  },
+  "gap_report": {
+   "path": "/home/user/lake-work/ledgers/gap_exclusion_report.json",
+   "sha256": "cf20564e3902e8152e3936f9d5c860492a3b9fe12d0eb43461d2cf4b9963f26a"
+  },
+  "labels": {
+   "path": "/home/user/lake-work/ledgers/labels_arm_a.parquet",
+   "sha256": "0da69ab64dcf5ae26677bba4d30a44d769c82a2ea3f2fac6c657e749ac943fb5"
+  }
+ },
+ "elapsed_seconds": 132.0,
+ "end_ms": 1752133500000,
+ "final_equity": 4090.2240675064613,
+ "n_candidates": 26023,
+ "n_events": 36589,
+ "release_version": "raw-v1",
+ "run": "OFFICIAL Arm A",
+ "start_ms": 1610323200000,
+ "starting_cash": 10000.0
 }
