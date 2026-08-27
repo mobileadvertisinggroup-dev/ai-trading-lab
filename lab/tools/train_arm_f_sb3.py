@@ -201,11 +201,13 @@ def main() -> None:  # pragma: no cover — official training run
 
     labels = pd.read_parquet(
         os.path.join(args.ledgers_dir, "labels_arm_a.parquet"))
-    cands = pd.read_parquet(
-        os.path.join(args.ledgers_dir, "candidates_arm_a.parquet"))
-    df = labels[["t", "symbol", "split", "net_r", "exit_t",
-                 "qty_filled"]].merge(
-        cands[["t", "symbol", "side", "close", "r_dist", "rank", "atr"]],
+    feats = pd.read_parquet(
+        os.path.join(args.ledgers_dir, "features_arm_a.parquet"))
+    # features parquet = the purged modeling set (carries split); labels
+    # carry every decision-time candidate field including the entry ATR
+    df = feats[["t", "symbol", "split"]].merge(
+        labels[["t", "symbol", "side", "close", "r_dist", "rank", "atr",
+                "net_r", "exit_t", "qty_filled"]],
         on=["t", "symbol"], validate="1:1")
 
     eq = pd.read_parquet(args.equity_ledger)
