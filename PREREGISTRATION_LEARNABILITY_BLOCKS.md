@@ -80,3 +80,10 @@ cannot change after viewing Checkpoint-2 data.
 ## Interim conclusion (directed, stands until independent adjudication)
 "NO DEMONSTRATED LEARNABILITY; statistical significance not
 adjudicated." The rerun reports statistics; it does not self-adjudicate.
+
+## Amendment A1 (2026-08-27, provenance directive)
+- Official execution runs under lab/tools/provenance_run.py from a
+  clean, detached git worktree at a single recorded commit (automatic
+  provenance manifest; outputs outside the checkout). A run launched
+  earlier from the mutable working tree is preserved as a PROFILE
+  cross-check only. No statistical procedure changes.

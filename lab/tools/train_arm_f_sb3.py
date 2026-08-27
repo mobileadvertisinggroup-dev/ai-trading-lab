@@ -219,6 +219,12 @@ def main() -> None:  # pragma: no cover — official training run
 
     tr = df[df.split == "train"]
     va = df[df.split == "validation"]
+    # reviewer check C: NO validation information during policy fitting —
+    # the training cycler sees the purged TRAIN split only, provably
+    # disjoint from validation; validation enters ONLY through the
+    # pre-registered post-hoc selection rule.
+    overlap = set(zip(tr.t, tr.symbol)) & set(zip(va.t, va.symbol))
+    assert not overlap, f"train/validation overlap: {sorted(overlap)[:5]}"
     print(f"trades: train {len(tr)} / validation {len(va)}", flush=True)
     print("building obs-v2 episodes...", flush=True)
     ep_tr = build_episodes_v2(tr, lake, end_ms, expo_frac)
@@ -294,6 +300,12 @@ def main() -> None:  # pragma: no cover — official training run
         "selected_seed": best["seed"],
         "selection_rule": "highest mean validation reward; ties -> lower "
                           "seed (pre-registered)",
+        "validation_isolation": ("training episodes = purged TRAIN split "
+                                 "only (disjointness asserted at load); "
+                                 "validation consumed ONLY by the "
+                                 "pre-registered selection rule; all "
+                                 "evaluation predictions "
+                                 "deterministic=True"),
         "seed_results": seed_results,
     }
     mpath = os.path.join(args.out_dir, "arm_f_sb3_manifest.json")

@@ -58,3 +58,18 @@ Everything below is fixed now; deviations require a documented amendment.
   section of `model_manifest.json`) is INVALID as of this document and is
   preserved under `data/models_invalid_cem/` as history. Arm G will be
   regenerated from the SB3 artifact; G receives no training of its own.
+
+## Amendment A1 (2026-08-27, provenance directive — exact version record)
+- The exact installed torch build on the official runner is
+  **2.13.0+cu130** (the abstract pin `torch==2.13.0` in requirements.txt
+  resolves to this CUDA build here; training and inference run with
+  `device="cpu"` as pre-registered). Every "torch 2.13.0" reference above
+  denotes exactly this build; the trainer records the full version
+  string in its manifest. This amendment corrects the dependency RECORD
+  only — no algorithm, hyperparameter, seed, budget, or selection change.
+- Provenance addendum: official training runs execute under
+  lab/tools/provenance_run.py from a clean, detached git worktree at a
+  single recorded commit, with the automatic provenance manifest
+  (source-hash census pre/post, import-path confinement, dependency
+  versions, command line, times, output hashes). Any earlier training
+  output produced outside this gate is PROFILE, not official.

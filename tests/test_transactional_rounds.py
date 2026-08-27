@@ -42,14 +42,20 @@ class LateBomb:
     """Sizer (consulted by arms E and G, LATE in the round) that raises at
     a chosen boundary — after A/B/C/D decided, exits were proposed, F/G
     stops were tightened, governor checks ran, and decision records were
-    appended."""
+    appended. `capture` (optional) is invoked immediately BEFORE the
+    raise so the test can prove in-round mutations (e.g. an already
+    tightened stop) really happened prior to the failure."""
     version = "test-bomb"
 
-    def __init__(self, fail_at: int):
+    def __init__(self, fail_at: int, capture=None):
         self.fail_at = fail_at
+        self.capture = capture
+        self.captured = None
 
     def bucket(self, cand, features) -> float:
         if cand["t"] == self.fail_at:
+            if self.capture is not None and self.captured is None:
+                self.captured = self.capture()
             raise RuntimeError("late-arm failure injected by test")
         return 1.00
 
@@ -97,10 +103,21 @@ def test_late_arm_failure_equivalent_to_no_round_at_all():
     fail_at = T0 + (HIST + 7) * H4          # SYM2 breakout round
     end = T0 + (n4 * 16 - 1) * B15
 
+    holder = {}
+
+    def capture_stops():
+        # runs INSIDE the failing round, just before the injected raise:
+        # snapshot every F/G stop so the test can prove a stop was
+        # ALREADY mutated by the RL tighten before the failure
+        return {a: {p.pos_id: p.stop
+                    for p in holder["bombed"].arms[a].engine
+                    .open_positions()} for a in ("F", "G")}
+
     def make(bombed: bool):
         prov = ArrayProvider({"AAAUSDT": {k: v.copy() for k, v in d1.items()},
                               "BBBUSDT": {k: v.copy() for k, v in d2.items()}})
-        sizer = LateBomb(fail_at) if bombed else LateBomb(-1)
+        sizer = (LateBomb(fail_at, capture=capture_stops) if bombed
+                 else LateBomb(-1))
         valid = ((lambda t: True) if bombed
                  else (lambda t: t != fail_at))
         return Competition(prov, 10_000,
@@ -109,6 +126,7 @@ def test_late_arm_failure_equivalent_to_no_round_at_all():
                            sizer_model=sizer, rl_policy=TightenPolicy())
 
     bombed = make(True)
+    holder["bombed"] = bombed
     control = make(False)
     # confirm the failing round REALLY exercised the late-failure path:
     # open positions existed (wave 1), candidates existed (wave 2)
@@ -116,13 +134,52 @@ def test_late_arm_failure_equivalent_to_no_round_at_all():
     assert any(bombed.arms[a].engine.open_positions() for a in ARMS)
     control.run(T0, fail_at - B15)
     assert full_state(bombed) == full_state(control)
+    pre_round_stops = {a: {p.pos_id: p.stop
+                           for p in control.arms[a].engine.open_positions()}
+                       for a in ("F", "G")}
+    # reviewer check B: adapter/model state must carry NO round effects —
+    # snapshot the stateless production-model surfaces before the failure
+    model_state_before = {
+        "ranker": dict(vars(bombed.ranker_model)),
+        "regime": {k: v for k, v in vars(bombed.regime_model).items()},
+        "policy": dict(vars(bombed.rl_policy)),
+    }
 
-    bombed.run(fail_at, end)
-    control.run(fail_at, end)
+    # process ONLY the failing round (plus its 15m bars, no further
+    # decision round) so rollback effects are observable in isolation
+    bombed.run(fail_at, fail_at + H4 - B15)
+    control.run(fail_at, fail_at + H4 - B15)
+    # reviewer check B — immediate stop mutation: inside the failing
+    # round, BEFORE the injected failure, at least one F/G stop had
+    # already been tightened relative to its pre-round value ...
+    cap = bombed.sizer_model.captured
+    assert cap is not None, "capture hook never ran"
+    mutated = [(a, pid) for a in ("F", "G")
+               for pid, s in cap[a].items()
+               if pre_round_stops[a].get(pid) is not None
+               and s != pre_round_stops[a][pid]]
+    assert mutated, "no in-round stop mutation was observed pre-failure"
+    # ... and the rollback restored every stop to the pre-round value
+    for a in ("F", "G"):
+        post = {p.pos_id: p.stop
+                for p in bombed.arms[a].engine.open_positions()}
+        for pid, s in pre_round_stops[a].items():
+            assert post.get(pid) == s, (a, pid, s, post.get(pid))
+    assert full_state(bombed) == full_state(control)
+
+    bombed.run(fail_at + H4, end)
+    control.run(fail_at + H4, end)
     assert full_state(bombed) == full_state(control), \
         "invalid round leaked state relative to the no-round control"
     assert not bombed.coordinator.is_valid(fail_at)
     assert bombed.coordinator.counts()["invalid"] >= 1
+    # reviewer check B — adapter/model state after the failure: the
+    # production adapters are stateless; nothing about the failed round
+    # may persist in them (TightenPolicy holds no state by construction)
+    assert dict(vars(bombed.ranker_model)) == model_state_before["ranker"]
+    assert dict(vars(bombed.rl_policy)) == model_state_before["policy"]
+    assert {k: v for k, v in vars(bombed.regime_model).items()} \
+        == model_state_before["regime"]
 
 
 def test_failure_before_any_decision_also_rolls_back():

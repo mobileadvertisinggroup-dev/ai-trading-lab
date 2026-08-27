@@ -75,3 +75,12 @@ No refitting, no new features, no metric substitution, no evaluation
 outside the 18 configurations, no reordering of tie rules after
 results are seen. Any deviation requires a documented amendment BEFORE
 it is executed.
+
+## Amendment A1 (2026-08-27, provenance directive)
+- Official execution runs under lab/tools/provenance_run.py from a
+  clean, detached git worktree at a single recorded commit (automatic
+  provenance manifest; outputs outside the checkout). The earlier
+  same-day evaluation from the mutable working tree is preserved as a
+  PROFILE cross-check only; the 18-configuration budget is NOT consumed
+  twice — the official run re-executes the identical pre-registered
+  grids deterministically (no new configurations are examined).
