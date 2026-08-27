@@ -52,3 +52,36 @@ Chronological, append-only. Decision IDs refer to BUILD_STATE.md.
   requested. This changelog, ARCHITECTURE.md, MODEL_CARDS.md added for the
   bundle. NO code, test, policy, model, or ledger changes; SD-RLOBS
   deliberately preserved unfixed pending adjudication.
+
+## 2026-08-27 (Checkpoint-1 adjudication: NOT APPROVED — corrections)
+- D52 recorded: independent adjudication received; six blockers directed;
+  original root hash and manifest preserved as historical NOT-APPROVED.
+- SUPERSEDING DESCRIPTION (directed): shakedown run 2 is henceforth
+  described as "operationally completed under known defective RL
+  observations, with insufficient RL-action evidence and unproven
+  transactional rollback". Any earlier "operationally clean" phrasing
+  (including in this changelog's 2026-08-26 entries and the preserved
+  Checkpoint-1 report) is superseded by this description; the historical
+  files themselves are preserved unmodified.
+- D46 wording correction: the "cannot increase risk" claim RETRACTED in
+  RISK_POLICY.md (correct claim: preserves the stated limits while
+  preventing an unintended absorbing pause).
+- D47 pin: "permanent delisting inferred after two days without bars"
+  recorded in lab/protocol.py as the permanent interpretation.
+- Blockers 2+3: canonical obs-v2 builder (lab/arms/observation.py) with
+  bit-identical training/inference parity proof; transactional
+  synchronized rounds with control-run equivalence proof; full RL
+  observability recording in the orchestrator.
+- Blocker 2 episode provenance: official equity ledger regenerated WITH
+  gross_exposure (behavior neutrality proven bit-identically;
+  EQUITY-EXPOSURE-COLUMN manifest amendment; original preserved).
+- Blocker 1: PREREGISTRATION_ARM_F_SB3.md committed BEFORE any SB3
+  output; CEM artifacts moved to data/models_invalid_cem/ as INVALID
+  history; SB3 PPO 10-seed training executed per the pre-registration.
+- Blocker 5: PREREGISTRATION_LEARNABILITY_BLOCKS.md committed before the
+  dependence-aware rerun; v1 permutation p-values retracted (files
+  preserved).
+- Blocker 6: PREREGISTRATION_BCE_FINALIZATION.md committed before grid
+  evaluation; finalized B threshold 0.30, C top-K 3, E mapping M3 under
+  the frozen SPEC utility; anomaly explanations recorded; honest
+  negatives preserved (data/models/bce_finalization.json).

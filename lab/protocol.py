@@ -41,7 +41,11 @@ UNIVERSE_MIN_DEFINED_DAYS = 20     # days with defined daily qvol in window
 UNIVERSE_MIN_COMPLETENESS = 0.99   # share of expected 15m bars, trailing 30d
 UNIVERSE_TOP_N = 75
 DAILY_QVOL_MIN_BARS = 90           # daily qvol defined only with >= 90/96 bars
-TRADABLE_LOOKBACK_MS = 2 * 24 * 60 * MIN  # "tradable at t": bar within 2 days
+# "tradable at t": a 15m bar within the last 2 days. PINNED PERMANENT
+# INTERPRETATION (D52, independent adjudication): "permanent delisting"
+# is operationally INFERRED after two days without bars — this frozen
+# reading (forced_delist_close trigger) is never to be changed silently.
+TRADABLE_LOOKBACK_MS = 2 * 24 * 60 * MIN
 
 # ---- cost model (protocol §5) --------------------------------------------
 TAKER_FEE = 0.0005            # 5.0 bps per side

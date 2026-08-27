@@ -2,8 +2,11 @@
 
 The external deterministic risk governor (SPEC_FINAL-1.2.md §14). It sits
 OUTSIDE every model and every arm — including Arm A — and is enforced by
-`lab/risk/governor.py`. No AI model may bypass it; it can restrict any
-action but can never increase risk; a failed AI arm is never silently
+`lab/risk/governor.py`. No AI model may bypass it; per request it can
+only reduce or reject what was proposed (allowed qty ≤ requested qty,
+management restricted to risk-reducing actions — a mechanical property
+of `check_entry`/`check_action`, distinct from the retracted D46 pause
+claim, see changelog); a failed AI arm is never silently
 replaced by Arm A. Every governor decision (approve / restrict / reject)
 is recorded with its reason.
 
@@ -61,7 +64,13 @@ material change (spec §16).
   permanent halt. v2 preserves the crash behavior exactly (a ≥25% fall
   within any 90-day window still blocks entries immediately) and bounds
   the halt horizon: after ~90 flat days the reference peak decays to
-  current equity and trading resumes. The pause can never be gamed to
-  increase risk. This is a PRE-LOCK amendment of a draft policy,
+  current equity and trading resumes. RETRACTION (independent
+  Checkpoint-1 adjudication, D52): the claim originally recorded here —
+  that the v2 pause "cannot increase risk" — is WITHDRAWN. Resuming
+  entries after ~90 flat days creates additional future exposure
+  relative to a permanent halt, so that claim was too strong. The
+  correct, adjudicated statement is: **v2 preserves the stated limits
+  while preventing an unintended absorbing pause.**
+  This is a PRE-LOCK amendment of a draft policy,
   recorded as a material decision for Checkpoint-1 review; the frozen
   EXPERIMENT_PROTOCOL.md is untouched.
