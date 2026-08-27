@@ -1,0 +1,223 @@
+{
+  "anomaly_explanations": {
+    "arm_b_draft": {
+      "accepted_mean_at_0.50": -0.3343320577411796,
+      "explanation": "The positive base rate centers the classifier's probabilities far below 0.50, so the draft threshold sits in the extreme upper tail of a chance-level score; the accepted set is tiny and its mean lies within the sampling noise of the validation net_r distribution \u2014 a tail artifact, not model preference for bad trades. Preserved as an honest negative.",
+      "n_accepted_at_0.50": 8,
+      "prob_quantiles": {
+        "0.5": 0.2568467413870309,
+        "0.9": 0.37247669594152977,
+        "0.95": 0.41603035480763545,
+        "0.99": 0.49850128471247823
+      },
+      "se_of_mean_of_that_n": 0.5426562584380786,
+      "validation_base_rate_pos": 0.33066666666666666
+    },
+    "arm_e_draft": {
+      "explanation": "With chance-level ranking (validation IC ~0.02), per-bucket means are noise draws around the overall mean; non-monotonicity is the expected behavior of no signal. Preserved as an honest negative.",
+      "overall_validation_mean_net_r": 0.06583132611671459,
+      "per_bucket": [
+        {
+          "bucket": 0.25,
+          "deviation_from_overall": -0.25182019388445237,
+          "exceeds_2se": true,
+          "mean_net_r": -0.18598886776773776,
+          "n": 149,
+          "se": 0.11408703311137675
+        },
+        {
+          "bucket": 0.5,
+          "deviation_from_overall": 0.1187473954122545,
+          "exceeds_2se": false,
+          "mean_net_r": 0.1845787215289691,
+          "n": 240,
+          "se": 0.10202135003587466
+        },
+        {
+          "bucket": 0.75,
+          "deviation_from_overall": 0.09095073165990113,
+          "exceeds_2se": false,
+          "mean_net_r": 0.15678205777661572,
+          "n": 272,
+          "se": 0.09624534680094558
+        },
+        {
+          "bucket": 1.0,
+          "deviation_from_overall": -0.17659286541180652,
+          "exceeds_2se": false,
+          "mean_net_r": -0.11076153929509193,
+          "n": 89,
+          "se": 0.15150985283224852
+        }
+      ]
+    }
+  },
+  "arm_b": {
+    "final": {
+      "rule": "highest accepted mean net_r among selectable; ties -> lower threshold",
+      "threshold": 0.3,
+      "verdict": "SELECTED"
+    },
+    "grid": [
+      {
+        "accepted_mean_net_r": 0.08344049440562035,
+        "n_accepted": 218,
+        "selectable": true,
+        "threshold": 0.3
+      },
+      {
+        "accepted_mean_net_r": 0.0739202609794923,
+        "n_accepted": 111,
+        "selectable": true,
+        "threshold": 0.35
+      },
+      {
+        "accepted_mean_net_r": -0.4552580337137048,
+        "n_accepted": 46,
+        "selectable": false,
+        "threshold": 0.4
+      },
+      {
+        "accepted_mean_net_r": -0.6122798730211997,
+        "n_accepted": 19,
+        "selectable": false,
+        "threshold": 0.45
+      },
+      {
+        "accepted_mean_net_r": -0.3343320577411796,
+        "n_accepted": 8,
+        "selectable": false,
+        "threshold": 0.5
+      },
+      {
+        "accepted_mean_net_r": 0.8196261185177038,
+        "n_accepted": 1,
+        "selectable": false,
+        "threshold": 0.55
+      },
+      {
+        "accepted_mean_net_r": null,
+        "n_accepted": 0,
+        "selectable": false,
+        "threshold": 0.6
+      },
+      {
+        "accepted_mean_net_r": null,
+        "n_accepted": 0,
+        "selectable": false,
+        "threshold": 0.65
+      },
+      {
+        "accepted_mean_net_r": null,
+        "n_accepted": 0,
+        "selectable": false,
+        "threshold": 0.7
+      }
+    ]
+  },
+  "arm_c": {
+    "final": {
+      "rule": "highest selected mean net_r among selectable; ties -> smaller K",
+      "top_k": 3,
+      "verdict": "SELECTED"
+    },
+    "grid": [
+      {
+        "n_selected": 443,
+        "selectable": true,
+        "selected_mean_net_r": 0.03280834940746795,
+        "top_k": 1
+      },
+      {
+        "n_selected": 604,
+        "selectable": true,
+        "selected_mean_net_r": 0.0748078675276846,
+        "top_k": 2
+      },
+      {
+        "n_selected": 670,
+        "selectable": true,
+        "selected_mean_net_r": 0.07901753026922392,
+        "top_k": 3
+      },
+      {
+        "n_selected": 720,
+        "selectable": true,
+        "selected_mean_net_r": 0.07158246117344477,
+        "top_k": 5
+      },
+      {
+        "n_selected": 750,
+        "selectable": true,
+        "selected_mean_net_r": 0.06583132611671459,
+        "top_k": 10
+      }
+    ]
+  },
+  "arm_e": {
+    "final": {
+      "dd95_arm_a_reference": 54.99632580713457,
+      "mapping": "M3",
+      "rule": "highest U_E; ties -> earliest of M1..M4",
+      "train_pred_quantiles": {
+        "q25": -0.3487419437139849,
+        "q50": -0.14245720442501314,
+        "q75": 0.16804165587744577,
+        "q90": 0.5632995575770018
+      },
+      "verdict": "SELECTED"
+    },
+    "grid": [
+      {
+        "bucket_counts": {
+          "0.25": 149,
+          "0.5": 240,
+          "0.75": 272,
+          "1.0": 89
+        },
+        "dd95": 34.26316036617411,
+        "mapping": "M1",
+        "mean_sized_r": 0.049796165397725974,
+        "sortino_net": 0.09940257696413339,
+        "utility_UE": 0.09940257696413339
+      },
+      {
+        "bucket_counts": {
+          "0.25": 389,
+          "0.75": 272,
+          "1.0": 89
+        },
+        "dd95": 32.32564112863045,
+        "mapping": "M2",
+        "mean_sized_r": 0.03502986767540845,
+        "sortino_net": 0.07510802606885905,
+        "utility_UE": 0.07510802606885905
+      },
+      {
+        "bucket_counts": {
+          "0.25": 149,
+          "0.5": 512,
+          "0.75": 83,
+          "1.0": 6
+        },
+        "dd95": 26.242701415524717,
+        "mapping": "M3",
+        "mean_sized_r": 0.03960552363908753,
+        "sortino_net": 0.1016192276139037,
+        "utility_UE": 0.1016192276139037
+      },
+      {
+        "bucket_counts": {
+          "1.0": 750
+        },
+        "dd95": 54.99632580713457,
+        "mapping": "M4",
+        "mean_sized_r": 0.06583132611671459,
+        "sortino_net": 0.08490666017017176,
+        "utility_UE": 0.08490666017017176
+      }
+    ]
+  },
+  "budget_configurations": 18,
+  "preregistration": "PREREGISTRATION_BCE_FINALIZATION.md"
+}
