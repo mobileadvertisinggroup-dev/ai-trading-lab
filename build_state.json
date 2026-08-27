@@ -18,10 +18,10 @@
   ],
   "pc1": "adopted 2026-08-25 with explicit user approval after independent review"
  },
- "current_phase": "CHECKPOINT 1 \u2014 STOPPED, awaiting user approval (spec \u00a721)",
+ "current_phase": "CHECKPOINT 1 NOT APPROVED \u2014 executing directed corrections (D52); replacement Checkpoint 1 will follow",
  "phase_0_status": "complete_pending_user_items",
  "last_completed_gate": "invalid shakedown complete (runs preserved); constitutional lock c423f782...",
- "checkpoint_1": "REACHED; root hash PRESERVED BY USER (NOT APPROVED); CHECKPOINT1_REVIEW_BUNDLE.zip submitted; HOLDING for independent adjudication",
+ "checkpoint_1": "NOT APPROVED 2026-08-27; corrections directed (6 blockers); original root preserved as historical not-approved lineage",
  "checkpoint_2": "not_reached",
  "holdout": {
   "defined": true,
@@ -119,7 +119,8 @@
   "D48",
   "D49",
   "D50",
-  "D51"
+  "D51",
+  "D52"
  ],
  "active_blockers": [
   {
@@ -132,11 +133,12 @@
  "invalidated_artifacts": [],
  "required_retraining": [],
  "pending_actions": [
-  "HOLD at Checkpoint 1: awaiting independent adjudication of CHECKPOINT1_REVIEW_BUNDLE.zip",
-  "prohibited until adjudication: SD-RLOBS fix, Arm F retraining, new constitutional root, shakedown reset, Checkpoint-2 steps, holdout access, private-key requests"
+  "execute D52 blockers 1-6, wording corrections, constitutional manifest v2, full rerun, new INVALID shakedown",
+  "then replacement Checkpoint-1 package + new external root hash; STOP for approval",
+  "prohibited: private key, holdout, Checkpoint-2, real money, evidence deletion, silent changes"
  ],
  "safe_resume": "Clone repo; read SPEC_FINAL-1.2.1.md (authoritative, sha256 84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8), BUILD_STATE.md, build_state.json; verify that sha256; continue from pending_actions. Do not re-decide frozen choices.",
- "updated": "2026-08-26T21:00:00Z",
+ "updated": "2026-08-27T06:20:00Z",
  "phase_1_status": "frozen",
  "protocol": {
   "file": "EXPERIMENT_PROTOCOL.md",
