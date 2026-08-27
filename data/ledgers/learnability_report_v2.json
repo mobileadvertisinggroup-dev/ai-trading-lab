@@ -1,0 +1,117 @@
+{
+  "block_bootstrap": {
+    "auc_ci95": [
+      0.456356829483952,
+      0.5790117460965012
+    ],
+    "auc_se": 0.03147995518320486,
+    "n_resamples": 1000,
+    "rank_ic_ci95": [
+      -0.04162658650661354,
+      0.10717743289983288
+    ],
+    "rank_ic_se": 0.03732799040808729
+  },
+  "block_definition_ms": 2419200000,
+  "block_permutation": {
+    "auc": {
+      "count_ge": 110,
+      "n": 200,
+      "p_raw": 0.55,
+      "p_upper": 0.5522388059701493
+    },
+    "n_permutations": 200,
+    "null_auc_abs_dev_q95": 0.06954400141370003,
+    "null_ic_abs_q95": 0.13523534400705312,
+    "rank_ic": {
+      "count_ge": 145,
+      "n": 200,
+      "p_raw": 0.725,
+      "p_upper": 0.7263681592039801
+    }
+  },
+  "frozen_il_rule": "See PREREGISTRATION_LEARNABILITY_BLOCKS.md \u2014 frozen before Checkpoint 2",
+  "interim_conclusion": "NO DEMONSTRATED LEARNABILITY; statistical significance not adjudicated",
+  "observed": {
+    "validation_auc": 0.5239927387225293,
+    "validation_rank_ic": 0.028817359880229914
+  },
+  "power_at_mue": {
+    "auc": 0.2673525968925725,
+    "method": "APPROXIMATE normal-theory (pre-registered)",
+    "mue": {
+      "abs_rank_ic": 0.05,
+      "auc_deviation": 0.05
+    },
+    "rank_ic": 0.011202927226042991
+  },
+  "preregistration": "PREREGISTRATION_LEARNABILITY_BLOCKS.md",
+  "retraction": "v1 label-permutation p-values (AUC p=0.42, IC p=0.67) RETRACTED as dependence-blind; v1 report preserved unmodified as learnability_report.json",
+  "seeds": {
+    "bootstrap": 20260828,
+    "model": 20260826,
+    "permutation": 20260827
+  },
+  "structure": {
+    "train": {
+      "de_block_level": {
+        "design_effect": 2.417263976457239,
+        "ess": 864.2001950741246,
+        "icc": 0.026258425697403737,
+        "mean_cluster_size": 54.973684210526315,
+        "n_clusters": 38
+      },
+      "de_boundary_level": {
+        "design_effect": 1.2372840901281075,
+        "ess": 1688.3753833638211,
+        "icc": 0.3500221471676469,
+        "mean_cluster_size": 1.6779116465863453,
+        "n_clusters": 1245
+      },
+      "ess_reported": 864.2001950741246,
+      "labels_per_boundary": {
+        "max": 10,
+        "mean": 1.6779116465863453,
+        "median": 1.0
+      },
+      "nominal_n": 2089,
+      "overlap": {
+        "max_concurrent_open_intervals": 13,
+        "mean_concurrent_open_intervals": 8.326104417670683,
+        "n_labels": 2089,
+        "overlapping_pair_fraction": 0.006449583569472644
+      },
+      "unique_boundaries": 1245
+    },
+    "validation": {
+      "de_block_level": {
+        "design_effect": 2.986494521283761,
+        "ess": 251.13054608170128,
+        "icc": 0.032300723923313186,
+        "mean_cluster_size": 62.5,
+        "n_clusters": 12
+      },
+      "de_boundary_level": {
+        "design_effect": 1.2776882367725833,
+        "ess": 586.9976559340377,
+        "icc": 0.40070322114089385,
+        "mean_cluster_size": 1.693002257336343,
+        "n_clusters": 443
+      },
+      "ess_reported": 251.13054608170128,
+      "labels_per_boundary": {
+        "max": 10,
+        "mean": 1.693002257336343,
+        "median": 1.0
+      },
+      "nominal_n": 750,
+      "overlap": {
+        "max_concurrent_open_intervals": 13,
+        "mean_concurrent_open_intervals": 8.767494356659142,
+        "n_labels": 750,
+        "overlapping_pair_fraction": 0.019289719626168225
+      },
+      "unique_boundaries": 443
+    }
+  }
+}

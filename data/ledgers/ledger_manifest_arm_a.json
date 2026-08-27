@@ -12,6 +12,19 @@
    "equity_sha256_new": "fe8dea69ac12ef574e61da2ae5e4afadcc6b4191912c7265083d8b447b9cb1fc",
    "equity_sha256_old": "6d451e58198bea9b8de408ecc7394dc2ca6154d9b7df84cc72d3a2fa6d9e0a25",
    "id": "EQUITY-EXPOSURE-COLUMN",
+   "official_provenance": {
+    "bit_identity": {
+     "candidates": "IDENTICAL",
+     "equity_with_exposure": "IDENTICAL (fe8dea69ac12ef57...)",
+     "events_decompressed": "IDENTICAL",
+     "labels": "IDENTICAL"
+    },
+    "certified": true,
+    "note": "The initially adopted equity ledger came from a PROFILE run launched from an uncommitted tree (see PROVENANCE_INCIDENT_2026-08-27.md). The OFFICIAL regeneration ran under provenance_run from the clean detached worktree and reproduced every artifact bit-identically, including this equity ledger.",
+    "provenance_manifest": "PROVENANCE_run_arm_a.json",
+    "provenance_manifest_sha256": "937aad30e5461c07cccd39386f2f6b31fa0052b51d116a14062d959c2f1064b2",
+    "worktree_commit": "2242f7aff20b9658c493dedafd6f415f64ec7a1f"
+   },
    "original_preserved_as": "equity_arm_a_v1_noexposure.parquet",
    "reason": "Adjudication blocker 2 (obs-v2): training episodes need the RECORDED official-run exposure fraction per boundary. The official Arm A run was re-executed with equity_curve additionally recording gross_exposure (pure recording)."
   }
