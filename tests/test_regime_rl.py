@@ -83,7 +83,10 @@ def make_bars(levels_15m):
 
 
 TRADE = {"side": 1, "qty": 10.0, "entry_ref": 100.0, "r_dist": 5.0,
-         "costs": {"hs": 0.0, "slip": 0.0, "fee": 0.0}}
+         "costs": {"hs": 0.0, "slip": 0.0, "fee": 0.0},
+         # obs-v2 (adjudication blocker 2): the entry-decision ATR is a
+         # REQUIRED episode input; r_dist = 2 x ATR under the protocol
+         "atr_entry": 2.5}
 
 
 def test_env_hold_to_episode_end_reward_is_net_r():

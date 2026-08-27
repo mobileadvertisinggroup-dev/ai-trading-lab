@@ -22,9 +22,14 @@ is the frozen §3 Arm-G order):
 """
 from __future__ import annotations
 
+import copy
+
 import numpy as np
 
 from lab import protocol as P
+from lab.arms.observation import (OBS_SCHEMA_HASH, OBS_SCHEMA_VERSION,
+                                  ObsInputs, atr_at_or_before,
+                                  build_observation)
 from lab.arms.arm_a import MarketProvider, tier_costs
 from lab.arms.indicators import SymbolSeries
 from lab.orchestration.rounds import RoundCoordinator
@@ -61,7 +66,7 @@ class FullSizeSizer:              # Arm E stub
 class HoldPolicy:                 # Arm F stub
     version = "stub-hold"
 
-    def action(self, obs: dict) -> str:
+    def action_from_obs(self, obs) -> str:
         return "hold"
 
 
@@ -79,7 +84,40 @@ class ArmState:
         self.engine = Engine(starting_cash)
         self.governor = RiskGovernor()
         self.decisions: list[dict] = []      # per-arm decision ledger
+        self.rl_decisions: list[dict] = []   # per-decision RL observability
         self.equity_curve: list[dict] = []
+
+    # ---- transactional snapshot/rollback (adjudication blocker 3) ----
+    def snapshot(self) -> dict:
+        e, g = self.engine, self.governor
+        return {
+            "cash": e.cash, "ruined": e.ruined, "next_id": e._next_id,
+            "positions": copy.deepcopy(e.positions),
+            "pend_in": copy.deepcopy(e._pending_entries),
+            "pend_out": copy.deepcopy(e._pending_exits),
+            "n_events": len(e.events),
+            "g_emerg": g.emergency_pause, "g_integ": g.integrity_pause,
+            "g_day": g._day, "g_day_eq": g._day_start_equity,
+            "g_peaks": dict(g._day_peaks), "g_n_events": len(g.events),
+            "n_decisions": len(self.decisions),
+            "n_rl": len(self.rl_decisions),
+        }
+
+    def rollback(self, snap: dict) -> None:
+        e, g = self.engine, self.governor
+        e.cash = snap["cash"]; e.ruined = snap["ruined"]
+        e._next_id = snap["next_id"]
+        e.positions = snap["positions"]
+        e._pending_entries = snap["pend_in"]
+        e._pending_exits = snap["pend_out"]
+        del e.events[snap["n_events"]:]
+        g.emergency_pause = snap["g_emerg"]
+        g.integrity_pause = snap["g_integ"]
+        g._day = snap["g_day"]; g._day_start_equity = snap["g_day_eq"]
+        g._day_peaks = snap["g_peaks"]
+        del g.events[snap["g_n_events"]:]
+        del self.decisions[snap["n_decisions"]:]
+        del self.rl_decisions[snap["n_rl"]:]
 
 
 class Competition:
@@ -200,19 +238,79 @@ class Competition:
             if held >= P.MAX_HOLD_BARS_4H:
                 arm.engine.submit_exit(p.pos_id, 1.0, "time_exit")
 
+    def _obs_inputs_for(self, arm: ArmState, p, t: int) -> ObsInputs:
+        """Orchestrator-side construction of the CANONICAL obs-v2 inputs
+        (adjudication blocker 2). atr_entry is mechanically exact:
+        r_dist = STOP_ATR_MULT x ATR at the entry decision. atr_now uses
+        the frozen Wilder ATR over completed 4h bars closing <= t.
+        Exposure/equity come from the OWNING arm's engine at t."""
+        series = self._series.get(p.symbol)
+        atr_entry = p.r_dist / P.STOP_ATR_MULT
+        if series is not None and len(series.t4):
+            atr_now = atr_at_or_before(series.t4 + P.BAR_4H_MS, series.atr,
+                                       t, atr_entry)
+        else:
+            atr_now = atr_entry
+        marks = dict(self._last_close)
+        return ObsInputs(
+            side=p.side, entry_fill=p.entry_fill, r_dist=p.r_dist,
+            mark=p.last_mark, mfe_price=p.mfe, mae_price=p.mae,
+            stop=p.stop, target=p.target, qty=p.qty, open_qty=p.open_qty,
+            bars_held_4h=max(0, (t - p.decision_ts) // P.BAR_4H_MS),
+            atr_now=atr_now, atr_entry=atr_entry,
+            gross_exposure=arm.engine.gross_exposure(marks),
+            equity=arm.engine.equity(marks))
+
     def _rl_management(self, arm: ArmState, t: int):
         """Arm F / G management via the RL policy + governor action filter,
-        with the frozen time-exit backstop (risk limits always enforced)."""
+        with the frozen time-exit backstop (risk limits always enforced).
+        Every decision is recorded with full observability (adjudication
+        blocker 4): observation vector + schema id, raw action, governor
+        outcome, executed action, before/after stop and quantity."""
         for p in arm.engine.open_positions():
             held = (t - p.decision_ts) // P.BAR_4H_MS
+            rec = {"t": int(t), "arm": arm.arm_id, "pos_id": p.pos_id,
+                   "symbol": p.symbol,
+                   "obs_schema_version": OBS_SCHEMA_VERSION,
+                   "obs_schema_hash": OBS_SCHEMA_HASH,
+                   "stop_before": p.stop, "qty_before": p.open_qty}
             if held >= P.MAX_HOLD_BARS_4H:
                 arm.engine.submit_exit(p.pos_id, 1.0, "time_exit")
+                rec.update({"backstop": "time_exit", "observation": None,
+                            "raw_action": None, "governor": None,
+                            "executed_action": "time_exit_queued",
+                            "invalid_reason": None,
+                            "stop_after": p.stop, "qty_after": p.open_qty})
+                arm.rl_decisions.append(rec)
                 continue
-            obs = {"unrealized_r": p.side * (p.last_mark - p.entry_fill)
-                   / p.r_dist, "bars_held": held}
-            action = self.rl_policy.action(obs)
-            if arm.governor.check_action(t, action) and action != "hold":
-                arm.engine.apply_management_action(t, p.pos_id, action)
+            obs = build_observation(self._obs_inputs_for(arm, p, t))
+            action = self.rl_policy.action_from_obs(obs)
+            rec.update({"backstop": None,
+                        "observation": [float(v) for v in obs],
+                        "raw_action": action})
+            gov_ok = arm.governor.check_action(t, action)
+            executed, invalid_reason = "hold", None
+            if not gov_ok:
+                invalid_reason = "governor_action_reject"
+            elif action != "hold":
+                if action == "tighten_stop":
+                    # identical rule to the training env: move the stop
+                    # 25% of the distance toward the last mark
+                    new_stop = p.stop + 0.25 * (p.last_mark - p.stop)
+                    ok = arm.engine.apply_management_action(
+                        t, p.pos_id, "tighten_stop", new_stop=new_stop)
+                else:
+                    ok = arm.engine.apply_management_action(t, p.pos_id,
+                                                            action)
+                if ok:
+                    executed = action
+                else:
+                    invalid_reason = "engine_invariant_reject"
+            rec.update({"governor": "approve" if gov_ok else "reject",
+                        "executed_action": executed,
+                        "invalid_reason": invalid_reason,
+                        "stop_after": p.stop, "qty_after": p.open_qty})
+            arm.rl_decisions.append(rec)
 
     # ------------------------------------------------------------- rounds
     def _decide(self, t: int, cands: list[dict]):
@@ -303,6 +401,17 @@ class Competition:
         while t <= end_ms:
             boundary = t % P.BAR_4H_MS == 0
             if boundary and self.valid_round_fn(t):
+                # -- TRANSACTIONAL round (adjudication blocker 3): the
+                # complete pre-round state of every arm AND the shadow is
+                # snapshotted; a failure anywhere rolls back cash,
+                # positions (incl. stops/quantities), pending operations,
+                # engine event streams, decision + RL ledgers, governor
+                # state and events, and the shared candidate ledger. Only
+                # the coordinator's centralized invalid-round record (with
+                # diagnostics) survives an invalid round.
+                snaps = {a: st.snapshot() for a, st in self.arms.items()}
+                snaps["__shadow__"] = self.shadow.snapshot()
+                n_cand_ledger = len(self.candidates)
                 self.coordinator.begin_round(t)
                 cands = self._shared_candidates(t)
                 try:
@@ -326,10 +435,11 @@ class Competition:
                 if self.coordinator.finalize(t):
                     self.candidates.extend(cands)
                 else:
-                    # invalid round: NOTHING executes for ANY arm
-                    for st in list(self.arms.values()) + [self.shadow]:
-                        st.engine._pending_entries.clear()
-                        st.engine._pending_exits.clear()
+                    # invalid round: FULL rollback — zero surviving effect
+                    for a, st in self.arms.items():
+                        st.rollback(snaps[a])
+                    self.shadow.rollback(snaps["__shadow__"])
+                    del self.candidates[n_cand_ledger:]
             bars = self._bars_at(t)
             for st in list(self.arms.values()) + [self.shadow]:
                 st.engine.process_bar_time(t, bars,

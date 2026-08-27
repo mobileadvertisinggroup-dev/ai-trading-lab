@@ -15,11 +15,14 @@ Action space (Discrete 6): 0 hold, 1 reduce_25, 2 reduce_50, 3 close,
 4 tighten_stop (move stop 25% of the distance toward the last mark),
 5 move_stop_breakeven.
 
-Observation (float32, spec Arm F list): unrealized R, time-in-trade
-fraction, MFE in R, MAE in R, ATR-relative volatility now/entry, momentum
-deterioration (close vs entry in R over time), distance to stop in R,
-distance to target in R, remaining size fraction, portfolio exposure
-fraction (supplied by the caller; 0 for single-trade episodes).
+Observation (float32): built EXCLUSIVELY by the canonical
+lab.arms.observation.build_observation (schema obs-v2, adjudication
+blocker 2) — training/inference parity is structural. Episode trades
+carry the entry-decision ATR (from the candidate ledger), the frozen
+Wilder ATR series over completed 4h bars, and the RECORDED official
+Arm-A portfolio-exposure fraction per boundary; the schema module
+defines every dimension's provenance, units, clipping, and missing-data
+rule.
 
 Reward: 0 each intermediate step; at episode end, net realized R
 (including fees and funding) minus frozen penalties:
@@ -39,6 +42,9 @@ except ImportError as e:  # pragma: no cover
     raise ImportError("gymnasium is required for lab.arms.rl_env") from e
 
 from lab import protocol as P
+from lab.arms.observation import (OBS_DIM, OBS_SCHEMA_HASH,
+                                  OBS_SCHEMA_VERSION, ObsInputs,
+                                  atr_at_or_before, build_observation)
 from lab.sim.engine import Bar, Costs, Engine
 
 ACTIONS = ("hold", "reduce_25", "reduce_50", "close", "tighten_stop",
@@ -48,7 +54,6 @@ TURNOVER_PENALTY = 0.05
 INVALID_PENALTY = 0.02
 DRAWDOWN_PENALTY = 0.25
 DRAWDOWN_FREE_R = 1.0
-OBS_DIM = 10
 
 
 class TradeManagementEnv(gym.Env):
@@ -56,41 +61,74 @@ class TradeManagementEnv(gym.Env):
 
     def __init__(self, trade: dict, bars: list[tuple[int, float, float, float, float]],
                  portfolio_exposure: float = 0.0):
-        """trade: {side, qty, entry_fill?, entry_ref, r_dist, costs:{hs,slip,fee}}
-        bars: chronological 15m bars [(t,o,h,l,c), ...]; bars[0] is the entry
-        bar. Management decisions are offered every BARS_PER_STEP bars
-        (= one 4h boundary), matching SIMULATOR_SEMANTICS §4."""
+        """trade: {side, qty, entry_ref, r_dist, costs:{hs,slip,fee},
+        atr_entry (REQUIRED, candidate-ledger ATR at the entry decision),
+        atr_t4_close_ms + atr_values (optional frozen ATR series over
+        completed 4h bars; absent -> the obs-v2 missing rule carries
+        atr_entry, ratio 1.0), exposure_by_boundary (optional dict
+        boundary_ms -> recorded Arm-A exposure FRACTION; absent boundary ->
+        most recent recorded <= t; none -> 0.0, flagged in info)}.
+        bars: chronological 15m bars [(t,o,h,l,c), ...]; bars[0] is the
+        entry bar. Management decisions are offered every BARS_PER_STEP
+        bars (= one 4h boundary), matching SIMULATOR_SEMANTICS §4."""
         super().__init__()
         self.trade = trade
         self.bars = [Bar(int(t), float(o), float(h), float(l), float(c))
                      for t, o, h, l, c in bars]
         if not self.bars:
             raise ValueError("bars required")
+        if "atr_entry" not in trade or not trade["atr_entry"] > 0:
+            raise ValueError("trade.atr_entry (entry-decision ATR) required")
         self.portfolio_exposure = float(portfolio_exposure)
+        self._atr_t = np.asarray(trade.get("atr_t4_close_ms", []),
+                                 dtype=np.int64)
+        self._atr_v = np.asarray(trade.get("atr_values", []), dtype=float)
+        self._expo = dict(trade.get("exposure_by_boundary", {}))
+        self._expo_keys = np.array(sorted(self._expo), dtype=np.int64)
+        self.exposure_recorded = bool(self._expo)
+        self.obs_schema = {"version": OBS_SCHEMA_VERSION,
+                           "hash": OBS_SCHEMA_HASH}
         self.action_space = spaces.Discrete(len(ACTIONS))
         self.observation_space = spaces.Box(-np.inf, np.inf, (OBS_DIM,),
                                             dtype=np.float32)
         self._steps_per_decision = P.BAR_4H_MS // P.BAR_15M_MS
 
     # ------------------------------------------------------------ helpers
-    def _obs(self):
+    def _exposure_at(self, t: int) -> float:
+        if not self.exposure_recorded:
+            return 0.0             # documented no-recorded-exposure rule
+        i = int(np.searchsorted(self._expo_keys, t, side="right")) - 1
+        if i < 0:
+            return 0.0
+        return float(self._expo[int(self._expo_keys[i])])
+
+    def obs_inputs(self) -> ObsInputs | None:
+        """The decision-time state record handed to the CANONICAL builder.
+        Exposed publicly so the parity test can compare it field-by-field
+        with the orchestrator's construction."""
         p = self.engine.positions.get(1)
         if p is None or p.closed:
+            return None
+        # the decision BOUNDARY this observation serves: the next 15m
+        # timestamp after the last processed bar (obs-v2 parity)
+        t_dec = self.bars[self._i].open_time + P.BAR_15M_MS
+        atr_entry = float(self.trade["atr_entry"])
+        atr_now = (atr_at_or_before(self._atr_t, self._atr_v, t_dec,
+                                    atr_entry)
+                   if len(self._atr_t) else atr_entry)
+        return ObsInputs(
+            side=p.side, entry_fill=p.entry_fill, r_dist=p.r_dist,
+            mark=p.last_mark, mfe_price=p.mfe, mae_price=p.mae,
+            stop=p.stop, target=p.target, qty=p.qty, open_qty=p.open_qty,
+            bars_held_4h=max(0, (t_dec - p.decision_ts) // P.BAR_4H_MS),
+            atr_now=atr_now, atr_entry=atr_entry,
+            gross_exposure=self._exposure_at(t_dec), equity=1.0)
+
+    def _obs(self):
+        x = self.obs_inputs()
+        if x is None:
             return np.zeros(OBS_DIM, dtype=np.float32)
-        r = self.trade["r_dist"]
-        mark = p.last_mark
-        unreal_r = p.side * (mark - p.entry_fill) / r
-        frac_t = self._i / max(1, len(self.bars) - 1)
-        mfe_r = p.mfe / r
-        mae_r = -p.mae / r
-        vol_ratio = 1.0            # ATR recomputation deferred to training data
-        deterioration = unreal_r / max(frac_t, 1e-6)
-        dist_stop_r = p.side * (mark - p.stop) / r
-        dist_tgt_r = p.side * (p.target - mark) / r
-        size_frac = p.open_qty / self.trade["qty"]
-        return np.array([unreal_r, frac_t, mfe_r, mae_r, vol_ratio,
-                         deterioration, dist_stop_r, dist_tgt_r, size_frac,
-                         self.portfolio_exposure], dtype=np.float32)
+        return build_observation(x)
 
     def _final_reward(self):
         p = self.engine.positions[1]
@@ -112,13 +150,29 @@ class TradeManagementEnv(gym.Env):
         c = t["costs"]
         self.engine.submit_entry(
             "X", int(t["side"]), float(t["qty"]), stop=0.0, target=0.0,
-            r_dist=float(t["r_dist"]), decision_ts=self.bars[0].open_time,
+            r_dist=float(t["r_dist"]),
+            # obs-v2: bars_held is measured from the entry DECISION
+            # boundary (identical to the orchestrator), supplied by the
+            # episode; default (entry bar - 15m) reproduces production
+            decision_ts=int(t.get("decision_ts",
+                                  self.bars[0].open_time - P.BAR_15M_MS)),
             costs=Costs(c["hs"], c["slip"], c["fee"]),
             stop_offset=float(t["r_dist"]),
             target_offset=P.TARGET_R_MULT * float(t["r_dist"]))
         self.engine.process_bar_time(self.bars[0].open_time,
                                      {"X": self.bars[0]})
         self._i = 0
+        # obs-v2 parity: decisions align with 4h BOUNDARIES exactly as in
+        # the orchestrator (state = bars processed through boundary-15m);
+        # advance so the first decision serves the first boundary
+        n = len(self.bars)
+        while (self._i + 1 < n
+               and self.bars[self._i + 1].open_time % P.BAR_4H_MS != 0):
+            self._i += 1
+            b = self.bars[self._i]
+            self.engine.process_bar_time(b.open_time, {"X": b})
+            if self.engine.positions[1].closed:
+                break
         self._executed_actions = 0
         self._invalid_actions = 0
         return self._obs(), {}
@@ -140,14 +194,19 @@ class TradeManagementEnv(gym.Env):
             else:
                 self._invalid_actions += 1
 
-        # advance one decision interval (16 x 15m bars) or to the end
-        end = min(self._i + self._steps_per_decision, len(self.bars) - 1)
-        while self._i < end:
+        # advance to the state immediately before the NEXT 4h boundary
+        # (bars processed through boundary-15m) — identical decision
+        # timing to the orchestrator (obs-v2 parity)
+        n = len(self.bars)
+        while self._i + 1 < n:
             self._i += 1
             b = self.bars[self._i]
             self.engine.process_bar_time(b.open_time, {"X": b})
             p = self.engine.positions[1]
             if p.closed:
+                break
+            nxt = self._i + 1
+            if nxt < n and self.bars[nxt].open_time % P.BAR_4H_MS == 0:
                 break
 
         p = self.engine.positions[1]
