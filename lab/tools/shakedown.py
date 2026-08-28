@@ -262,7 +262,12 @@ def main() -> None:  # pragma: no cover — the shakedown run
         fin = json.load(f)
     b_threshold = float(fin["arm_b"]["selected_threshold"])
     c_top_k = int(fin["arm_c"]["selected_top_k"])
-    e_mapping = fin["arm_e"]["selected_mapping"]
+    # D63 blocker 1: the E mapping comes from the certified PORTFOLIO
+    # utility selection; the per-trade selections remain invalid history
+    with open(os.path.join(args.model_dir,
+                           "arm_e_portfolio_selection.json")) as f:
+        e_sel = json.load(f)
+    e_mapping = e_sel["selected_mapping"]
     e_quantiles = fin["arm_e"]["train_pred_quantiles"]
 
     # the selected SB3 Arm F policy (blocker 1), canonical obs-v2 only

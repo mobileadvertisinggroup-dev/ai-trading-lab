@@ -1,0 +1,95 @@
+{
+  "annualization": {
+    "method": "time-series Sortino x sqrt(P_YEAR)",
+    "periods_per_year": 2191.5
+  },
+  "arm_a_reference": {
+    "dd95_decimal": 0.6144558395937956,
+    "final_equity": 10462.958310962455,
+    "identical_across_runs": true,
+    "max_drawdown_decimal": 0.3593105016688485,
+    "sortino_annualized": 0.5147949479941559
+  },
+  "bootstrap": {
+    "block_len_4h": 168,
+    "n": 1000,
+    "paired": true,
+    "seed": 20260901,
+    "unit": "circular moving-block over the 4h return series; one max drawdown per resample"
+  },
+  "invalidated_history": "per-trade cumulative-R selection in bc_train_selection.json arm_e (and the earlier single-path variant) \u2014 preserved, never consumed",
+  "preregistration": "PREREGISTRATION_ARM_E_PORTFOLIO.md",
+  "results": [
+    {
+      "dd95_decimal": 0.3907637964661684,
+      "equity_curve_sha256": "0f753d95204694c487f481e9d030c0ef56f63c56cc8d9e3ab5ac07a6bc591473",
+      "final_equity": 12254.533089871484,
+      "mapping": "M1",
+      "max_drawdown_decimal": 0.20379563691893898,
+      "n_boundaries": 2462,
+      "penalty": 0.0,
+      "rounds": {
+        "invalid": 0,
+        "total": 2462,
+        "valid": 2462
+      },
+      "sortino_annualized": 0.9871647773550533,
+      "utility_UE": 0.9871647773550533
+    },
+    {
+      "dd95_decimal": 0.38599029965981385,
+      "equity_curve_sha256": "57398a1ad1eb8050acd45d2a3f73913077e6aa81fe0f61defa596b750a0b356e",
+      "final_equity": 11438.49044511194,
+      "mapping": "M2",
+      "max_drawdown_decimal": 0.2215483869174012,
+      "n_boundaries": 2462,
+      "penalty": 0.0,
+      "rounds": {
+        "invalid": 0,
+        "total": 2462,
+        "valid": 2462
+      },
+      "sortino_annualized": 0.7706679667947098,
+      "utility_UE": 0.7706679667947098
+    },
+    {
+      "dd95_decimal": 0.3374867347317686,
+      "equity_curve_sha256": "989d8e45bf935422e2d6b36ab3d6ddfdd3c412dc73c5ab7f892d540f5129c34c",
+      "final_equity": 11663.836569931906,
+      "mapping": "M3",
+      "max_drawdown_decimal": 0.17978376891314507,
+      "n_boundaries": 2462,
+      "penalty": 0.0,
+      "rounds": {
+        "invalid": 0,
+        "total": 2462,
+        "valid": 2462
+      },
+      "sortino_annualized": 0.893096373722038,
+      "utility_UE": 0.893096373722038
+    },
+    {
+      "dd95_decimal": 0.6144558395937956,
+      "equity_curve_sha256": "6ad1068748ef1c5c9931811ac264b180b27f672d6d03532cd86f8a4da424e0a4",
+      "final_equity": 10462.958310962455,
+      "mapping": "M4",
+      "max_drawdown_decimal": 0.3593105016688485,
+      "n_boundaries": 2462,
+      "penalty": 0.0,
+      "rounds": {
+        "invalid": 0,
+        "total": 2462,
+        "valid": 2462
+      },
+      "sortino_annualized": 0.5147949479941559,
+      "utility_UE": 0.5147949479941559
+    }
+  ],
+  "rule": "highest U_E; ties -> earliest of M1..M4",
+  "selected_mapping": "M1",
+  "window": {
+    "end_ms": 1752133500000,
+    "n_4h_boundaries": 2462,
+    "start_ms": 1716681600000
+  }
+}
