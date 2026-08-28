@@ -1,0 +1,196 @@
+{
+  "arm_b": {
+    "in_sample_caveat": "TRAIN probabilities are in-sample for the frozen booster (SPEC \u00a710 mandates the split, not unbiasedness)",
+    "selected_threshold": 0.5,
+    "support_min": 140,
+    "train_grid": [
+      {
+        "selectable": true,
+        "threshold": 0.3,
+        "train_accepted_mean_net_r": 1.148880613495852,
+        "train_n_accepted": 748
+      },
+      {
+        "selectable": true,
+        "threshold": 0.35,
+        "train_accepted_mean_net_r": 1.4616267497308724,
+        "train_n_accepted": 533
+      },
+      {
+        "selectable": true,
+        "threshold": 0.4,
+        "train_accepted_mean_net_r": 1.7879122064534732,
+        "train_n_accepted": 375
+      },
+      {
+        "selectable": true,
+        "threshold": 0.45,
+        "train_accepted_mean_net_r": 1.892732383805553,
+        "train_n_accepted": 269
+      },
+      {
+        "selectable": true,
+        "threshold": 0.5,
+        "train_accepted_mean_net_r": 2.1275475316787906,
+        "train_n_accepted": 191
+      },
+      {
+        "selectable": false,
+        "threshold": 0.55,
+        "train_accepted_mean_net_r": 2.347074414165683,
+        "train_n_accepted": 121
+      },
+      {
+        "selectable": false,
+        "threshold": 0.6,
+        "train_accepted_mean_net_r": 2.319357253676958,
+        "train_n_accepted": 78
+      },
+      {
+        "selectable": false,
+        "threshold": 0.65,
+        "train_accepted_mean_net_r": 2.339993657357415,
+        "train_n_accepted": 51
+      },
+      {
+        "selectable": false,
+        "threshold": 0.7,
+        "train_accepted_mean_net_r": 2.4774302268865362,
+        "train_n_accepted": 14
+      }
+    ],
+    "validation_applied_once": {
+      "accept_rate": 0.010666666666666666,
+      "accepted_mean_net_r": -0.3343320577411796,
+      "n_accepted": 8,
+      "rejected_mean_net_r": 0.07014575613135499,
+      "threshold_applied_once": 0.5
+    },
+    "verdict": "SELECTED (train-only)"
+  },
+  "arm_c": {
+    "selected_top_k": 1,
+    "support_min": 140,
+    "train_grid": [
+      {
+        "selectable": true,
+        "top_k": 1,
+        "train_n_selected": 1245,
+        "train_selected_mean_net_r": 0.18243027976633422
+      },
+      {
+        "selectable": true,
+        "top_k": 2,
+        "train_n_selected": 1684,
+        "train_selected_mean_net_r": 0.07169006840104024
+      },
+      {
+        "selectable": true,
+        "top_k": 3,
+        "train_n_selected": 1869,
+        "train_selected_mean_net_r": 0.024552307548852206
+      },
+      {
+        "selectable": true,
+        "top_k": 5,
+        "train_n_selected": 2014,
+        "train_selected_mean_net_r": -0.009049809555900179
+      },
+      {
+        "selectable": true,
+        "top_k": 10,
+        "train_n_selected": 2089,
+        "train_selected_mean_net_r": -0.035646318438047025
+      }
+    ],
+    "validation_applied_once": {
+      "n_selected": 443,
+      "selected_mean_net_r": 0.03280834940746795,
+      "top_k_applied_once": 1
+    },
+    "verdict": "SELECTED (train-only)"
+  },
+  "arm_e": {
+    "annualization": {
+      "method": "S_per_trade * sqrt(lam) (pre-registered, openly approximate under overlap)",
+      "t_years": 0.946383755418663,
+      "trades_per_year": 792.490356798457
+    },
+    "bootstrap": {
+      "block_len_boundaries": 36,
+      "n": 1000,
+      "n_boundaries": 443,
+      "paired": true,
+      "seed": 20260830,
+      "unit": "circular moving-block over validation boundaries"
+    },
+    "dd95_arm_a_reference": 95.58609609715747,
+    "grid": [
+      {
+        "bucket_counts": {
+          "0.25": 149,
+          "0.5": 240,
+          "0.75": 272,
+          "1.0": 89
+        },
+        "dd95_bootstrap_upper95": 59.70061182188817,
+        "mapping": "M1",
+        "mean_sized_r": 0.049796165397725974,
+        "sortino_annualized": 2.7983023460916376,
+        "sortino_per_trade": 0.09940257696413339,
+        "utility_UE": 2.7983023460916376
+      },
+      {
+        "bucket_counts": {
+          "0.25": 389,
+          "0.75": 272,
+          "1.0": 89
+        },
+        "dd95_bootstrap_upper95": 59.19539906003752,
+        "mapping": "M2",
+        "mean_sized_r": 0.03502986767540845,
+        "sortino_annualized": 2.1143814574810857,
+        "sortino_per_trade": 0.07510802606885905,
+        "utility_UE": 2.1143814574810857
+      },
+      {
+        "bucket_counts": {
+          "0.25": 149,
+          "0.5": 512,
+          "0.75": 83,
+          "1.0": 6
+        },
+        "dd95_bootstrap_upper95": 45.70894208410487,
+        "mapping": "M3",
+        "mean_sized_r": 0.03960552363908753,
+        "sortino_annualized": 2.860703733491845,
+        "sortino_per_trade": 0.1016192276139037,
+        "utility_UE": 2.860703733491845
+      },
+      {
+        "bucket_counts": {
+          "1.0": 750
+        },
+        "dd95_bootstrap_upper95": 95.58609609715747,
+        "mapping": "M4",
+        "mean_sized_r": 0.06583132611671459,
+        "sortino_annualized": 2.390224817196905,
+        "sortino_per_trade": 0.08490666017017176,
+        "utility_UE": 2.390224817196905
+      }
+    ],
+    "rule": "highest U_E; ties -> earliest of M1..M4",
+    "selected_mapping": "M3",
+    "train_pred_quantiles": {
+      "q25": -0.3487419437139849,
+      "q50": -0.14245720442501314,
+      "q75": 0.16804165587744577,
+      "q90": 0.5632995575770018
+    }
+  },
+  "invalidated_history_preserved": "bce_finalization.json (validation-selected B/C; single-path-M3) \u2014 never consumed here",
+  "preregistrations": [
+    "PREREGISTRATION_BC_TRAIN_SELECTION.md",
+    "PREREGISTRATION_ARM_E_UTILITY_V2.md"
+  ]
+}

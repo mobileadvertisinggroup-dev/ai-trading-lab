@@ -1,0 +1,128 @@
+{
+  "circular_moving_block_bootstrap": {
+    "auc_ci95": [
+      0.4599868129824783,
+      0.5839166813745292
+    ],
+    "auc_se": 0.03245762809921327,
+    "block_len_boundaries": 36,
+    "n_boundaries": 443,
+    "n_resamples": 1000,
+    "rank_ic_ci95": [
+      -0.056933833989987435,
+      0.11192464008583189
+    ],
+    "rank_ic_se": 0.0430589247745794,
+    "resampled_rows": {
+      "max": 823,
+      "mean": 749.346,
+      "min": 672
+    }
+  },
+  "frozen_il_rule": "unchanged (PREREGISTRATION_LEARNABILITY_BLOCKS.md; applies at Checkpoint 2)",
+  "history": {
+    "v1": "RETRACTED (dependence-blind)",
+    "v2": "preserved, quantitative procedure NOT adjudicated (fixed-block bootstrap; modulo assignment)"
+  },
+  "interim_conclusion": "NO DEMONSTRATED LEARNABILITY; statistical significance not adjudicated",
+  "observed": {
+    "validation_auc": 0.5239927387225293,
+    "validation_rank_ic": 0.028817359880229914
+  },
+  "power_at_mue": {
+    "auc": 0.2830755908080621,
+    "method": "APPROXIMATE normal-theory (pre-registered)",
+    "mue": {
+      "abs_rank_ic": 0.05,
+      "auc_deviation": 0.05
+    },
+    "rank_ic": 0.04796931377686153
+  },
+  "preregistration": "PREREGISTRATION_LEARNABILITY_V3.md",
+  "procedure_version": 3,
+  "rotation_permutation": {
+    "auc": {
+      "count_ge": 95,
+      "n": 200,
+      "p_raw": 0.475,
+      "p_upper": 0.47761194029850745
+    },
+    "eligible_offsets": 1182,
+    "n_permutations": 200,
+    "null_auc_abs_dev_q95": 0.06862188343400588,
+    "null_ic_abs_q95": 0.12168752655560278,
+    "rank_ic": {
+      "count_ge": 133,
+      "n": 200,
+      "p_raw": 0.665,
+      "p_upper": 0.6666666666666666
+    }
+  },
+  "seeds": {
+    "bootstrap": 20260832,
+    "model": 20260826,
+    "permutation": 20260831
+  },
+  "structure": {
+    "train": {
+      "de_block_level": {
+        "design_effect": 2.417263976457239,
+        "ess": 864.2001950741246,
+        "icc": 0.026258425697403737,
+        "mean_cluster_size": 54.973684210526315,
+        "n_clusters": 38
+      },
+      "de_boundary_level": {
+        "design_effect": 1.2372840901281075,
+        "ess": 1688.3753833638211,
+        "icc": 0.3500221471676469,
+        "mean_cluster_size": 1.6779116465863453,
+        "n_clusters": 1245
+      },
+      "ess_reported_APPROXIMATION": 864.2001950741246,
+      "labels_per_boundary": {
+        "max": 10,
+        "mean": 1.6779116465863453,
+        "median": 1.0
+      },
+      "nominal_n": 2089,
+      "overlap": {
+        "max_concurrent_open_intervals": 13,
+        "mean_concurrent_open_intervals": 8.326104417670683,
+        "n_labels": 2089,
+        "overlapping_pair_fraction": 0.006449583569472644
+      },
+      "unique_boundaries": 1245
+    },
+    "validation": {
+      "de_block_level": {
+        "design_effect": 2.986494521283761,
+        "ess": 251.13054608170128,
+        "icc": 0.032300723923313186,
+        "mean_cluster_size": 62.5,
+        "n_clusters": 12
+      },
+      "de_boundary_level": {
+        "design_effect": 1.2776882367725833,
+        "ess": 586.9976559340377,
+        "icc": 0.40070322114089385,
+        "mean_cluster_size": 1.693002257336343,
+        "n_clusters": 443
+      },
+      "ess_reported_APPROXIMATION": 251.13054608170128,
+      "labels_per_boundary": {
+        "max": 10,
+        "mean": 1.693002257336343,
+        "median": 1.0
+      },
+      "nominal_n": 750,
+      "overlap": {
+        "max_concurrent_open_intervals": 13,
+        "mean_concurrent_open_intervals": 8.767494356659142,
+        "n_labels": 750,
+        "overlapping_pair_fraction": 0.019289719626168225
+      },
+      "unique_boundaries": 443
+    }
+  }
+}
