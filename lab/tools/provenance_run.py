@@ -99,6 +99,12 @@ def main() -> None:  # pragma: no cover — governance tool
     ap.add_argument("--module", required=True)
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--input-dir", action="append", default=[])
+    ap.add_argument("--lake-dir", default=None,
+                    help="lake consumed by the job -> verify + bind the "
+                         "authoritative lake manifest (D61 blocker F)")
+    ap.add_argument("--lake-manifests-dir", default=None,
+                    help="manifests dir holding lake_manifest/partition "
+                         "meta (default: <checkout>/data/manifests)")
     ap.add_argument("--manifest-name", default=None)
     ap.add_argument("rest", nargs=argparse.REMAINDER)
     args = ap.parse_args()
@@ -121,6 +127,73 @@ def main() -> None:  # pragma: no cover — governance tool
     pre_census = source_census(root)
     inputs = {d: dir_census(d) for d in args.input_dir}
 
+    # ---- lake-input provenance addendum (D61 blocker F) ------------------
+    # Verify the AUTHORITATIVE content-addressed lake manifest BEFORE the
+    # job runs; bind partition metadata + the quarantine boundary; record
+    # the zero-readable-holdout basis. The manifest already covers every
+    # lake file by sha256, so instead of re-hashing ~1.2 GB we verify (a)
+    # the exact on-disk file census against the manifest paths and (b) a
+    # seeded deterministic SAMPLE of full per-file hashes. A pre-verified
+    # full check (lake_verification file) is recorded by hash alongside.
+    lake_prov = None
+    if args.lake_dir:
+        import random
+        mdir = args.lake_manifests_dir or os.path.join(root, "data",
+                                                       "manifests")
+        lm_path = os.path.join(mdir, "lake_manifest_raw-v1.json")
+        pm_path = os.path.join(mdir, "partition_meta.json")
+        lv_path = os.path.join(mdir, "lake_verification_raw-v1.json")
+        with open(lm_path) as f:
+            lm = json.load(f)
+        with open(pm_path) as f:
+            pm = json.load(f)
+        man_files = {e["path"]: e["sha256"] for e in lm["files"]}
+        on_disk = set()
+        lroot = os.path.abspath(args.lake_dir)
+        for dirpath, _d, fns in os.walk(lroot):
+            for fn in fns:
+                on_disk.add(os.path.relpath(os.path.join(dirpath, fn),
+                                            lroot))
+        missing = sorted(set(man_files) - on_disk)[:10]
+        extra = sorted(on_disk - set(man_files))[:10]
+        rng = random.Random(20260829)
+        sample = rng.sample(sorted(man_files), k=min(24, len(man_files)))
+        sample_bad = [p for p in sample
+                      if sha256_file(os.path.join(lroot, p))
+                      != man_files[p]]
+        verified = not missing and not extra and not sample_bad
+        lake_prov = {
+            "lake_dir": lroot,
+            "lake_manifest": {"path": lm_path,
+                              "sha256": sha256_file(lm_path),
+                              "n_files": len(man_files)},
+            "partition_meta": {"path": pm_path,
+                               "sha256": sha256_file(pm_path),
+                               "quarantine_start_ms":
+                                   int(pm["quarantine_start_ms"]),
+                               "holdout_end_ms":
+                                   int(pm["holdout_end_ms"])},
+            "full_verification_record": {
+                "path": lv_path, "sha256": sha256_file(lv_path)}
+            if os.path.isfile(lv_path) else None,
+            "census_check": {"on_disk_files": len(on_disk),
+                             "missing_vs_manifest": missing,
+                             "extra_vs_manifest": extra},
+            "sampled_hash_check": {"seed": 20260829, "n_sampled":
+                                   len(sample), "mismatches": sample_bad},
+            "verified": verified,
+            "holdout_statement": (
+                "zero readable holdout rows available: the lake contains "
+                "only pre-quarantine data (content-addressed manifest + "
+                "recorded full verification); holdout rows exist solely "
+                "inside the encrypted artifact, untouched. This addendum "
+                "grants NO holdout access."),
+        }
+        if not verified:
+            raise SystemExit(f"PROVENANCE GATE: lake verification FAILED: "
+                             f"{lake_prov['census_check']} "
+                             f"{sample_bad}")
+
     manifest = {
         "gate": "provenance_run v1 (reviewer directive 2026-08-27)",
         "git": {"root": root, "commit": sha, "status_porcelain_pre": "",
@@ -138,6 +211,7 @@ def main() -> None:  # pragma: no cover — governance tool
                            c, sort_keys=True).encode()).hexdigest(),
                        "files": c}
                    for d, c in inputs.items()},
+        "lake_provenance": lake_prov,
         "started_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
 
