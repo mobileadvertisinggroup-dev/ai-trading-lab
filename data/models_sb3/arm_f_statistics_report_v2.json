@@ -1,0 +1,135 @@
+{
+  "baseline": {
+    "action_distribution": {
+      "close": 215,
+      "hold": 12964
+    },
+    "definition": "EXACT frozen Arm A conventional manager (trailing-channel exit then time exit, ArmARunner order; identical episodes, bars, costs, exit ordering, terminal reward)",
+    "mean_validation_reward": 0.053991844860182575,
+    "parity_proof": "tests/test_arm_f_baseline_parity.py",
+    "v1_hold_baseline_for_reference": 0.04613874153267407
+  },
+  "carried_over_v1_statistics": {
+    "best_seed": 4,
+    "convergence": {
+      "n_non_converged": 7,
+      "per_seed": {
+        "1": false,
+        "10": false,
+        "2": true,
+        "3": false,
+        "4": true,
+        "5": true,
+        "6": true,
+        "7": true,
+        "8": true,
+        "9": true
+      },
+      "selected_seed": 4,
+      "selected_seed_non_converged": true
+    },
+    "iqr_validation_reward": {
+      "iqr": 0.007576388220079978,
+      "q1": -0.009550994463310699,
+      "q3": -0.001974606243230721
+    },
+    "mean_validation_reward": -0.005844425711635156,
+    "median_validation_reward": -0.006275085732829623,
+    "variance_validation_reward": 3.811648647399368e-05,
+    "worst_seed": 3
+  },
+  "invalidated_history": "v1 HOLD-baseline comparison preserved unmodified in arm_f_statistics_report.json \u2014 HOLD is NOT the frozen Arm A conventional manager",
+  "per_seed": [
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.06285970589922059,
+      "recomputation_matches": true,
+      "recomputed": -0.008867861039038015,
+      "seed": 1,
+      "validation_mean_reward": -0.008867861039038015
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.0637705504649175,
+      "recomputation_matches": true,
+      "recomputed": -0.009778705604734926,
+      "seed": 2,
+      "validation_mean_reward": -0.009778705604734926
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.07000436665516135,
+      "recomputation_matches": true,
+      "recomputed": -0.016012521794978783,
+      "seed": 3,
+      "validation_mean_reward": -0.016012521794978783
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.04950214886616015,
+      "recomputation_matches": true,
+      "recomputed": 0.004489695994022424,
+      "seed": 4,
+      "validation_mean_reward": 0.004489695994022424
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.06520185129767939,
+      "recomputation_matches": true,
+      "recomputed": -0.011210006437496811,
+      "seed": 5,
+      "validation_mean_reward": -0.011210006437496811
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.058743373175486946,
+      "recomputation_matches": true,
+      "recomputed": -0.004751528315304373,
+      "seed": 6,
+      "validation_mean_reward": -0.004751528315304373
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.05868685283780059,
+      "recomputation_matches": true,
+      "recomputed": -0.004695007977618019,
+      "seed": 7,
+      "validation_mean_reward": -0.004695007977618019
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.0550596505252842,
+      "recomputation_matches": true,
+      "recomputed": -0.0010678056651016216,
+      "seed": 8,
+      "validation_mean_reward": -0.0010678056651016216
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.052743717985929126,
+      "recomputation_matches": true,
+      "recomputed": 0.0012481268742534511,
+      "seed": 9,
+      "validation_mean_reward": 0.0012481268742534511
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "margin_vs_baseline": -0.06179048801053745,
+      "recomputation_matches": true,
+      "recomputed": -0.007798643150354873,
+      "seed": 10,
+      "validation_mean_reward": -0.007798643150354873
+    }
+  ],
+  "preregistration": "PREREGISTRATION_ARM_F_BASELINE.md",
+  "selection": {
+    "note": "no independent artifact-integrity failure observed; per-seed recomputation matches the preserved manifest",
+    "preserved": true,
+    "selected_seed": 4
+  },
+  "wins_losses": {
+    "losses": 10,
+    "pct_seeds_beating_exact_baseline": 0.0,
+    "wins": 0
+  }
+}
