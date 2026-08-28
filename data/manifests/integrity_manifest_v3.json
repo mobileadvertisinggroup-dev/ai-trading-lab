@@ -1,0 +1,313 @@
+{
+ "constitutional_properties": [
+  "exact-equality differential gate vs the Independent Reference Ledger (first-divergence adjudication; 1e-9 diagnostic only)",
+  "golden fixtures G01-G12 (layer-1 Decimal-quantize exact + 1e-8 bound)",
+  "property-based accounting invariants incl. randomized differential fuzzing",
+  "holdout refusal at the read layer for exact/partial/point/funding/universe queries (GuardedLake)",
+  "authorization strictness: fabricated or merely nonempty hashes never grant access (read layer AND unseal gate)",
+  "one-time holdout gate: manifest-bound artifact, atomic single opening, tmpfs-only, FAILED_CLOSED on every post-claim failure, permanent second-opening block, corrupt chain fails closed",
+  "deliberate-leak battery: label-in-features, off-dictionary column, purge violation, post-t feature, holdout contamination all fail loudly",
+  "no-lookahead feature proof: mutating every post-t bar leaves all 28 features bit-identical",
+  "synchronized-round invalidation: any arm failure voids the round for every arm",
+  "risk-governor pauses/limits incl. trailing-window drawdown release",
+  "forced_delist_close conformance with bounded deferral logging",
+  "canonical obs-v2 observation builder: one builder for training AND inference; bit-identical parity proven mechanically",
+  "transactional synchronized rounds: invalid rounds leave end-state identical to a never-run round (control-run equivalence); only the coordinator's centralized invalid-round record survives",
+  "G matched-entry diagnostic: exact matched-fill identity with G actual (timestamp, symbol, side, qty, price, initial protection); over-cap excursions explicitly recorded",
+  "G feasible counterfactual: every divergence from G actual is recorded and explained (decision stages + governor/engine rejections); no silent divergence",
+  "G diagnostics are inert: with diagnostics on vs absent, G actual and every arm are byte-identical (superseded strict single-shadow identity preserved as failed history, SD-GSHADOW)"
+ ],
+ "files": [
+  {
+   "path": "DATA_DICTIONARY.md",
+   "reason": "MODIFIED (D61 blocker A): documents the two G diagnostic ledgers (matched / feasible) and their fields.",
+   "sha256_v2": "ce7c47d641a7ca1fbf62451bc4879d54c394b61493e7ee8569b9c53ccca663a4",
+   "sha256_v3": "f34190ce7776c379febc4c952d0d47e82696b34722d924b054a59501f9f1f06c",
+   "status": "modified"
+  },
+  {
+   "path": "EXPERIMENT_PROTOCOL.md",
+   "sha256_v2": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+   "sha256_v3": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+   "status": "unchanged"
+  },
+  {
+   "path": "HOLDOUT_POLICY.md",
+   "sha256_v2": "58b94feefde19c1c43be18564e059ab78169c621942deaa06960e8b5702f2ca2",
+   "sha256_v3": "58b94feefde19c1c43be18564e059ab78169c621942deaa06960e8b5702f2ca2",
+   "status": "unchanged"
+  },
+  {
+   "path": "INTEGRITY_TEST_POLICY.md",
+   "sha256_v2": "275ddcefe3a7d239d8d5333378f17a3eef54c120bf9288bb4979be63870c8de7",
+   "sha256_v3": "275ddcefe3a7d239d8d5333378f17a3eef54c120bf9288bb4979be63870c8de7",
+   "status": "unchanged"
+  },
+  {
+   "path": "RISK_POLICY.md",
+   "sha256_v2": "9591f11da0bf6265ca8c7a6ba9b28b73941a33ac45060a5f37a746442f6f5608",
+   "sha256_v3": "9591f11da0bf6265ca8c7a6ba9b28b73941a33ac45060a5f37a746442f6f5608",
+   "status": "unchanged"
+  },
+  {
+   "path": "SIMULATOR_SEMANTICS.md",
+   "sha256_v2": "2edceb990a3c3ea6b7f5ebf65339a2065ef5b18f5be008ac62afe1a4d333a449",
+   "sha256_v3": "2edceb990a3c3ea6b7f5ebf65339a2065ef5b18f5be008ac62afe1a4d333a449",
+   "status": "unchanged"
+  },
+  {
+   "path": "SPEC_AMENDMENT_A1_GSHADOW.md",
+   "reason": "ADDED (D61 blocker A): adjudicated material-change amendment to the Arm G Shadow Counterfactual section; the spec file itself stays byte-unmodified.",
+   "sha256_v2": null,
+   "sha256_v3": "baef30966ffa047f2c629a5990bf7901e33dab176b8b88e1ff7c739f10f20b3b",
+   "status": "added"
+  },
+  {
+   "path": "SPEC_FINAL-1.2.1.md",
+   "sha256_v2": "84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8",
+   "sha256_v3": "84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G01_long_plus_2R.json",
+   "sha256_v2": "1079c188bdeeb9014e43277ef91adc517f385849d30f9144ec25123a3f1dc13c",
+   "sha256_v3": "1079c188bdeeb9014e43277ef91adc517f385849d30f9144ec25123a3f1dc13c",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G02_short_minus_1R.json",
+   "sha256_v2": "8ccf3353ae455226f3df7381f3c24c86d46b83b8e31ec5a60e542940f8f2c021",
+   "sha256_v3": "8ccf3353ae455226f3df7381f3c24c86d46b83b8e31ec5a60e542940f8f2c021",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G03_gross_winner_net_loser_v2.json",
+   "sha256_v2": "8bb5363d9321480301b34c010e072c78d838515507c619ce61bf6f672366586e",
+   "sha256_v3": "8bb5363d9321480301b34c010e072c78d838515507c619ce61bf6f672366586e",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G04_funding_long_pays.json",
+   "sha256_v2": "22e1daae99c29fe64d58fd34c9bf908aa5fd486bd5b167520cd953278baccf61",
+   "sha256_v3": "22e1daae99c29fe64d58fd34c9bf908aa5fd486bd5b167520cd953278baccf61",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G05_capital_competition.json",
+   "sha256_v2": "bef3c0f777e05d89d3c48fcb98aaa28e388768519c293c9943901985cf219724",
+   "sha256_v3": "bef3c0f777e05d89d3c48fcb98aaa28e388768519c293c9943901985cf219724",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G06_ambiguity_stop_first.json",
+   "sha256_v2": "ed155a9b4f2a24737a460cbff61cd839d44bf948fba17f4e8bf716cfa7090b93",
+   "sha256_v3": "ed155a9b4f2a24737a460cbff61cd839d44bf948fba17f4e8bf716cfa7090b93",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G07_insolvency_ruin.json",
+   "sha256_v2": "ce687c05847e760429d9461fb2ae2eb461c45e93661a0da8a83283bf431a8d18",
+   "sha256_v3": "ce687c05847e760429d9461fb2ae2eb461c45e93661a0da8a83283bf431a8d18",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G08_missing_data.json",
+   "sha256_v2": "d6fcf4f403555051a29a2bd4794ac62af087bd6b959793828d5bfc774647afe9",
+   "sha256_v3": "d6fcf4f403555051a29a2bd4794ac62af087bd6b959793828d5bfc774647afe9",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G09_loss_limit_rejection.json",
+   "sha256_v2": "f8141c2ab1aaa302d135a3dc94283560822dfe5eb8eaf2dd7eab683b28bd4f51",
+   "sha256_v3": "f8141c2ab1aaa302d135a3dc94283560822dfe5eb8eaf2dd7eab683b28bd4f51",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G10_invalid_rl_action.json",
+   "sha256_v2": "2eb2dae2393052ce35fcae7ff8eb4a47cda5bd3f172d90996cda6732370754e0",
+   "sha256_v3": "2eb2dae2393052ce35fcae7ff8eb4a47cda5bd3f172d90996cda6732370754e0",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G11_partial_exit_breakeven.json",
+   "sha256_v2": "364f7ed6270dc5e3d923fa5f8a9a023545da723e3b5c7d4c7e3e9690b6d09521",
+   "sha256_v3": "364f7ed6270dc5e3d923fa5f8a9a023545da723e3b5c7d4c7e3e9690b6d09521",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G12_synchronized_round_failure.json",
+   "sha256_v2": "4f2ccf57c1455327e1da1b657b12258129e3b63243e4dd319acb3e0aa5f303fa",
+   "sha256_v3": "4f2ccf57c1455327e1da1b657b12258129e3b63243e4dd319acb3e0aa5f303fa",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/superseded/G03_gross_winner_net_loser_v1.json",
+   "sha256_v2": "dc1add29ecf69bce81d1e61b3d369c2dd3e28701f0e624fd86df1c8ba0247d28",
+   "sha256_v3": "dc1add29ecf69bce81d1e61b3d369c2dd3e28701f0e624fd86df1c8ba0247d28",
+   "status": "unchanged"
+  },
+  {
+   "path": "lab/protocol.py",
+   "sha256_v2": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2",
+   "sha256_v3": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/__init__.py",
+   "sha256_v2": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "sha256_v3": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_arm_a.py",
+   "sha256_v2": "da7c9031c4d9f7b25fa600da8f6c35b70fbb293c75080f1769185b6a90eb13e8",
+   "sha256_v3": "da7c9031c4d9f7b25fa600da8f6c35b70fbb293c75080f1769185b6a90eb13e8",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_audit.py",
+   "sha256_v2": "01aa52cd868f1f2182cdcae8d84c10593f000b5acb44d9acbd1731251a425521",
+   "sha256_v3": "01aa52cd868f1f2182cdcae8d84c10593f000b5acb44d9acbd1731251a425521",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_authz_negative.py",
+   "sha256_v2": "7678f1463e8136c6cfbff82dbe8d405de89a6ee94671394c4e349b353378fee7",
+   "sha256_v3": "7678f1463e8136c6cfbff82dbe8d405de89a6ee94671394c4e349b353378fee7",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_competition.py",
+   "reason": "MODIFIED (D61 blocker A, adjudicated amendment): the single G-shadow strict-identity test is replaced by the three constitutional diagnostic properties (exact matched-fill identity; fully explained feasible divergence; diagnostic inertness) plus explicit over-cap recording.",
+   "sha256_v2": "52dfecb121bdef90fbb689bc983aac2529f7731b381bd05a279b0d717fc32a90",
+   "sha256_v3": "385ea08db326bd88bce68e352c402e448fd22c7a0391227508ad641a15c13caa",
+   "status": "modified"
+  },
+  {
+   "path": "tests/test_dashboard.py",
+   "sha256_v2": "99080072e8bbfa1e4249e6d31dbfcdaa040d846d77c00b6c1d0ad90dcbba6dd3",
+   "sha256_v3": "99080072e8bbfa1e4249e6d31dbfcdaa040d846d77c00b6c1d0ad90dcbba6dd3",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_differential.py",
+   "sha256_v2": "7b70cb1d964c474db89fb97742c93c9a65bb20adf967447d0d69a3de4e55e883",
+   "sha256_v3": "7b70cb1d964c474db89fb97742c93c9a65bb20adf967447d0d69a3de4e55e883",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_engine.py",
+   "sha256_v2": "c4cf1981f1336c4b9189d18d9eff324a69ad1fdac643891a1b2809a8c8345740",
+   "sha256_v3": "c4cf1981f1336c4b9189d18d9eff324a69ad1fdac643891a1b2809a8c8345740",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_features.py",
+   "sha256_v2": "db4230410d74d4b9536d68d653f134fb9b3a5385edfeeee94eab24784d6fc343",
+   "sha256_v3": "db4230410d74d4b9536d68d653f134fb9b3a5385edfeeee94eab24784d6fc343",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_golden_fixtures.py",
+   "sha256_v2": "eb71e800ffd8189aa05e34591a4f94ddf2126539f7dff11d3c66294016dce36c",
+   "sha256_v3": "eb71e800ffd8189aa05e34591a4f94ddf2126539f7dff11d3c66294016dce36c",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_governor.py",
+   "sha256_v2": "fb6426a1b07e6b1435a7936228aa7e71e2191b56682f2e9226e6c0a7d011ed1d",
+   "sha256_v3": "fb6426a1b07e6b1435a7936228aa7e71e2191b56682f2e9226e6c0a7d011ed1d",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_holdout_gate.py",
+   "sha256_v2": "b28bca43f498042e44559d3fb8a459bb5cdc4ca25b9f1fb24c4402f637c5a26b",
+   "sha256_v3": "b28bca43f498042e44559d3fb8a459bb5cdc4ca25b9f1fb24c4402f637c5a26b",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_ingest_parsers.py",
+   "sha256_v2": "6aff97ab6677bf2a0509d2e59bb0e5f8dbb3d9df9cef1f631f183a19bec3dfb3",
+   "sha256_v3": "6aff97ab6677bf2a0509d2e59bb0e5f8dbb3d9df9cef1f631f183a19bec3dfb3",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_invariants.py",
+   "sha256_v2": "1c8ce5ca8a5c2f8fd325698cfcaaef5822ecded1fbfa73ddd4c1ab34b018b473",
+   "sha256_v3": "1c8ce5ca8a5c2f8fd325698cfcaaef5822ecded1fbfa73ddd4c1ab34b018b473",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_labels.py",
+   "sha256_v2": "3a04f327adec43193a31c5c104b660d4687003841549eeb9f65dd2bd5b013c39",
+   "sha256_v3": "3a04f327adec43193a31c5c104b660d4687003841549eeb9f65dd2bd5b013c39",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_learnability_v3_invariance.py",
+   "reason": "ADDED (D61 blocker D): pre-registered mechanical invariance tests for the v3 rotation permutation and TRUE circular moving-block bootstrap, committed before the v3 run.",
+   "sha256_v2": null,
+   "sha256_v3": "f2641c9eff8bf9bfea12331cc7f1c5b342fb75dd45c8baa0a0b74409a1fef653",
+   "status": "added"
+  },
+  {
+   "path": "tests/test_observation_parity.py",
+   "sha256_v2": "ca7bfa7a3b013774c190ba65f45c37b7c51b0635923e2f66a56aa0a418038f43",
+   "sha256_v3": "ca7bfa7a3b013774c190ba65f45c37b7c51b0635923e2f66a56aa0a418038f43",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_partition.py",
+   "sha256_v2": "7da5e3af2c04f2e13bdc1e45c110802378a96c3474eddc2a4c5d1dc175e9ee4a",
+   "sha256_v3": "7da5e3af2c04f2e13bdc1e45c110802378a96c3474eddc2a4c5d1dc175e9ee4a",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_pipelines_leaks.py",
+   "sha256_v2": "11da950c98fa0de1a672e922f901954a30f78c9486d8cfe3cbec808fb9df68c0",
+   "sha256_v3": "11da950c98fa0de1a672e922f901954a30f78c9486d8cfe3cbec808fb9df68c0",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_regime_rl.py",
+   "sha256_v2": "053482fbef2afba0ddf3236b93102f8dd7f528a33fdf38094c4ae2832c57cf71",
+   "sha256_v3": "053482fbef2afba0ddf3236b93102f8dd7f528a33fdf38094c4ae2832c57cf71",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_rounds.py",
+   "sha256_v2": "8f9dcbc4e4957487a3897c8a32377c6c4d1ce974d87dc4200e6e00e3e9cbfd14",
+   "sha256_v3": "8f9dcbc4e4957487a3897c8a32377c6c4d1ce974d87dc4200e6e00e3e9cbfd14",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_seal_access.py",
+   "sha256_v2": "103464d411bca3d3de732783dbdfae249a238ff03cef5fe90a2694d1e75f0533",
+   "sha256_v3": "103464d411bca3d3de732783dbdfae249a238ff03cef5fe90a2694d1e75f0533",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_transactional_rounds.py",
+   "reason": "MODIFIED (D61 blocker A): the transactional byte-compare now covers BOTH G diagnostics instead of the single shadow.",
+   "sha256_v2": "ff8e6cd922fe0b75ef115f9277a1753578ccf0293ae92b98395bdf97aaeb4b00",
+   "sha256_v3": "6a0715c9fd7f1a1a9817e5aeae57c46209b7d16b5711f475ef0c4859558aa125",
+   "status": "modified"
+  }
+ ],
+ "integrity_manifest_hash": "c5cbdf7713533c190a45b4d3b739052493c3aca57a73c4997cc60afd9618c9c8",
+ "locked_utc": "2026-08-28T14:42:44Z",
+ "material_change_rule": "spec \u00a716: any post-lock change to a listed file requires a documented amendment, review, and retraining assessment; never silent.",
+ "predecessors": [
+  {
+   "integrity_manifest_hash": "c423f7826d0e3c667681a981f75e69d553c619022f17cdf2eea62c48ae01afb6",
+   "path": "data/manifests/integrity_manifest.json",
+   "status": "HISTORICAL \u2014 NOT APPROVED (v1)"
+  },
+  {
+   "integrity_manifest_hash": "2268007d9b7ac16071bf140fcb7fd8d43b1a67e004c63ccfebafa30e06f1d130",
+   "path": "data/manifests/integrity_manifest_v2.json",
+   "status": "HISTORICAL \u2014 replacement Checkpoint 1 NOT APPROVED (v2, D61); preserved unmodified"
+  }
+ ],
+ "version": 3
+}

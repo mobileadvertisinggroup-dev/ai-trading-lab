@@ -147,8 +147,9 @@
   "sealed": true
  },
  "independent_review_gate": "SATISFIED (final narrow review 2026-08-26; mechanical corrections D37 executed)",
- "integrity_manifest_hash": "2268007d9b7ac16071bf140fcb7fd8d43b1a67e004c63ccfebafa30e06f1d130",
+ "integrity_manifest_hash": "c5cbdf7713533c190a45b4d3b739052493c3aca57a73c4997cc60afd9618c9c8",
  "integrity_manifest_hash_v1_notapproved": "c423f7826d0e3c667681a981f75e69d553c619022f17cdf2eea62c48ae01afb6",
+ "integrity_manifest_hash_v2_notapproved": "2268007d9b7ac16071bf140fcb7fd8d43b1a67e004c63ccfebafa30e06f1d130",
  "invalidated_artifacts": [
   {
    "artifacts": [
