@@ -8,7 +8,8 @@ official results, never backfilled, never reused.
 The run exercises the full production pipeline: shared single-pass
 candidate generation, all seven arms with their own engines and governors,
 the FROZEN model artifacts (B/C/E LightGBM with the pre-registered
-finalized decision rules from bce_finalization.json, D regime, F = the
+corrected TRAIN-only/utility-corrected decision rules from
+bc_train_selection.json (D61), D regime, F = the
 selected SB3 PPO policy consuming the CANONICAL obs-v2 observation),
 G composed strictly as filter -> rank -> min(E, D) x A-size -> governor,
 the two versioned G diagnostics (matched-entry exact fill identity;
@@ -251,13 +252,18 @@ def main() -> None:  # pragma: no cover — the shakedown run
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
 
-    # pre-registered FINALIZED B/C/E decision rules (blocker 6)
-    with open(os.path.join(args.model_dir, "bce_finalization.json")) as f:
+    # D61 blockers B+C: the CORRECTED selections — B threshold and C
+    # top-K from the TRAIN-only procedure, E mapping from the corrected
+    # frozen utility (bc_train_selection.json). The invalidated
+    # validation-selected values in bce_finalization.json are history
+    # and are never consumed.
+    with open(os.path.join(args.model_dir,
+                           "bc_train_selection.json")) as f:
         fin = json.load(f)
-    b_threshold = float(fin["arm_b"]["final"]["threshold"])
-    c_top_k = int(fin["arm_c"]["final"]["top_k"])
-    e_mapping = fin["arm_e"]["final"]["mapping"]
-    e_quantiles = fin["arm_e"]["final"]["train_pred_quantiles"]
+    b_threshold = float(fin["arm_b"]["selected_threshold"])
+    c_top_k = int(fin["arm_c"]["selected_top_k"])
+    e_mapping = fin["arm_e"]["selected_mapping"]
+    e_quantiles = fin["arm_e"]["train_pred_quantiles"]
 
     # the selected SB3 Arm F policy (blocker 1), canonical obs-v2 only
     with open(os.path.join(args.sb3_dir, "arm_f_sb3_manifest.json")) as f:

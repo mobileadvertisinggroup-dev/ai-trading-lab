@@ -1,0 +1,259 @@
+{
+ "certified": true,
+ "command": {
+  "args": [
+   "--lake",
+   "/home/user/lake-work/lake",
+   "--manifests-dir",
+   "data/manifests",
+   "--ledgers-dir",
+   "/home/user/lake-work/ledgers",
+   "--equity-ledger",
+   "/home/user/lake-work/ledgers/equity_arm_a.parquet",
+   "--sb3-dir",
+   "/home/user/lake-work/official_v2/models_sb3",
+   "--shakedown-observability",
+   "/home/user/ai-trading-lab/data/shakedown_v2/SHAKEDOWN_INVALID_rl_observability.json",
+   "--out",
+   "/home/user/lake-work/official_v3/arm_f_report/arm_f_statistics_report.json"
+  ],
+  "module": "lab.tools.report_arm_f",
+  "wrapper_argv": [
+   "/home/user/worktrees/atl-v3/lab/tools/provenance_run.py",
+   "--module",
+   "lab.tools.report_arm_f",
+   "--out-dir",
+   "/home/user/lake-work/official_v3/arm_f_report",
+   "--input-dir",
+   "/home/user/lake-work/official_v2/models_sb3",
+   "--lake-dir",
+   "/home/user/lake-work/lake",
+   "--",
+   "--lake",
+   "/home/user/lake-work/lake",
+   "--manifests-dir",
+   "data/manifests",
+   "--ledgers-dir",
+   "/home/user/lake-work/ledgers",
+   "--equity-ledger",
+   "/home/user/lake-work/ledgers/equity_arm_a.parquet",
+   "--sb3-dir",
+   "/home/user/lake-work/official_v2/models_sb3",
+   "--shakedown-observability",
+   "/home/user/ai-trading-lab/data/shakedown_v2/SHAKEDOWN_INVALID_rl_observability.json",
+   "--out",
+   "/home/user/lake-work/official_v3/arm_f_report/arm_f_statistics_report.json"
+  ]
+ },
+ "dependencies": {
+  "age": "not installed",
+  "gymnasium": "1.2.3",
+  "lightgbm": "4.7.0",
+  "numpy": "2.4.6",
+  "pandas": "3.0.5",
+  "pyarrow": "25.0.1",
+  "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+  "sklearn": "1.9.0",
+  "stable_baselines3": "2.7.0",
+  "torch": "2.13.0+cu130"
+ },
+ "elapsed_seconds": 126.1,
+ "ended_utc": "2026-08-28T14:42:00Z",
+ "environment": {
+  "LC_CTYPE": "C.UTF-8",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "error": null,
+ "gate": "provenance_run v1 (reviewer directive 2026-08-27)",
+ "git": {
+  "commit": "9424118e22e045ac994f349fd44cdc8a87664323",
+  "describe": "9424118e22e045ac994f349fd44cdc8a87664323 2026-08-28 14:37:21 +0000 D61 blockers B-E executors: finalize_bce_v2, learnability_v3 + invariance tests, report_arm_f",
+  "root": "/home/user/worktrees/atl-v3",
+  "status_porcelain_post": "",
+  "status_porcelain_pre": ""
+ },
+ "host": {
+  "cpu_count": 4,
+  "hostname": "vm",
+  "platform": "Linux-6.18.44-fc-v22-x86_64-with-glibc2.39"
+ },
+ "inputs": {
+  "/home/user/lake-work/official_v2/models_sb3": {
+   "census_sha256": "fb1ae3a2804b259a370e8307f347a7cd4e28f24d67856b455846f9ce92e3e6ee",
+   "files": {
+    "PROVENANCE_train_arm_f_sb3.json": "c4d1463dfb37894a71e9d373743e68711938c54acd1d65b2647886f569fe8e9d",
+    "arm_f_sb3_manifest.json": "c7e650f8a68258d37fc34990546c025ad74acb4f2fb9c8aaa64431c96283f8a5",
+    "arm_f_sb3_seed1.zip": "989b3ba62bcd3b9cf8219412164a47739f24ebb90832af5033d6446514b7756b",
+    "arm_f_sb3_seed10.zip": "08911cdbe26465636683a19433024cdafeb6bfe4ed0f0e1baeed68a843068183",
+    "arm_f_sb3_seed2.zip": "1e5fdc0e91b8b940c02e4cd5f6c0a1bb31fa644b2050d3c407ffac8af6be6e7e",
+    "arm_f_sb3_seed3.zip": "0836edfc708c3cd09e23684511ab90ba58ef78d3912d6899285f599496874d07",
+    "arm_f_sb3_seed4.zip": "5112d080dd276ef5ad781d04014421c632db49d754b1a5a92db10f06ca4f663c",
+    "arm_f_sb3_seed5.zip": "8b73666507243826864dbd6d6058d16660bd500417121575329b0ab125517523",
+    "arm_f_sb3_seed6.zip": "07b3a15fd48f231ee3942139b9b410aaed805d7d5233f21df2d16f3ddd2448af",
+    "arm_f_sb3_seed7.zip": "78ea0d8542c4953402fe72d3f40f2610284fff1aefc0bf46b260b775d1034f6a",
+    "arm_f_sb3_seed8.zip": "07298214544afe88e68c3d441553682884d7dce1dff4617fb3f11d66a8e908c0",
+    "arm_f_sb3_seed9.zip": "9e4c1a0ad08762e0a938eb24ef5faafda524c88fa1fe83543e2863e41cb45af8"
+   },
+   "n_files": 12
+  }
+ },
+ "lake_provenance": {
+  "census_check": {
+   "extra_vs_manifest": [],
+   "missing_vs_manifest": [],
+   "on_disk_files": 13241
+  },
+  "full_verification_record": {
+   "path": "/home/user/worktrees/atl-v3/data/manifests/lake_verification_raw-v1.json",
+   "sha256": "65bfc0020f709f0ce23b923b3345bff3dca9b60597d964676f60e5801186234a"
+  },
+  "holdout_statement": "zero readable holdout rows available: the lake contains only pre-quarantine data (content-addressed manifest + recorded full verification); holdout rows exist solely inside the encrypted artifact, untouched. This addendum grants NO holdout access.",
+  "lake_dir": "/home/user/lake-work/lake",
+  "lake_manifest": {
+   "n_files": 13241,
+   "path": "/home/user/worktrees/atl-v3/data/manifests/lake_manifest_raw-v1.json",
+   "sha256": "c1ef7262f62b9cbb1cc12b6405ecc21c1898233e8e699c89bd16d31e8e2211ac"
+  },
+  "partition_meta": {
+   "holdout_end_ms": 1787572800000,
+   "path": "/home/user/worktrees/atl-v3/data/manifests/partition_meta.json",
+   "quarantine_start_ms": 1752134400000,
+   "sha256": "735f0ecaef51c17deeebd95e543c7f272220f5d730f2780f7c7ecb1f7dd69305"
+  },
+  "sampled_hash_check": {
+   "mismatches": [],
+   "n_sampled": 24,
+   "seed": 20260829
+  },
+  "verified": true
+ },
+ "loaded_lab_modules": {
+  "lab": {
+   "file": "lab/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.arms": {
+   "file": "lab/arms/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.arms.indicators": {
+   "file": "lab/arms/indicators.py",
+   "sha256": "bf1446de8f723fd654643f70a8488fbcf640ad4fdc5bf3fb594ee442df1b6cb9"
+  },
+  "lab.arms.observation": {
+   "file": "lab/arms/observation.py",
+   "sha256": "8e8b719eaa93157d689cd29f89a90510de03fc4a93b7310ae97a9973da81a5da"
+  },
+  "lab.arms.rl_env": {
+   "file": "lab/arms/rl_env.py",
+   "sha256": "e83c4a47781bd7f2ef45905435559e7e55634e37281ea6ea4ca946be30edc2fc"
+  },
+  "lab.data": {
+   "file": "lab/data/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.data.access": {
+   "file": "lab/data/access.py",
+   "sha256": "8feea30357346fe1e0171bca100d012d0f7eb5c1530a8672d27efd13cc248803"
+  },
+  "lab.data.lake": {
+   "file": "lab/data/lake.py",
+   "sha256": "d4f35da1d45912149454513ed52f69e2b79bf0b917eb807fb1c3db5549f7270e"
+  },
+  "lab.protocol": {
+   "file": "lab/protocol.py",
+   "sha256": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2"
+  },
+  "lab.sim": {
+   "file": "lab/sim/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.sim.engine": {
+   "file": "lab/sim/engine.py",
+   "sha256": "2e295ab6e4f81c59d65ea287888f6ceacda509ee05bf5e970a215dff75cc773a"
+  },
+  "lab.tools": {
+   "file": "lab/tools/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.tools.train_arm_f_sb3": {
+   "file": "lab/tools/train_arm_f_sb3.py",
+   "sha256": "373fbc225db00e19e72bfdcbbd9fb1f5061a13858a1d6d0ac1e5f56d0569eabc"
+  }
+ },
+ "outputs": {
+  "dir": "/home/user/lake-work/official_v3/arm_f_report",
+  "files": {
+   "arm_f_statistics_report.json": "6902d7cf28c8926692412e48b2fd504a6cb3f9f0ae1fac4287aa8ed8a40a1caa"
+  },
+  "n_files": 1
+ },
+ "problems": [],
+ "source_census": {
+  "census_sha256_post": "d56118d03c76c89ed569ed04b49e7b01e0d9eaff5ea2892057d226622fbb57b9",
+  "census_sha256_pre": "d56118d03c76c89ed569ed04b49e7b01e0d9eaff5ea2892057d226622fbb57b9",
+  "changed_during_run": [],
+  "files": {
+   "lab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/arms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/arms/arm_a.py": "8b7d26317b84c68f8a0997bafa7a4ec0a601914b97e51319d21e0de1fe384f99",
+   "lab/arms/indicators.py": "bf1446de8f723fd654643f70a8488fbcf640ad4fdc5bf3fb594ee442df1b6cb9",
+   "lab/arms/observation.py": "8e8b719eaa93157d689cd29f89a90510de03fc4a93b7310ae97a9973da81a5da",
+   "lab/arms/regime.py": "3d96fc8b13ac59d471487ba65a09912660c572f2772de5aa8032a4d5f43ce7fb",
+   "lab/arms/rl_env.py": "e83c4a47781bd7f2ef45905435559e7e55634e37281ea6ea4ca946be30edc2fc",
+   "lab/arms/rl_sb3.py": "937c3ce1caf0603b26e57e38cddd92388a38efaa0cefbc6c7d3d09866365d793",
+   "lab/arms/rl_train.py": "90b22199f3a3378ba111544b1543f3f7e7e40c8f113d43e2b1d1e0e428f97b3e",
+   "lab/dashboard/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/dashboard/build.py": "d81086e18efc1b2b3200d51e0d50d4c4877cc2742524a2dca0e7ea3a5cd37f58",
+   "lab/data/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/data/access.py": "8feea30357346fe1e0171bca100d012d0f7eb5c1530a8672d27efd13cc248803",
+   "lab/data/audit.py": "ce59c682d2c3cfda66e4ee003454ab1e1d1b4646fea2e6272eb0e0f57e1c84fe",
+   "lab/data/authz.py": "272ba02cff01b52ccae1a2b67717e313f05647d99803071fda5dbc02d79d6cd8",
+   "lab/data/holdout_ledger.py": "1b4bc66d9cd1a3dcf757ddf45a458ff4e479cbf3ced4433bdbf0deaef6a5e2e3",
+   "lab/data/ingest.py": "ffb7f705df8dde63ea8a103fff734dfb229d36c121a685df9f8038ffaa205c1d",
+   "lab/data/lake.py": "d4f35da1d45912149454513ed52f69e2b79bf0b917eb807fb1c3db5549f7270e",
+   "lab/data/partition.py": "9cb704365ab729ec012ec6305c442ddf35f6cc2184293c69a27c3004b93203bd",
+   "lab/data/seal.py": "aab1732b9e0ffc1eba793dc5cf988996827a76ab60930a7b61196908abe670a5",
+   "lab/data/unseal.py": "eec21b8279588b5773790c825291c9c21daf08ca4021bec1c5ad2434b61e6598",
+   "lab/features/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/features/build.py": "bb7114bc139b2cef26def1decd035acf02848fa6cee36e13c72a7fc2c88e2f51",
+   "lab/labels/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/labels/labels.py": "4044ef8ab6347ae9dfcacafee62075b346798abffcc2226818b82d4c5511d3c9",
+   "lab/labels/purge.py": "3c0d392d800477853c8e7c65d8326adc2a249f6e9383ee3b07abe9888f3df247",
+   "lab/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/models/pipelines.py": "bfe918f43fa2151c454044311d3188f3afe26d7e410cd3f484a8216a82d9c790",
+   "lab/orchestration/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/orchestration/competition.py": "c0b952dd4840243f307d4cae5ce13937115b9143168186fdef7e116920979d88",
+   "lab/orchestration/rounds.py": "233674a96ea986b931d6892f6cd2c16dccb799e4c3a22216bf763b0c8409eabc",
+   "lab/protocol.py": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2",
+   "lab/refledger/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/refledger/ledger.py": "16415d6ea969fe8893fc14088ac8e427acc1597aface8a1e80951565610aa202",
+   "lab/risk/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/risk/governor.py": "3a6b368dc076570207186fb18377ae8a2bcb28cc232d0e88cc1e45414110a210",
+   "lab/sim/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/sim/engine.py": "2e295ab6e4f81c59d65ea287888f6ceacda509ee05bf5e970a215dff75cc773a",
+   "lab/tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/tools/build_features.py": "7201973cc0d34fd40a56463788bfe9904e3c711df64223ed11410ac040d9e9ca",
+   "lab/tools/finalize_bce.py": "34e5b2db90d8f10191a3e3b5d8d35c7d790afdabc105541d3cbee6b99a9962f4",
+   "lab/tools/finalize_bce_v2.py": "2b349edb483ea783cfeed9028168398027ed9b66f2af74e7c53ebf9c6796844f",
+   "lab/tools/immutable_evidence.py": "b55b02a1f4f81aaffefd180463f6a5a364848c1e6310e54daeb85349cff4b5f7",
+   "lab/tools/learnability.py": "fa99548326d5d535eee7c727d92512bd010b982e3df473d71516bbe884e71d81",
+   "lab/tools/learnability_v2.py": "d61527faad54abfc725adc8515c038d02ea15ee2bf0fdcda4ea811a9da5eeb51",
+   "lab/tools/learnability_v3.py": "220b3bfa15419b6b713f78354a574c7744abc038c586352490c53c920c79b4b6",
+   "lab/tools/lock_integrity.py": "432b486c2833b4a94f32c6df9a879ae1e4beb04787a44275239e8458e7af34c8",
+   "lab/tools/lock_integrity_v2.py": "bc38c7016d22c1e4c16d12b6ad6dd8cca735a6ce35b073a0910c8ac0f16bf9d8",
+   "lab/tools/provenance_run.py": "2f9781bff3680809073c8ee7dbf28b8e53b7aa4152d01f6eb5a42bb1ecc0a5fc",
+   "lab/tools/report_arm_f.py": "f0346668b2f02a94f431135041af9d1ee918fe1d5c2fd4856f2a1e8f6f2302e5",
+   "lab/tools/run_arm_a.py": "6b5c069ccf0744a60f16c6621facd01c30d586c3adee70f6f305ce268be43c45",
+   "lab/tools/shakedown.py": "e19ac7e97e0df4a8df810f7aaa3a14d7b06b86332437197c1e28690c6530b5b3",
+   "lab/tools/train_arm_f_sb3.py": "373fbc225db00e19e72bfdcbbd9fb1f5061a13858a1d6d0ac1e5f56d0569eabc",
+   "lab/tools/train_arms.py": "af2b04240b7dcb17e3db0daffd089c00ce08815227588d2d778b50c066cb1404",
+   "lab/tools/verify_lake.py": "73089d4556d6c689b38ccba82ddfa25b6ac8cc95caa6e0de0a26604ed6a489d4",
+   "lab/verify/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/verify/differential.py": "656b33937d50de29f5ac79a1845f784b577ac7bbafb691e141c9f1cbfa75dfef",
+   "requirements.txt": "4c750face755892d4bb37c1e0e2ce875fcef1b6a2034a3e33b503b2511e159e9"
+  },
+  "n_files": 58
+ },
+ "started_utc": "2026-08-28T14:39:53Z"
+}

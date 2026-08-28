@@ -1,0 +1,200 @@
+{
+  "directive": "D61 blocker E \u2014 reporting only; NO retraining",
+  "explicit_statements": [
+    "7/10 seeds were flagged non-converged by the pre-registered diagnostic",
+    "the selected seed 4 was itself flagged non-converged",
+    "the selected validation mean reward was approximately +0.00449",
+    "in the replacement shakedown the executed RL actions collapsed to HOLD and CLOSE only",
+    "no RL management edge has been demonstrated"
+  ],
+  "per_seed": [
+    {
+      "beats_hold_baseline": false,
+      "non_converged": false,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": -0.008867861039038015,
+      "seed": 1,
+      "train_mean_reward": -0.02312792057124085,
+      "validation_action_distribution": {
+        "close": 747,
+        "hold": 8
+      },
+      "validation_mean_reward": -0.008867861039038015
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": true,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": -0.009778705604734926,
+      "seed": 2,
+      "train_mean_reward": -0.0031751407128286753,
+      "validation_action_distribution": {
+        "close": 729,
+        "hold": 649
+      },
+      "validation_mean_reward": -0.009778705604734926
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": false,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": -0.016012521794978783,
+      "seed": 3,
+      "train_mean_reward": -0.003676919369295414,
+      "validation_action_distribution": {
+        "close": 727,
+        "hold": 668,
+        "reduce_50": 16
+      },
+      "validation_mean_reward": -0.016012521794978783
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": true,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": 0.004489695994022424,
+      "seed": 4,
+      "train_mean_reward": 0.0006465024500196481,
+      "validation_action_distribution": {
+        "close": 705,
+        "hold": 1202,
+        "tighten_stop": 15
+      },
+      "validation_mean_reward": 0.004489695994022424
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": true,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": -0.011210006437496811,
+      "seed": 5,
+      "train_mean_reward": -0.0010065049630041463,
+      "validation_action_distribution": {
+        "close": 721,
+        "hold": 694,
+        "move_stop_breakeven": 15
+      },
+      "validation_mean_reward": -0.011210006437496811
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": true,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": -0.004751528315304373,
+      "seed": 6,
+      "train_mean_reward": 0.001408999299161748,
+      "validation_action_distribution": {
+        "close": 709,
+        "hold": 928,
+        "reduce_25": 15
+      },
+      "validation_mean_reward": -0.004751528315304373
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": true,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": -0.004695007977618019,
+      "seed": 7,
+      "train_mean_reward": -0.001662031568015809,
+      "validation_action_distribution": {
+        "close": 712,
+        "hold": 3,
+        "move_stop_breakeven": 19,
+        "tighten_stop": 592
+      },
+      "validation_mean_reward": -0.004695007977618019
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": true,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": -0.0010678056651016216,
+      "seed": 8,
+      "train_mean_reward": -0.0008068389615681871,
+      "validation_action_distribution": {
+        "close": 728,
+        "tighten_stop": 636
+      },
+      "validation_mean_reward": -0.0010678056651016216
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": true,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": 0.0012481268742534511,
+      "seed": 9,
+      "train_mean_reward": -4.676957232688913e-05,
+      "validation_action_distribution": {
+        "close": 710,
+        "hold": 15,
+        "move_stop_breakeven": 6,
+        "tighten_stop": 632
+      },
+      "validation_mean_reward": 0.0012481268742534511
+    },
+    {
+      "beats_hold_baseline": false,
+      "non_converged": false,
+      "recomputation_matches": true,
+      "recomputed_validation_mean_reward": -0.007798643150354873,
+      "seed": 10,
+      "train_mean_reward": -0.004479739822519377,
+      "validation_action_distribution": {
+        "close": 725,
+        "hold": 847
+      },
+      "validation_mean_reward": -0.007798643150354873
+    }
+  ],
+  "replacement_shakedown_executed_actions": {
+    "F": {
+      "close": 1175,
+      "hold": 2623
+    },
+    "G": {
+      "close": 290,
+      "hold": 1205
+    }
+  },
+  "selection": {
+    "rule": "highest mean validation reward; ties -> lower seed (pre-registered)",
+    "rule_still_selects_this_seed": true,
+    "selected_seed": 4
+  },
+  "statistics": {
+    "best_seed": 4,
+    "convergence": {
+      "n_non_converged": 7,
+      "per_seed": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": true,
+        "5": true,
+        "6": true,
+        "7": true,
+        "8": true,
+        "9": true,
+        "10": false
+      },
+      "selected_seed": 4,
+      "selected_seed_non_converged": true
+    },
+    "hold_baseline_action_distribution": {
+      "hold": 13360
+    },
+    "hold_baseline_validation_mean_reward": 0.04613874153267407,
+    "iqr_validation_reward": {
+      "iqr": 0.007576388220079978,
+      "q1": -0.009550994463310699,
+      "q3": -0.001974606243230721
+    },
+    "mean_validation_reward": -0.005844425711635156,
+    "median_validation_reward": -0.006275085732829623,
+    "n_seeds_beating_baseline": 0,
+    "pct_seeds_beating_arm_a_conventional": 0.0,
+    "variance_validation_reward": 3.811648647399368e-05,
+    "worst_seed": 3
+  }
+}
