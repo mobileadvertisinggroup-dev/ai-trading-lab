@@ -122,6 +122,110 @@ def test_diagnostics_change_nothing_about_g_actual():
     assert on.candidates == off.candidates
 
 
+def _entry_bar_scenario(entry_open, entry_high, entry_low, entry_close):
+    """Breakout at boundary HIST+1; the FIRST 15m bar of the next 4h
+    period (the entry bar) is customized so same-bar protection fires."""
+    levels = [100.0] * HIST + [105.0] + [105.0] * 3
+    data = build_symbol(levels)
+    i = (HIST + 1) * 16                     # entry bar index
+    data["open"][i] = entry_open
+    data["high"][i] = entry_high
+    data["low"][i] = entry_low
+    data["close"][i] = entry_close
+    prov = ArrayProvider({"AAAUSDT": data})
+    comp = Competition(prov, 10_000, universe_fn=lambda t: ["AAAUSDT"])
+    end = T0 + (len(levels) * 16 - 1) * B15
+    comp.run(T0, end)
+    return comp
+
+
+def _entry_and_close(state):
+    opens = [e for e in state.engine.events if e["kind"] == "fill_open"]
+    closes = [e for e in state.engine.events if e["kind"] == "fill_close"]
+    return opens, closes
+
+
+def test_g_matched_same_bar_stop_after_entry():
+    """D63 blocker 3 (constitutional): when G actual's entry bar itself
+    hits the protective stop, the matched clone experiences the SAME
+    same-bar stop under exact engine semantics — identical close time,
+    fill price, and realized economics."""
+    comp = _entry_bar_scenario(105.0, 105.2, 100.5, 101.0)
+    g_opens, g_closes = _entry_and_close(comp.arms["G"])
+    m_opens, m_closes = _entry_and_close(comp.shadow_matched)
+    assert g_opens and m_opens
+    t_entry = g_opens[0]["t"]
+    # G actual stopped out on the entry bar itself
+    assert g_closes and g_closes[0]["t"] == t_entry, g_closes[:1]
+    # the matched clone did too — identical time, price, quantity
+    assert m_closes and m_closes[0]["t"] == t_entry, m_closes[:1]
+    for k in ("t", "price", "qty"):
+        assert m_closes[0][k] == g_closes[0][k], (k, g_closes[0],
+                                                  m_closes[0])
+    gp = comp.arms["G"].engine.positions[g_opens[0]["pos_id"]]
+    mp = comp.shadow_matched.engine.positions[m_opens[0]["pos_id"]]
+    assert mp.closed and gp.closed
+    assert mp.realized_pnl == gp.realized_pnl
+    assert mp.mae == gp.mae and mp.mfe == gp.mfe
+
+
+def test_g_matched_same_bar_target_after_entry():
+    """Same-bar TARGET on the entry bar clones identically."""
+    comp = _entry_bar_scenario(105.0, 108.5, 104.9, 108.0)
+    g_opens, g_closes = _entry_and_close(comp.arms["G"])
+    m_opens, m_closes = _entry_and_close(comp.shadow_matched)
+    assert g_opens and m_opens
+    t_entry = g_opens[0]["t"]
+    assert g_closes and g_closes[0]["t"] == t_entry
+    assert m_closes and m_closes[0]["t"] == t_entry
+    for k in ("t", "price", "qty"):
+        assert m_closes[0][k] == g_closes[0][k]
+    gp = comp.arms["G"].engine.positions[g_opens[0]["pos_id"]]
+    mp = comp.shadow_matched.engine.positions[m_opens[0]["pos_id"]]
+    assert mp.realized_pnl == gp.realized_pnl
+
+
+class _TightenReducePolicy:
+    """Nontrivial RL management: tighten, then reduce, then hold."""
+    version = "test-tighten-reduce"
+
+    def __init__(self):
+        self.k = 0
+
+    def action_from_obs(self, obs):
+        a = ("tighten_stop", "reduce_25", "hold")[self.k % 3]
+        self.k += 1
+        return a
+
+
+def test_g_matched_rl_management_does_not_propagate():
+    """Later stop tightening and reductions on G actual must NOT touch
+    the matched clone (it manages conventionally) while entry fills stay
+    identical — the whole point of matched trade-level attribution."""
+    levels = [100.0] * HIST + [105.0, 105.5, 106.0, 106.5, 106.0, 106.5,
+                               107.0, 106.5, 106.0]
+    prov = ArrayProvider({"AAAUSDT": build_symbol(levels, wiggle=0.4)})
+    comp = Competition(prov, 10_000, universe_fn=lambda t: ["AAAUSDT"],
+                       rl_policy=_TightenReducePolicy())
+    end = T0 + (len(levels) * 16 - 1) * B15
+    comp.run(T0, end)
+    assert _fills(comp.arms["G"]) == _fills(comp.shadow_matched)
+    g_tight = [e for e in comp.arms["G"].engine.events
+               if e["kind"] == "stop_tightened"]
+    g_reduce = [e for e in comp.arms["G"].engine.events
+                if e["kind"] == "fill_close"
+                and e.get("reason") == "rl_reduce_25"]
+    assert g_tight and g_reduce, "scenario must exercise RL management"
+    m_ev = comp.shadow_matched.engine.events
+    assert not [e for e in m_ev if e["kind"] == "stop_tightened"]
+    assert not [e for e in m_ev if e["kind"] == "fill_close"
+                and str(e.get("reason", "")).startswith("rl_")]
+    g_open = [e for e in comp.arms["G"].engine.events
+              if e["kind"] == "fill_open"][0]
+    mp = comp.shadow_matched.engine.positions[1]
+    assert mp.stop == g_open["stop"], "clone keeps the INITIAL protection"
+
+
 def test_g_matched_over_cap_recorded_explicitly():
     """Cloning past the ten-position cap emits diagnostic_over_cap
     rather than silently rejecting (the matched book is a diagnostic,

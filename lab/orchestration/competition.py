@@ -536,11 +536,21 @@ class Competition:
                         self._matched_cursor,
                         len(self.arms["G"].engine.events))
             bars = self._bars_at(t)
-            for st in list(self.arms.values()) + self._diagnostic_states():
+            # D63 blocker 3 — entry-bar semantics: arms process the bar
+            # FIRST (G fills at this bar's open, then experiences this
+            # bar's protection sweep inside the same engine call); every
+            # new G fill is mirrored into the matched engine NEXT; the
+            # diagnostic engines process the SAME bar LAST, so a fresh
+            # clone receives the identical same-bar stop/target sweep,
+            # mark, and MFE/MAE updates under exact engine semantics.
+            for st in self.arms.values():
                 st.engine.process_bar_time(t, bars,
                                            prev_close=dict(self._last_close))
             if self.diagnostics:
                 self._mirror_g_fills()
+                for st in self._diagnostic_states():
+                    st.engine.process_bar_time(
+                        t, bars, prev_close=dict(self._last_close))
             for sym, b in bars.items():
                 self._last_close[sym] = b.close
             if boundary:
