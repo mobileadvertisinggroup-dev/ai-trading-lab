@@ -1,0 +1,18 @@
+{
+ "decisions_per_arm": {
+  "A": 3203,
+  "B": 3687,
+  "C": 3262,
+  "D": 3215,
+  "E": 2965,
+  "F": 3014,
+  "G": 3718
+ },
+ "defects": [],
+ "marker": "SHAKEDOWN \u2014 INVALID FOR PERFORMANCE CONCLUSIONS",
+ "round_counts": {
+  "invalid": 0,
+  "total": 1080,
+  "valid": 1080
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "artifacts": {
+  "decisions_G_feasible.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_decisions_G_feasible.jsonl.gz",
+   "sha256": "3674115c251d57fa9ddf4d963b2d0cbabcdc5d567e96c832161a857c658fb3f2"
+  },
+  "events_A.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_A.jsonl.gz",
+   "sha256": "124552ebc3602b5e22fcf663173a10154bf9bfbeb57cebf3966cc7ab7ba68ffc"
+  },
+  "events_B.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_B.jsonl.gz",
+   "sha256": "d36154b1b0922fad677d2fd1b9b36cbe5022121bd694477b62b4ee3981637c78"
+  },
+  "events_C.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_C.jsonl.gz",
+   "sha256": "834ecd16d1726891c47e9bc4989348ad2baa50a893c9bf62479bb27fa6f841db"
+  },
+  "events_D.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_D.jsonl.gz",
+   "sha256": "d163da0dc4db61d9248427c94c3f94c35b84f42da44d0748c135dd9512ab26ef"
+  },
+  "events_E.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_E.jsonl.gz",
+   "sha256": "9f18f5813bfa39fb3cf2e0f61c4e124aa7b55f1b22c0547354ac1c0be4f9b845"
+  },
+  "events_F.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_F.jsonl.gz",
+   "sha256": "f023e3aff2be69207cc83e0c09834ad1432ccc335353c9c1ad31b4cdae0d0b9e"
+  },
+  "events_G.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_G.jsonl.gz",
+   "sha256": "5360a107f3a3a89c1fd93892dbe3380bac45b2d4bf443e3ebdcc1122c7135082"
+  },
+  "events_G_feasible.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_G_feasible.jsonl.gz",
+   "sha256": "0f7ca0ded7922652c47db7ed593605cf341947045c6e896547fec8f00e667abd"
+  },
+  "events_G_matched.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_events_G_matched.jsonl.gz",
+   "sha256": "8571889803ba7821aad3e33bda8e430adeff0bc40886ca553f4c412355ba7d7b"
+  },
+  "rl_decisions_F.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_rl_decisions_F.jsonl.gz",
+   "sha256": "4840b1b4a7c8e2930afb4e2d683ec8f8643939cdfc0acf5ae1e2e7218af763a0"
+  },
+  "rl_decisions_G.jsonl.gz": {
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_rl_decisions_G.jsonl.gz",
+   "sha256": "7ddc8a79eebdd9efe418d24685b2c9b67f363443dfbb10450e1b4e8a9d7f712e"
+  }
+ },
+ "checks": {
+  "feasible_capacity_divergence": {
+   "g_only_fills": 4,
+   "governor_capacity_rejections": 4,
+   "reasons": [
+    "insufficient_capacity",
+    "max_positions"
+   ],
+   "unexplained": 0
+  },
+  "matched_fill_identity": true,
+  "matched_over_cap": {
+   "events": 4,
+   "exceeded_ten": true,
+   "max_concurrent": 14
+  },
+  "rl_actions_executed": {
+   "close": 28,
+   "reduce_25": 28,
+   "tighten_stop": 28
+  },
+  "same_bar_stop": true,
+  "same_bar_target": true
+ },
+ "defects": [],
+ "marker": "STRESS FIXTURE \u2014 INVALID FOR PERFORMANCE CONCLUSIONS",
+ "rounds": {
+  "invalid": 0,
+  "total": 140,
+  "valid": 140
+ }
+}

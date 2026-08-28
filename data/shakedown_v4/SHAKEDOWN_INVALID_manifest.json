@@ -1,0 +1,248 @@
+{
+  "artifacts": {
+    "candidates.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_candidates.jsonl.gz",
+      "sha256": "51c7d00da6f9c3668494cc1601a483d1f346c973d0b0e9aad1b3f60e72e3517b"
+    },
+    "decisions_A.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_decisions_A.jsonl.gz",
+      "sha256": "8e7d3e4a549b7aa7f2ff84a2abbd215b3a512f38c28ab95b45d4e68f39e5d449"
+    },
+    "decisions_B.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_decisions_B.jsonl.gz",
+      "sha256": "d2c5fd28ef32394588e189bdc845022bbc1e823e5374d120a5c77bbb1d38c789"
+    },
+    "decisions_C.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_decisions_C.jsonl.gz",
+      "sha256": "4d6e85d8feab854f6e5596d146284907214d2ee846f772a786b520fa4f91b8bc"
+    },
+    "decisions_D.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_decisions_D.jsonl.gz",
+      "sha256": "aaa528cc5cbdd20c785fa2e3b067386a96e307ec78c8a646bf382e774b406ca5"
+    },
+    "decisions_E.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_decisions_E.jsonl.gz",
+      "sha256": "e04a0d79e30b925824150e6cebf44b7b0c206c7391455f3583e91bae9434ab4d"
+    },
+    "decisions_F.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_decisions_F.jsonl.gz",
+      "sha256": "db4309342ae17370615d8eaaea54825ed62509187da7fb9c5e7b81c9074b898b"
+    },
+    "decisions_G.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_decisions_G.jsonl.gz",
+      "sha256": "47d2eb48123f428a114dba6cb5aa1db87491013f6f91b31948948dc99d713124"
+    },
+    "decisions_G_feasible.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_decisions_G_feasible.jsonl.gz",
+      "sha256": "906a469752879b2c3c4ec0d433cfa90d04f3f1b56300343ecd4f6d572b327471"
+    },
+    "defects.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_defects.json",
+      "sha256": "6438f9f040bfe33b10112283e693df4f050d6454d9a10f1a42feb1f1221480d3"
+    },
+    "equity_A.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_A.json",
+      "sha256": "c3c118864b000766cce90449bb68f3c91ecc47d4fd2314a6364b6a4ac67bf300"
+    },
+    "equity_B.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_B.json",
+      "sha256": "c22c3e00c119f1cd97e07adc624a20dff16dfe9d19e195de880dee187466f52a"
+    },
+    "equity_C.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_C.json",
+      "sha256": "9ab3272e96c89397bb8d3f23e124080f6c8a43c4223cdec0559359c2ef6bc36c"
+    },
+    "equity_D.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_D.json",
+      "sha256": "0a30939fbdaf6d663994cd4c90e1f0f9d77b24cf3992e631e1f002834b9b916c"
+    },
+    "equity_E.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_E.json",
+      "sha256": "3ba927e230a0816bfdcc090fa634210c928954a059f6ccc303700e65e5bd7702"
+    },
+    "equity_F.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_F.json",
+      "sha256": "a5b585ed6781e816a418f186cf854c0d8a283dbe99f32c7ee5fe600dc22b2b87"
+    },
+    "equity_G.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_G.json",
+      "sha256": "3c58362b7be45a12a4c27db62a9525bf988d0abe73203774145b6899656b713e"
+    },
+    "equity_G_feasible.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_G_feasible.json",
+      "sha256": "d41d56cb379efce8d0a1474d508ccc5a4f3c78da496d3d98454cb291c431ed45"
+    },
+    "equity_G_matched.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_equity_G_matched.json",
+      "sha256": "fb653e9f0269deeb3b30279fcaa737408f58e6d31404c4af00395c93fcacc16d"
+    },
+    "events_A.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_A.jsonl.gz",
+      "sha256": "276f72eb378508cc9d2480eec504ca4ce266233ac7c9836c007b683b7dcf5a78"
+    },
+    "events_B.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_B.jsonl.gz",
+      "sha256": "4574fde9fd9f76d5f8a8b2bfb24e5086c459954186a4b411a890b33d473c5bca"
+    },
+    "events_C.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_C.jsonl.gz",
+      "sha256": "f1158709bbfd7a57f59803e99b4a538668df12498c1e2e393614f303d86077ac"
+    },
+    "events_D.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_D.jsonl.gz",
+      "sha256": "3c8bbe5817dd0a83c861772109c7e2df85be858f60e66a4eff951fa2e4855cce"
+    },
+    "events_E.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_E.jsonl.gz",
+      "sha256": "dd9ecf38fcbe1f06d53e8e171774303a1966c2c6edf29e845228a532cd4b42f8"
+    },
+    "events_F.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_F.jsonl.gz",
+      "sha256": "f36498b1aad82ef10c243bbc06ddafb1103d58a75a77203538e7ab729a4903e4"
+    },
+    "events_G.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_G.jsonl.gz",
+      "sha256": "739b5a18a9b0020df43ff93833c41b59efe05a95b8ff80fe13182421faffc393"
+    },
+    "events_G_feasible.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_G_feasible.jsonl.gz",
+      "sha256": "e9a60a8e7abef8f72e6c2156c4ce2a5ea52c81e36d51c71951bfb0538b1d6a14"
+    },
+    "events_G_matched.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_events_G_matched.jsonl.gz",
+      "sha256": "791b21947f88fbddf8be5a4e3b13c2226722122aa22152ba771e08e50b89cb6d"
+    },
+    "governor_A.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_governor_A.jsonl.gz",
+      "sha256": "05e7fe765911d8780c9307b7b8250c6ad22504eb744a90cf593cdebfb23a2390"
+    },
+    "governor_B.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_governor_B.jsonl.gz",
+      "sha256": "b484aa090887000ebe9dd6e6540331bcc28f0e83742823b31788d23ac2a8f9a9"
+    },
+    "governor_C.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_governor_C.jsonl.gz",
+      "sha256": "7cfc9d89767251511bd49c6c6ff264bdbe06392cbb0256dfcda1bb73fdc1d6da"
+    },
+    "governor_D.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_governor_D.jsonl.gz",
+      "sha256": "a72cd0f67c2b14d7bb7e827ff02419d91a4405c3b5305cc98ec6d3e2f33237c9"
+    },
+    "governor_E.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_governor_E.jsonl.gz",
+      "sha256": "e95f8715b9a090e759b0c05567d5cee2f37f518d2ec9dabb397f05938820ca28"
+    },
+    "governor_F.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_governor_F.jsonl.gz",
+      "sha256": "81e8174d5ef72d7698b1bd61df8c8709462d3ebc088bd4e4d03d7078cf950813"
+    },
+    "governor_G.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_governor_G.jsonl.gz",
+      "sha256": "e364ff371319eae903d123cb17aff09e6819722ad7ac52c46b1e46eab43e70c9"
+    },
+    "rl_decisions_F.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_rl_decisions_F.jsonl.gz",
+      "sha256": "aee0bb9e5f105943ad3bb724014fa15718568c9f0a5cb0caf0fc6cb791cea737"
+    },
+    "rl_decisions_G.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_rl_decisions_G.jsonl.gz",
+      "sha256": "81322dab7bd2c95189475d543d0dd0e0135b570c3b90bc6b9068c677ef923bb6"
+    },
+    "rl_observability.json": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_rl_observability.json",
+      "sha256": "f802ce70a0b2b3bef6d1036ee47d082fe25dc5588c460174393726d9454a64c2"
+    },
+    "round_records.jsonl.gz": {
+      "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_round_records.jsonl.gz",
+      "sha256": "97a796ba9e84ef3fbcb6c8c30b5762dadff681dde385f6239c59e3a1788953ab"
+    }
+  },
+  "days": 180,
+  "decisions_per_arm": {
+    "A": 3203,
+    "B": 3687,
+    "C": 3262,
+    "D": 3215,
+    "E": 2965,
+    "F": 3014,
+    "G": 3718
+  },
+  "end_ms": 1752133500000,
+  "final_equity": {
+    "A": 8313.490173431916,
+    "B": 9692.70393867201,
+    "C": 8749.412339355053,
+    "D": 7977.597268335876,
+    "E": 10863.977478340554,
+    "F": 9464.08546211074,
+    "G": 10028.421235281852
+  },
+  "final_equity_G_feasible": 10241.671068400856,
+  "final_equity_G_matched": 10241.102152297979,
+  "g_feasible_fill_divergence": {
+    "feasible_fills": 8,
+    "g_fills": 8,
+    "unexplained": 0
+  },
+  "g_matched_max_open_over_cap": 0,
+  "g_matched_over_cap_events": 0,
+  "marker": "SHAKEDOWN \u2014 INVALID FOR PERFORMANCE CONCLUSIONS",
+  "model_wiring": {
+    "arm_b_threshold": 0.5,
+    "arm_c_top_k": 1,
+    "arm_e_mapping": "M1",
+    "arm_f_policy": "F-sb3-ppo-seed4-frozen",
+    "obs_schema": {
+      "hash": "9fdb82103dc004da0f770e6569600c8bef00bf32f33d1abe882880187406e884",
+      "version": "obs-v2"
+    }
+  },
+  "n_candidates": 3720,
+  "n_defects": 0,
+  "rl_observability": {
+    "F": {
+      "boundaries_with_decisions": 930,
+      "executed_action_counts": {
+        "close": 1175,
+        "hold": 2623
+      },
+      "governor_rejects": 0,
+      "hold_count": 2623,
+      "n_rl_decisions": 3798,
+      "obs_schema_hashes": [
+        "9fdb82103dc004da0f770e6569600c8bef00bf32f33d1abe882880187406e884"
+      ],
+      "tighten_reconciliation": {
+        "engine_events": 0,
+        "match": true,
+        "rl_records": 0
+      },
+      "uncovered_open_boundaries": []
+    },
+    "G": {
+      "boundaries_with_decisions": 44,
+      "executed_action_counts": {
+        "close": 6,
+        "hold": 38
+      },
+      "governor_rejects": 0,
+      "hold_count": 38,
+      "n_rl_decisions": 44,
+      "obs_schema_hashes": [
+        "9fdb82103dc004da0f770e6569600c8bef00bf32f33d1abe882880187406e884"
+      ],
+      "tighten_reconciliation": {
+        "engine_events": 0,
+        "match": true,
+        "rl_records": 0
+      },
+      "uncovered_open_boundaries": []
+    }
+  },
+  "round_counts": {
+    "invalid": 0,
+    "total": 1080,
+    "valid": 1080
+  },
+  "start_ms": 1736582400000
+}

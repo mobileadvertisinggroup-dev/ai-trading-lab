@@ -11,7 +11,9 @@
   "root_hash_v1_not_approved": "80c7c5b578ce168a4a391812e560aa451a3f2dc20af8993d950158d11dcabcaf",
   "root_hash_v2_not_approved": "695823719461ef15b6adf2e3f3cdbcd74bbb76cf58b63da8db67f11680a88346",
   "root_hash_v3": "befcb96db4486f56ea3b755ec1cc96860255a280ef5ea06179c614167b775640",
-  "status": "REPLACEMENT v3 SUBMITTED \u2014 awaiting adjudication"
+  "root_hash_v3_not_approved": "befcb96db4486f56ea3b755ec1cc96860255a280ef5ea06179c614167b775640",
+  "root_hash_v4": "0de3c9ab4dd1b0bc4e774d10550ffe3e1fc2a972173d780cb28484bdeb469fe9",
+  "status": "REPLACEMENT v4 SUBMITTED \u2014 awaiting adjudication"
  },
  "checkpoint_2": "not_reached",
  "closed_blockers": [
@@ -21,7 +23,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "V3 NOT APPROVED \u2014 three narrow blockers (D63): Arm E portfolio utility, Arm F conventional baseline, G_matched entry-bar semantics; v4 package to follow",
+ "current_phase": "REPLACEMENT CHECKPOINT 1 (v4) REACHED 2026-08-28 (D63-D65) \u2014 STOPPED, awaiting independent adjudication; root v4 to preserve externally; roots v1/v2/v3 preserved NOT APPROVED",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -94,7 +96,8 @@
   "D61",
   "D62",
   "D63",
-  "D64"
+  "D64",
+  "D65"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -252,10 +255,7 @@
   }
  },
  "pending_actions": [
-  "execute D63 blockers 1-3",
-  "manifest v4 + suite + differential",
-  "full INVALID shakedown v4 + targeted INVALID stress fixture",
-  "V4 bundle + new external root; STOP",
+  "await independent adjudication of replacement Checkpoint 1 (v4)",
   "prohibited: private key, holdout, Checkpoint-2, real money, evidence deletion, silent changes"
  ],
  "pending_user_inputs": [
@@ -357,7 +357,7 @@
   "version": "FINAL-1.2.1"
  },
  "tests": {
-  "dev_suite": "149/149 (worktree a474c65, verbatim output preserved)"
+  "dev_suite": "153/153 (worktree 4bdecf0, verbatim output preserved)"
  },
  "updated": "2026-08-28",
  "user_constraints_2026_08_25": [

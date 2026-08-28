@@ -1,0 +1,204 @@
+{
+ "certified": true,
+ "command": {
+  "args": [
+   "--out-dir",
+   "/home/user/lake-work/official_v4/stress"
+  ],
+  "module": "lab.tools.stress_fixture",
+  "wrapper_argv": [
+   "/home/user/worktrees/atl-v4final/lab/tools/provenance_run.py",
+   "--module",
+   "lab.tools.stress_fixture",
+   "--out-dir",
+   "/home/user/lake-work/official_v4/stress",
+   "--",
+   "--out-dir",
+   "/home/user/lake-work/official_v4/stress"
+  ]
+ },
+ "dependencies": {
+  "age": "not installed",
+  "gymnasium": "1.2.3",
+  "lightgbm": "4.7.0",
+  "numpy": "2.4.6",
+  "pandas": "3.0.5",
+  "pyarrow": "25.0.1",
+  "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+  "sklearn": "1.9.0",
+  "stable_baselines3": "2.7.0",
+  "torch": "2.13.0+cu130"
+ },
+ "elapsed_seconds": 0.5,
+ "ended_utc": "2026-08-28T18:28:49Z",
+ "environment": {
+  "LC_CTYPE": "C.UTF-8",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "error": null,
+ "gate": "provenance_run v1 (reviewer directive 2026-08-27)",
+ "git": {
+  "commit": "4bdecf02083fca327ad89d29f39374a42be93bc7",
+  "describe": "4bdecf02083fca327ad89d29f39374a42be93bc7 2026-08-28 18:27:02 +0000 Constitutional integrity manifest v4: verified; explicit v1->v2->v3->v4 lineage",
+  "root": "/home/user/worktrees/atl-v4final",
+  "status_porcelain_post": "",
+  "status_porcelain_pre": ""
+ },
+ "host": {
+  "cpu_count": 4,
+  "hostname": "vm",
+  "platform": "Linux-6.18.44-fc-v22-x86_64-with-glibc2.39"
+ },
+ "inputs": {},
+ "lake_provenance": null,
+ "loaded_lab_modules": {
+  "lab": {
+   "file": "lab/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.arms": {
+   "file": "lab/arms/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.arms.arm_a": {
+   "file": "lab/arms/arm_a.py",
+   "sha256": "8b7d26317b84c68f8a0997bafa7a4ec0a601914b97e51319d21e0de1fe384f99"
+  },
+  "lab.arms.indicators": {
+   "file": "lab/arms/indicators.py",
+   "sha256": "bf1446de8f723fd654643f70a8488fbcf640ad4fdc5bf3fb594ee442df1b6cb9"
+  },
+  "lab.arms.observation": {
+   "file": "lab/arms/observation.py",
+   "sha256": "8e8b719eaa93157d689cd29f89a90510de03fc4a93b7310ae97a9973da81a5da"
+  },
+  "lab.orchestration": {
+   "file": "lab/orchestration/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.orchestration.competition": {
+   "file": "lab/orchestration/competition.py",
+   "sha256": "4ea970d374256cd0829ca94932d4b1d5bbcaef4270ba65cac9487c6dc376c734"
+  },
+  "lab.orchestration.rounds": {
+   "file": "lab/orchestration/rounds.py",
+   "sha256": "233674a96ea986b931d6892f6cd2c16dccb799e4c3a22216bf763b0c8409eabc"
+  },
+  "lab.protocol": {
+   "file": "lab/protocol.py",
+   "sha256": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2"
+  },
+  "lab.risk": {
+   "file": "lab/risk/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.risk.governor": {
+   "file": "lab/risk/governor.py",
+   "sha256": "3a6b368dc076570207186fb18377ae8a2bcb28cc232d0e88cc1e45414110a210"
+  },
+  "lab.sim": {
+   "file": "lab/sim/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.sim.engine": {
+   "file": "lab/sim/engine.py",
+   "sha256": "2e295ab6e4f81c59d65ea287888f6ceacda509ee05bf5e970a215dff75cc773a"
+  },
+  "lab.tools": {
+   "file": "lab/tools/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+ },
+ "outputs": {
+  "dir": "/home/user/lake-work/official_v4/stress",
+  "files": {
+   "STRESS_INVALID_decisions_G_feasible.jsonl.gz": "3674115c251d57fa9ddf4d963b2d0cbabcdc5d567e96c832161a857c658fb3f2",
+   "STRESS_INVALID_events_A.jsonl.gz": "124552ebc3602b5e22fcf663173a10154bf9bfbeb57cebf3966cc7ab7ba68ffc",
+   "STRESS_INVALID_events_B.jsonl.gz": "d36154b1b0922fad677d2fd1b9b36cbe5022121bd694477b62b4ee3981637c78",
+   "STRESS_INVALID_events_C.jsonl.gz": "834ecd16d1726891c47e9bc4989348ad2baa50a893c9bf62479bb27fa6f841db",
+   "STRESS_INVALID_events_D.jsonl.gz": "d163da0dc4db61d9248427c94c3f94c35b84f42da44d0748c135dd9512ab26ef",
+   "STRESS_INVALID_events_E.jsonl.gz": "9f18f5813bfa39fb3cf2e0f61c4e124aa7b55f1b22c0547354ac1c0be4f9b845",
+   "STRESS_INVALID_events_F.jsonl.gz": "f023e3aff2be69207cc83e0c09834ad1432ccc335353c9c1ad31b4cdae0d0b9e",
+   "STRESS_INVALID_events_G.jsonl.gz": "5360a107f3a3a89c1fd93892dbe3380bac45b2d4bf443e3ebdcc1122c7135082",
+   "STRESS_INVALID_events_G_feasible.jsonl.gz": "0f7ca0ded7922652c47db7ed593605cf341947045c6e896547fec8f00e667abd",
+   "STRESS_INVALID_events_G_matched.jsonl.gz": "8571889803ba7821aad3e33bda8e430adeff0bc40886ca553f4c412355ba7d7b",
+   "STRESS_INVALID_manifest.json": "bd8e1a07f378e71daa578a2c06ac8ca04057d8f959ba44ca16266021b47819f3",
+   "STRESS_INVALID_rl_decisions_F.jsonl.gz": "4840b1b4a7c8e2930afb4e2d683ec8f8643939cdfc0acf5ae1e2e7218af763a0",
+   "STRESS_INVALID_rl_decisions_G.jsonl.gz": "7ddc8a79eebdd9efe418d24685b2c9b67f363443dfbb10450e1b4e8a9d7f712e"
+  },
+  "n_files": 13
+ },
+ "problems": [],
+ "source_census": {
+  "census_sha256_post": "ffec9e200b73bb9dfa56eeb878983bce45f1e76d5365ac817ebfabf6f18f08c1",
+  "census_sha256_pre": "ffec9e200b73bb9dfa56eeb878983bce45f1e76d5365ac817ebfabf6f18f08c1",
+  "changed_during_run": [],
+  "files": {
+   "lab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/arms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/arms/arm_a.py": "8b7d26317b84c68f8a0997bafa7a4ec0a601914b97e51319d21e0de1fe384f99",
+   "lab/arms/indicators.py": "bf1446de8f723fd654643f70a8488fbcf640ad4fdc5bf3fb594ee442df1b6cb9",
+   "lab/arms/observation.py": "8e8b719eaa93157d689cd29f89a90510de03fc4a93b7310ae97a9973da81a5da",
+   "lab/arms/regime.py": "3d96fc8b13ac59d471487ba65a09912660c572f2772de5aa8032a4d5f43ce7fb",
+   "lab/arms/rl_env.py": "e83c4a47781bd7f2ef45905435559e7e55634e37281ea6ea4ca946be30edc2fc",
+   "lab/arms/rl_sb3.py": "937c3ce1caf0603b26e57e38cddd92388a38efaa0cefbc6c7d3d09866365d793",
+   "lab/arms/rl_train.py": "90b22199f3a3378ba111544b1543f3f7e7e40c8f113d43e2b1d1e0e428f97b3e",
+   "lab/dashboard/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/dashboard/build.py": "d81086e18efc1b2b3200d51e0d50d4c4877cc2742524a2dca0e7ea3a5cd37f58",
+   "lab/data/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/data/access.py": "8feea30357346fe1e0171bca100d012d0f7eb5c1530a8672d27efd13cc248803",
+   "lab/data/audit.py": "ce59c682d2c3cfda66e4ee003454ab1e1d1b4646fea2e6272eb0e0f57e1c84fe",
+   "lab/data/authz.py": "272ba02cff01b52ccae1a2b67717e313f05647d99803071fda5dbc02d79d6cd8",
+   "lab/data/holdout_ledger.py": "1b4bc66d9cd1a3dcf757ddf45a458ff4e479cbf3ced4433bdbf0deaef6a5e2e3",
+   "lab/data/ingest.py": "ffb7f705df8dde63ea8a103fff734dfb229d36c121a685df9f8038ffaa205c1d",
+   "lab/data/lake.py": "d4f35da1d45912149454513ed52f69e2b79bf0b917eb807fb1c3db5549f7270e",
+   "lab/data/partition.py": "9cb704365ab729ec012ec6305c442ddf35f6cc2184293c69a27c3004b93203bd",
+   "lab/data/seal.py": "aab1732b9e0ffc1eba793dc5cf988996827a76ab60930a7b61196908abe670a5",
+   "lab/data/unseal.py": "eec21b8279588b5773790c825291c9c21daf08ca4021bec1c5ad2434b61e6598",
+   "lab/features/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/features/build.py": "bb7114bc139b2cef26def1decd035acf02848fa6cee36e13c72a7fc2c88e2f51",
+   "lab/labels/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/labels/labels.py": "4044ef8ab6347ae9dfcacafee62075b346798abffcc2226818b82d4c5511d3c9",
+   "lab/labels/purge.py": "3c0d392d800477853c8e7c65d8326adc2a249f6e9383ee3b07abe9888f3df247",
+   "lab/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/models/pipelines.py": "bfe918f43fa2151c454044311d3188f3afe26d7e410cd3f484a8216a82d9c790",
+   "lab/orchestration/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/orchestration/competition.py": "4ea970d374256cd0829ca94932d4b1d5bbcaef4270ba65cac9487c6dc376c734",
+   "lab/orchestration/rounds.py": "233674a96ea986b931d6892f6cd2c16dccb799e4c3a22216bf763b0c8409eabc",
+   "lab/protocol.py": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2",
+   "lab/refledger/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/refledger/ledger.py": "16415d6ea969fe8893fc14088ac8e427acc1597aface8a1e80951565610aa202",
+   "lab/risk/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/risk/governor.py": "3a6b368dc076570207186fb18377ae8a2bcb28cc232d0e88cc1e45414110a210",
+   "lab/sim/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/sim/engine.py": "2e295ab6e4f81c59d65ea287888f6ceacda509ee05bf5e970a215dff75cc773a",
+   "lab/tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/tools/arm_e_portfolio.py": "6d936121a8c1a7cf057ba3a004b3fb5d05856d15071e7aa2e8010b08af36bd09",
+   "lab/tools/build_features.py": "7201973cc0d34fd40a56463788bfe9904e3c711df64223ed11410ac040d9e9ca",
+   "lab/tools/finalize_bce.py": "34e5b2db90d8f10191a3e3b5d8d35c7d790afdabc105541d3cbee6b99a9962f4",
+   "lab/tools/finalize_bce_v2.py": "2b349edb483ea783cfeed9028168398027ed9b66f2af74e7c53ebf9c6796844f",
+   "lab/tools/immutable_evidence.py": "b55b02a1f4f81aaffefd180463f6a5a364848c1e6310e54daeb85349cff4b5f7",
+   "lab/tools/learnability.py": "fa99548326d5d535eee7c727d92512bd010b982e3df473d71516bbe884e71d81",
+   "lab/tools/learnability_v2.py": "d61527faad54abfc725adc8515c038d02ea15ee2bf0fdcda4ea811a9da5eeb51",
+   "lab/tools/learnability_v3.py": "220b3bfa15419b6b713f78354a574c7744abc038c586352490c53c920c79b4b6",
+   "lab/tools/lock_integrity.py": "432b486c2833b4a94f32c6df9a879ae1e4beb04787a44275239e8458e7af34c8",
+   "lab/tools/lock_integrity_v2.py": "bc38c7016d22c1e4c16d12b6ad6dd8cca735a6ce35b073a0910c8ac0f16bf9d8",
+   "lab/tools/lock_integrity_v3.py": "e7295cc3c3c8c7a6446f47218052d90540a20365102fe9cc6484a0a5371f9cd0",
+   "lab/tools/lock_integrity_v4.py": "b2c070344cfb2bf2a3572db469d2b5b002df5929f6730a4a353739930ff36e4c",
+   "lab/tools/provenance_run.py": "2f9781bff3680809073c8ee7dbf28b8e53b7aa4152d01f6eb5a42bb1ecc0a5fc",
+   "lab/tools/report_arm_f.py": "f0346668b2f02a94f431135041af9d1ee918fe1d5c2fd4856f2a1e8f6f2302e5",
+   "lab/tools/report_arm_f_v2.py": "67affdde5278ee6bceefa7cb5e829d4ab3e039ed988de59f05ef902ae7a9855e",
+   "lab/tools/run_arm_a.py": "6b5c069ccf0744a60f16c6621facd01c30d586c3adee70f6f305ce268be43c45",
+   "lab/tools/shakedown.py": "8b1651d6ae62f0f9e7d42f9aeda0619025e1762c262bd514e6a5671cd9792ed6",
+   "lab/tools/stress_fixture.py": "cc57be9105e74cac9e4a47376e553dcfc85d3c463710a0513cc50e5d3a3e147d",
+   "lab/tools/train_arm_f_sb3.py": "373fbc225db00e19e72bfdcbbd9fb1f5061a13858a1d6d0ac1e5f56d0569eabc",
+   "lab/tools/train_arms.py": "af2b04240b7dcb17e3db0daffd089c00ce08815227588d2d778b50c066cb1404",
+   "lab/tools/verify_lake.py": "73089d4556d6c689b38ccba82ddfa25b6ac8cc95caa6e0de0a26604ed6a489d4",
+   "lab/verify/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/verify/differential.py": "656b33937d50de29f5ac79a1845f784b577ac7bbafb691e141c9f1cbfa75dfef",
+   "requirements.txt": "4c750face755892d4bb37c1e0e2ce875fcef1b6a2034a3e33b503b2511e159e9"
+  },
+  "n_files": 63
+ },
+ "started_utc": "2026-08-28T18:28:49Z"
+}
