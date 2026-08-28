@@ -1,0 +1,43 @@
+{
+ "marker": "SHAKEDOWN \u2014 INVALID FOR PERFORMANCE CONCLUSIONS",
+ "per_arm": {
+  "F": {
+   "boundaries_with_decisions": 930,
+   "executed_action_counts": {
+    "close": 1175,
+    "hold": 2623
+   },
+   "governor_rejects": 0,
+   "hold_count": 2623,
+   "n_rl_decisions": 3798,
+   "obs_schema_hashes": [
+    "9fdb82103dc004da0f770e6569600c8bef00bf32f33d1abe882880187406e884"
+   ],
+   "tighten_reconciliation": {
+    "engine_events": 0,
+    "match": true,
+    "rl_records": 0
+   },
+   "uncovered_open_boundaries": []
+  },
+  "G": {
+   "boundaries_with_decisions": 44,
+   "executed_action_counts": {
+    "close": 6,
+    "hold": 38
+   },
+   "governor_rejects": 0,
+   "hold_count": 38,
+   "n_rl_decisions": 44,
+   "obs_schema_hashes": [
+    "9fdb82103dc004da0f770e6569600c8bef00bf32f33d1abe882880187406e884"
+   ],
+   "tighten_reconciliation": {
+    "engine_events": 0,
+    "match": true,
+    "rl_records": 0
+   },
+   "uncovered_open_boundaries": []
+  }
+ }
+}
