@@ -20,7 +20,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "REPLACEMENT CHECKPOINT 1 REACHED (2026-08-27, D53-D60) \u2014 STOPPED, awaiting independent adjudication; root hash v2 6958237194\u2026 to be preserved externally; predecessor 80c7c5b5\u2026 preserved NOT APPROVED",
+ "current_phase": "REPLACEMENT CHECKPOINT 1 v2 NOT APPROVED (D61) \u2014 executing narrow corrections A-F; v3 package will follow; root v2 preserved NOT APPROVED",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -89,7 +89,8 @@
   "D57",
   "D58",
   "D59",
-  "D60"
+  "D60",
+  "D61"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -166,6 +167,31 @@
    "id": "LEARNABILITY-V1-PVALUES",
    "preserved_at": "data/ledgers/learnability_report.json (unmodified)",
    "reason": "dependence-blind i.i.d. permutation (blocker 5)"
+  },
+  {
+   "artifacts": [
+    "bce_finalization.json arm_b.final (0.30)",
+    "bce_finalization.json arm_c.final (top-3)"
+   ],
+   "id": "BC-VALIDATION-SELECTION",
+   "preserved_at": "data/models/bce_finalization.json (unmodified history)",
+   "reason": "D61 blocker B: SPEC \u00a710 requires TRAIN-only threshold fitting"
+  },
+  {
+   "artifacts": [
+    "bce_finalization.json arm_e.final (M3)"
+   ],
+   "id": "ARM-E-M3-SELECTION",
+   "preserved_at": "data/models/bce_finalization.json (unmodified history)",
+   "reason": "D61 blocker C: utility implementation did not match the frozen spec (unannualized; single-path DD95)"
+  },
+  {
+   "artifacts": [
+    "learnability_report_v2.json quantitative procedure"
+   ],
+   "id": "LEARNABILITY-V2-QUANT",
+   "preserved_at": "data/ledgers/learnability_report_v2.json (not-adjudicated history)",
+   "reason": "D61 blocker D: bootstrap not circular moving-block as pre-registered; permutation modulo assignment not multiset-preserving"
   }
  ],
  "last_completed_gate": "invalid shakedown complete (runs preserved); constitutional lock c423f782...",
@@ -204,7 +230,10 @@
   }
  },
  "pending_actions": [
-  "await independent adjudication of replacement Checkpoint 1",
+  "execute D61 blockers A-F",
+  "manifest v3 + suite + differential",
+  "new INVALID shakedown after B/C/E + G diagnostics freeze",
+  "CHECKPOINT1_REPORT_V3 + bundle v3 + new external root; STOP",
   "prohibited: private key, holdout, Checkpoint-2, real money, evidence deletion, silent changes"
  ],
  "pending_user_inputs": [
@@ -308,7 +337,7 @@
  "tests": {
   "dev_suite": "141/141 (worktree 76a1c2e, verbatim output preserved)"
  },
- "updated": "2026-08-27",
+ "updated": "2026-08-28",
  "user_constraints_2026_08_25": [
   "engine_v7_location_must_be_established_not_assumed; requirements report before Phase 5",
   "actions: no holdout rows in logs; no raw data/secrets/decrypted holdout in git; no decrypted holdout artifacts; least-privilege secrets; paper-only",
