@@ -78,7 +78,9 @@ def full_state(comp):
                     "events": copy.deepcopy(g.events)},
         }
     out = {a: arm_state(comp.arms[a]) for a in ARMS}
-    out["__shadow__"] = arm_state(comp.shadow)
+    # D61 blocker A: both G diagnostics are in the byte-compare
+    out["__matched__"] = arm_state(comp.shadow_matched)
+    out["__feasible__"] = arm_state(comp.shadow_feasible)
     out["__candidates__"] = copy.deepcopy(comp.candidates)
     return out
 

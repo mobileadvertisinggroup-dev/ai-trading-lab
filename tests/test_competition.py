@@ -50,16 +50,92 @@ def test_all_seven_arms_trade_identical_candidates_with_stubs():
     assert comp.coordinator.counts()["invalid"] == 0
 
 
-def test_g_shadow_identity_through_entry():
+# D61 blocker A: the single G-shadow strict-identity test is REPLACED by
+# the two versioned diagnostics' constitutional properties (adjudicated
+# amendment; the original strict check's SD-GSHADOW failure is preserved
+# permanently in data/shakedown_v2/).
+
+def _fills(state):
+    return [(e["t"], e["symbol"], e["side"], e["qty"], e["price"],
+             e["stop"], e["target"])
+            for e in state.engine.events if e["kind"] == "fill_open"]
+
+
+def test_g_matched_diagnostic_exact_fill_identity():
+    """Constitutional: the matched-entry diagnostic clones EVERY actual
+    G fill at the identical timestamp, symbol, side, quantity, price,
+    and initial protection."""
     comp, start, end = make_comp()
     comp.run(start, end)
-    g_opens = [(e["t"], e["symbol"], e["qty"], e["price"], e["stop"])
-               for e in comp.arms["G"].engine.events
-               if e["kind"] == "fill_open"]
-    s_opens = [(e["t"], e["symbol"], e["qty"], e["price"], e["stop"])
-               for e in comp.shadow.engine.events
-               if e["kind"] == "fill_open"]
-    assert g_opens and g_opens == s_opens     # constitutional prototype
+    g = _fills(comp.arms["G"])
+    m = _fills(comp.shadow_matched)
+    assert g and g == m
+
+
+def test_g_feasible_divergence_fully_explained():
+    """Every candidate the feasible counterfactual did NOT submit has a
+    recorded stage in its decision ledger; every submitted-but-unfilled
+    entry has a governor rejection or an engine rejection/cancellation
+    event — divergence from G actual is fully explained, never silent."""
+    comp, start, end = make_comp()
+    comp.run(start, end)
+    feas = comp.shadow_feasible
+    by_key = {}
+    for r in feas.decisions:
+        by_key.setdefault((r["t"], r["symbol"]), r)
+    for c in comp.candidates:
+        assert (c["t"], c["symbol"]) in by_key, c
+    filled = {(e["decision_ts"], e["symbol"]) for e in feas.engine.events
+              if e["kind"] == "fill_open"}
+    explained = {"already_open", "filter_rejected", "rank_cut",
+                 "regime_blocked"}
+    for key, r in by_key.items():
+        if key in filled:
+            continue
+        if r["stage"] == "submitted":
+            assert r.get("governor") == "reject" or any(
+                e["kind"] in ("rejection", "entry_cancelled")
+                and e.get("decision_ts") == key[0]
+                and e.get("symbol") == key[1]
+                for e in feas.engine.events), r
+        else:
+            assert r["stage"] in explained, r
+
+
+def test_diagnostics_change_nothing_about_g_actual():
+    """G actual (and every other arm) with diagnostics enabled is
+    BYTE-IDENTICAL to a run with no diagnostic ledgers at all —
+    decisions, capacity, execution, events, cash, governor streams."""
+    on, start, end = make_comp()
+    off, _, _ = make_comp(diagnostics=False)
+    on.run(start, end)
+    off.run(start, end)
+    for a in ARMS:
+        s1, s2 = on.arms[a], off.arms[a]
+        assert s1.engine.events == s2.engine.events, a
+        assert s1.engine.cash == s2.engine.cash, a
+        assert s1.decisions == s2.decisions, a
+        assert s1.rl_decisions == s2.rl_decisions, a
+        assert s1.governor.events == s2.governor.events, a
+        assert {pid: vars(p) for pid, p in s1.engine.positions.items()} \
+            == {pid: vars(p) for pid, p in s2.engine.positions.items()}, a
+    assert on.candidates == off.candidates
+
+
+def test_g_matched_over_cap_recorded_explicitly():
+    """Cloning past the ten-position cap emits diagnostic_over_cap
+    rather than silently rejecting (the matched book is a diagnostic,
+    not a feasibility claim)."""
+    from lab.sim.engine import Costs, Engine
+    eng = Engine(1_000_000.0)
+    c = Costs(0.0005, 0.0005)
+    for i in range(11):
+        eng.clone_open(T0, f"S{i:02d}USDT", 1, 1.0, 100.0, 98.0, 106.0,
+                       2.0, T0 - B15, c)
+    over = [e for e in eng.events if e["kind"] == "diagnostic_over_cap"]
+    assert over and over[-1]["n_open"] == 11 and over[-1]["cap"] == 10
+    assert sum(1 for e in eng.events if e["kind"] == "fill_open"
+               and e.get("cloned")) == 11
 
 
 def test_arm_e_bucket_scales_size():

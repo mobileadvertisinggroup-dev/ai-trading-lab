@@ -11,7 +11,9 @@ the FROZEN model artifacts (B/C/E LightGBM with the pre-registered
 finalized decision rules from bce_finalization.json, D regime, F = the
 selected SB3 PPO policy consuming the CANONICAL obs-v2 observation),
 G composed strictly as filter -> rank -> min(E, D) x A-size -> governor,
-G-shadow entry identity, TRANSACTIONAL synchronized-round invalidation,
+the two versioned G diagnostics (matched-entry exact fill identity;
+feasible-counterfactual explained divergence — D61 blocker A),
+TRANSACTIONAL synchronized-round invalidation,
 and the dashboard build. Defect detection per spec §20 is written into
 SHAKEDOWN_INVALID_defects.json.
 
@@ -327,17 +329,51 @@ def main() -> None:  # pragma: no cover — the shakedown run
     # ---- defect detection (spec §20) -------------------------------------
     defects = []
     rc = comp.coordinator.counts()
-    # G-shadow entry identity (constitutional property)
-    g_opens = [(e["t"], e["symbol"], e["side"], round(e["qty"], 10))
-               for e in comp.arms["G"].engine.events
-               if e["kind"] == "fill_open"]
-    s_opens = [(e["t"], e["symbol"], e["side"], round(e["qty"], 10))
-               for e in comp.shadow.engine.events
-               if e["kind"] == "fill_open"]
-    if g_opens != s_opens:
-        defects.append({"id": "SD-GSHADOW", "severity": "constitutional",
-                        "detail": f"G/shadow entry mismatch: "
-                                  f"{len(g_opens)} vs {len(s_opens)}"})
+    # D61 blocker A — two versioned G diagnostics replace the single
+    # strict shadow check (whose SD-GSHADOW failure stays preserved in
+    # data/shakedown_v2/):
+    # (1) matched-entry diagnostic: EXACT fill identity is constitutional
+    def _fills(state):
+        return [(e["t"], e["symbol"], e["side"], e["qty"], e["price"],
+                 e["stop"], e["target"]) for e in state.engine.events
+                if e["kind"] == "fill_open"]
+    g_fills = _fills(comp.arms["G"])
+    m_fills = _fills(comp.shadow_matched)
+    if g_fills != m_fills:
+        defects.append({"id": "SD-GMATCHED", "severity": "constitutional",
+                        "detail": f"matched-entry diagnostic fill "
+                                  f"mismatch: {len(g_fills)} vs "
+                                  f"{len(m_fills)}"})
+    over_cap = [e for e in comp.shadow_matched.engine.events
+                if e["kind"] == "diagnostic_over_cap"]
+    # (2) feasible counterfactual: divergence must be FULLY explained
+    feas = comp.shadow_feasible
+    feas_by_key: dict = {}
+    for r in feas.decisions:
+        feas_by_key.setdefault((r["t"], r["symbol"]), r)
+    feas_filled = {(e["decision_ts"], e["symbol"])
+                   for e in feas.engine.events if e["kind"] == "fill_open"}
+    explained_stages = {"already_open", "filter_rejected", "rank_cut",
+                        "regime_blocked"}
+    unexplained = []
+    for c in comp.candidates:
+        key = (c["t"], c["symbol"])
+        r = feas_by_key.get(key)
+        if r is None:
+            unexplained.append(key)
+        elif key not in feas_filled and r["stage"] == "submitted" \
+                and r.get("governor") != "reject" and not any(
+                    e["kind"] in ("rejection", "entry_cancelled")
+                    and e.get("decision_ts") == key[0]
+                    and e.get("symbol") == key[1]
+                    for e in feas.engine.events):
+            unexplained.append(key)
+    if unexplained:
+        defects.append({"id": "SD-GFEASIBLE-UNEXPLAINED",
+                        "severity": "blocking",
+                        "detail": f"{len(unexplained)} feasible-"
+                                  f"counterfactual divergences without a "
+                                  f"recorded explanation"})
     # missing decisions: every arm must have >= 1 decision record per
     # valid round in which it saw fresh candidates — proxy: nonzero
     n_dec = {a: len(comp.arms[a].decisions) for a in ARMS}
@@ -455,8 +491,11 @@ def main() -> None:  # pragma: no cover — the shakedown run
         save(f"rl_decisions_{a}.jsonl.gz", comp.arms[a].rl_decisions)
     save("rl_observability.json", {"marker": marker,
                                    "per_arm": rl_observability})
-    save("events_G_shadow.jsonl.gz", comp.shadow.engine.events)
-    save("equity_G_shadow.json", comp.shadow.equity_curve)
+    save("events_G_matched.jsonl.gz", comp.shadow_matched.engine.events)
+    save("equity_G_matched.json", comp.shadow_matched.equity_curve)
+    save("events_G_feasible.jsonl.gz", comp.shadow_feasible.engine.events)
+    save("equity_G_feasible.json", comp.shadow_feasible.equity_curve)
+    save("decisions_G_feasible.jsonl.gz", comp.shadow_feasible.decisions)
     save("candidates.jsonl.gz", comp.candidates)
     save("round_records.jsonl.gz", comp.coordinator.records)
     save("defects.json", {"marker": marker, "defects": defects,
@@ -469,8 +508,17 @@ def main() -> None:  # pragma: no cover — the shakedown run
                 "decisions_per_arm": n_dec,
                 "final_equity": {a: comp.arms[a].equity_curve[-1]["equity"]
                                  for a in ARMS},
-                "final_equity_G_shadow":
-                    comp.shadow.equity_curve[-1]["equity"],
+                "final_equity_G_matched":
+                    comp.shadow_matched.equity_curve[-1]["equity"],
+                "final_equity_G_feasible":
+                    comp.shadow_feasible.equity_curve[-1]["equity"],
+                "g_matched_over_cap_events": len(over_cap),
+                "g_matched_max_open_over_cap":
+                    max((e["n_open"] for e in over_cap), default=0),
+                "g_feasible_fill_divergence": {
+                    "g_fills": len(g_fills),
+                    "feasible_fills": len(feas_filled),
+                    "unexplained": len(unexplained)},
                 "n_defects": len(defects),
                 "model_wiring": {
                     "arm_b_threshold": b_threshold,

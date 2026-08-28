@@ -16,9 +16,28 @@ is the frozen §3 Arm-G order):
   E: every A trade at bucket x A size (0.25/0.50/0.75/1.00; never 0).
   F: A's entries; RL policy manages post-entry at each boundary.
   G: B filter -> C rank -> min(E,D) multiplier x A size -> governor ->
-     entry; F's policy manages. G-SHADOW: an eighth ledger (diagnostic,
-     not an arm) receiving G's IDENTICAL entries with frozen conventional
-     management — identity through entry is a constitutional property.
+     entry; F's policy manages. G ACTUAL is the complete system under
+     test: it gates entries on ITS OWN state only; no diagnostic may
+     suppress or alter its decisions, capacity, or execution.
+
+TWO G DIAGNOSTICS (D61 blocker A — versioned; neither is an arm):
+  G_matched  — matched-entry management shadow: clones every ACTUAL G
+     fill at the identical timestamp, symbol, side, quantity, price and
+     initial protection (engine.clone_open), then manages CONVENTIONALLY.
+     Used ONLY for matched trade-level attribution of management
+     effects; cloning beyond ten simultaneous diagnostic positions is
+     recorded explicitly (diagnostic_over_cap); it is NOT an
+     independently feasible portfolio and is never described as one.
+     Exact matched-fill identity is the constitutional property.
+  G_feasible — feasible conventional counterfactual: the SAME pre-RL
+     entry pipeline (filter -> rank -> min(E,D) x A-size -> governor)
+     with CONVENTIONAL management under its OWN capital, exposure and
+     position limits; later fills may diverge from G as management
+     changes capacity; every skip is recorded in its decision ledger so
+     divergence is fully explained; no strict entry identity is claimed
+     after state divergence.
+  The original single G-shadow strict fill-identity check and its
+  SD-GSHADOW failure are preserved permanently (data/shakedown_v2/).
 """
 from __future__ import annotations
 
@@ -124,7 +143,8 @@ class Competition:
     def __init__(self, provider: MarketProvider, starting_cash: float,
                  universe_fn, valid_round_fn=None, filter_model=None,
                  ranker_model=None, sizer_model=None, rl_policy=None,
-                 regime_model=None, ranker_top_k: int = P.MAX_CONCURRENT_POSITIONS):
+                 regime_model=None, ranker_top_k: int = P.MAX_CONCURRENT_POSITIONS,
+                 diagnostics: bool = True):
         self.provider = provider
         self.universe_fn = universe_fn
         self.valid_round_fn = valid_round_fn or (lambda t: True)
@@ -136,7 +156,15 @@ class Competition:
         self.ranker_top_k = ranker_top_k
         self.coordinator = RoundCoordinator(list(ARMS))
         self.arms = {a: ArmState(a, starting_cash) for a in ARMS}
-        self.shadow = ArmState("G_shadow", starting_cash)   # diagnostic
+        # D61 blocker A: two versioned G diagnostics (see module doc).
+        # diagnostics=False runs G actual with NO diagnostic ledgers —
+        # exists so a test can prove the diagnostics change nothing.
+        self.diagnostics = bool(diagnostics)
+        self.shadow_matched = (ArmState("G_matched", starting_cash)
+                               if self.diagnostics else None)
+        self.shadow_feasible = (ArmState("G_feasible", starting_cash)
+                                if self.diagnostics else None)
+        self._matched_cursor = 0        # G engine-event mirror cursor
         self.candidates: list[dict] = []     # THE shared candidate ledger
 
         self._series: dict[str, SymbolSeries] = {}
@@ -187,9 +215,10 @@ class Competition:
         return out
 
     # --------------------------------------------------------- arm helpers
-    def _submit(self, arm: ArmState, cand: dict, size_mult: float,
-                shadow: ArmState | None = None) -> dict:
-        """Size, govern, and submit one entry for one arm. Returns record."""
+    def _submit(self, arm: ArmState, cand: dict, size_mult: float) -> dict:
+        """Size, govern, and submit one entry for ONE account (an arm or
+        the G_feasible diagnostic, each with its own engine, equity,
+        governor, and limits). Returns the decision record."""
         t = cand["t"]
         eng = arm.engine
         marks = dict(self._last_close)
@@ -210,17 +239,16 @@ class Competition:
         rec = {"t": t, "symbol": cand["symbol"], "size_mult": size_mult,
                "qty": qty, "governor": decision, "governor_reason": reason}
         if decision != "reject":
-            for target_state in ([arm] if shadow is None else [arm, shadow]):
-                target_state.engine.submit_entry(
-                    cand["symbol"], cand["side"], allowed_qty,
-                    stop=0.0, target=0.0, r_dist=cand["r_dist"],
-                    decision_ts=t, costs=tier_costs(cand["rank"] - 1),
-                    # cap scales WITH the multiplier so a bucketed arm fills
-                    # exactly mult x Arm A's post-cap size (spec §3 Arm E:
-                    # fractions of Arm A's SIZE, not of the pre-cap request)
-                    max_notional=P.NOTIONAL_CAP_FRACTION * equity * size_mult,
-                    stop_offset=cand["r_dist"],
-                    target_offset=P.TARGET_R_MULT * cand["r_dist"])
+            arm.engine.submit_entry(
+                cand["symbol"], cand["side"], allowed_qty,
+                stop=0.0, target=0.0, r_dist=cand["r_dist"],
+                decision_ts=t, costs=tier_costs(cand["rank"] - 1),
+                # cap scales WITH the multiplier so a bucketed arm fills
+                # exactly mult x Arm A's post-cap size (spec §3 Arm E:
+                # fractions of Arm A's SIZE, not of the pre-cap request)
+                max_notional=P.NOTIONAL_CAP_FRACTION * equity * size_mult,
+                stop_offset=cand["r_dist"],
+                target_offset=P.TARGET_R_MULT * cand["r_dist"])
         return rec
 
     def _conventional_exits(self, arm: ArmState, t: int):
@@ -366,7 +394,9 @@ class Competition:
             self.arms["F"].decisions.append(
                 dict(self._submit(self.arms["F"], c, 1.0), arm="F"))
 
-        shadow_open = {p.symbol for p in self.shadow.engine.open_positions()}
+        # G ACTUAL (D61 blocker A): gates on ITS OWN state only —
+        # fresh["G"] already excludes G's own open symbols; no diagnostic
+        # state may suppress or alter G's entries.
         for c in fresh["G"]:
             ok, _ = self.filter_model.accept(c, None)
             if not ok:
@@ -385,32 +415,86 @@ class Competition:
                 continue
             mult = min(self.sizer_model.bucket(c, None),
                        regime["multiplier"][c["side"]])
-            if mult <= 0 or c["symbol"] in shadow_open:
+            if mult <= 0:
                 self.arms["G"].decisions.append(
                     {"arm": "G", "t": t, "symbol": c["symbol"],
-                     "stage": "regime_blocked" if mult <= 0 else "shadow_open"})
+                     "stage": "regime_blocked"})
                 continue
             self.arms["G"].decisions.append(
-                dict(self._submit(self.arms["G"], c, mult,
-                                  shadow=self.shadow),
+                dict(self._submit(self.arms["G"], c, mult),
                      arm="G", g_multiplier=mult))
 
+        # G_feasible counterfactual (D61 blocker A): the SAME pre-RL
+        # entry pipeline under its OWN state and limits; every skip is
+        # recorded so any divergence from G actual is fully explained.
+        if self.diagnostics:
+            feas = self.shadow_feasible
+            feas_open = {p.symbol
+                         for p in feas.engine.open_positions()}
+            feas_fresh = [c for c in cands
+                          if c["symbol"] not in feas_open]
+            f_scored = sorted(((self.ranker_model.score(x, None), x)
+                               for x in feas_fresh), key=lambda x: -x[0])
+            f_rank_of = {x["symbol"]: i
+                         for i, (_, x) in enumerate(f_scored)}
+            for c in cands:
+                rec = {"arm": "G_feasible", "t": t, "symbol": c["symbol"]}
+                if c["symbol"] in feas_open:
+                    rec["stage"] = "already_open"
+                elif not self.filter_model.accept(c, None)[0]:
+                    rec["stage"] = "filter_rejected"
+                elif f_rank_of[c["symbol"]] >= self.ranker_top_k:
+                    rec["stage"] = "rank_cut"
+                else:
+                    mult = min(self.sizer_model.bucket(c, None),
+                               regime["multiplier"][c["side"]])
+                    if mult <= 0:
+                        rec["stage"] = "regime_blocked"
+                    else:
+                        rec.update(self._submit(feas, c, mult))
+                        rec["stage"] = "submitted"
+                        rec["g_multiplier"] = mult
+                feas.decisions.append(rec)
+
     # ---------------------------------------------------------------- run
+    def _diagnostic_states(self) -> list[ArmState]:
+        return ([self.shadow_matched, self.shadow_feasible]
+                if self.diagnostics else [])
+
+    def _mirror_g_fills(self):
+        """G matched-entry diagnostic (D61 blocker A): mirror every NEW
+        actual G fill into the matched engine at the identical timestamp,
+        symbol, side, quantity, price, and initial protection. Read-only
+        with respect to G — nothing about G's state is touched."""
+        g_events = self.arms["G"].engine.events
+        while self._matched_cursor < len(g_events):
+            e = g_events[self._matched_cursor]
+            self._matched_cursor += 1
+            if e["kind"] != "fill_open":
+                continue
+            p = self.arms["G"].engine.positions[e["pos_id"]]
+            self.shadow_matched.engine.clone_open(
+                e["t"], e["symbol"], e["side"], e["qty"], e["price"],
+                e["stop"], e["target"], p.r_dist, e["decision_ts"],
+                p.costs)
+
     def run(self, start_ms: int, end_ms: int):
         t = start_ms
         while t <= end_ms:
             boundary = t % P.BAR_4H_MS == 0
             if boundary and self.valid_round_fn(t):
                 # -- TRANSACTIONAL round (adjudication blocker 3): the
-                # complete pre-round state of every arm AND the shadow is
-                # snapshotted; a failure anywhere rolls back cash,
-                # positions (incl. stops/quantities), pending operations,
-                # engine event streams, decision + RL ledgers, governor
-                # state and events, and the shared candidate ledger. Only
-                # the coordinator's centralized invalid-round record (with
-                # diagnostics) survives an invalid round.
+                # complete pre-round state of every arm AND both G
+                # diagnostics is snapshotted; a failure anywhere rolls
+                # back cash, positions (incl. stops/quantities), pending
+                # operations, engine event streams, decision + RL
+                # ledgers, governor state and events, and the shared
+                # candidate ledger. Only the coordinator's centralized
+                # invalid-round record (with diagnostics) survives.
                 snaps = {a: st.snapshot() for a, st in self.arms.items()}
-                snaps["__shadow__"] = self.shadow.snapshot()
+                if self.diagnostics:
+                    snaps["__matched__"] = self.shadow_matched.snapshot()
+                    snaps["__feasible__"] = self.shadow_feasible.snapshot()
                 n_cand_ledger = len(self.candidates)
                 self.coordinator.begin_round(t)
                 cands = self._shared_candidates(t)
@@ -418,12 +502,17 @@ class Competition:
                     # management first (uses info strictly before t)
                     for a in ("A", "B", "C", "D", "E"):
                         self._conventional_exits(self.arms[a], t)
-                    self._conventional_exits(self.shadow, t)
+                    for st in self._diagnostic_states():
+                        self._conventional_exits(st, t)
                     for a in ("F", "G"):
                         self._rl_management(self.arms[a], t)
                     for st in self.arms.values():
                         st.governor.observe(t, st.engine.equity(
                             dict(self._last_close)))
+                    if self.diagnostics:
+                        self.shadow_feasible.governor.observe(
+                            t, self.shadow_feasible.engine.equity(
+                                dict(self._last_close)))
                     self._decide(t, cands)
                     for a in ARMS:
                         self.coordinator.report(t, a, True)
@@ -438,17 +527,26 @@ class Competition:
                     # invalid round: FULL rollback — zero surviving effect
                     for a, st in self.arms.items():
                         st.rollback(snaps[a])
-                    self.shadow.rollback(snaps["__shadow__"])
+                    if self.diagnostics:
+                        self.shadow_matched.rollback(snaps["__matched__"])
+                        self.shadow_feasible.rollback(snaps["__feasible__"])
                     del self.candidates[n_cand_ledger:]
+                    # G's event stream may have shrunk under rollback
+                    self._matched_cursor = min(
+                        self._matched_cursor,
+                        len(self.arms["G"].engine.events))
             bars = self._bars_at(t)
-            for st in list(self.arms.values()) + [self.shadow]:
+            for st in list(self.arms.values()) + self._diagnostic_states():
                 st.engine.process_bar_time(t, bars,
                                            prev_close=dict(self._last_close))
+            if self.diagnostics:
+                self._mirror_g_fills()
             for sym, b in bars.items():
                 self._last_close[sym] = b.close
             if boundary:
                 marks = dict(self._last_close)
-                for st in list(self.arms.values()) + [self.shadow]:
+                for st in (list(self.arms.values())
+                           + self._diagnostic_states()):
                     st.equity_curve.append(
                         {"t": t, "equity": st.engine.equity(marks)})
             t += P.BAR_15M_MS

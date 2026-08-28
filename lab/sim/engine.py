@@ -120,6 +120,34 @@ class Engine:
         return sum(p.open_qty * marks.get(p.symbol, p.last_mark)
                    for p in self.open_positions())
 
+    def clone_open(self, t: int, symbol: str, side: int, qty: float,
+                   fill: float, stop: float, target: float, r_dist: float,
+                   decision_ts: int, costs: Costs) -> int:
+        """DIAGNOSTIC ONLY (D61 blocker A — G matched-entry management
+        shadow): mirror an ACTUAL fill from another account into this
+        diagnostic engine at the identical timestamp, symbol, side,
+        quantity, fill price, and initial protection. Capacity checks are
+        bypassed BY DESIGN — this account is never claimed to be an
+        independently feasible portfolio — and an explicit
+        `diagnostic_over_cap` event is emitted whenever the mirrored book
+        exceeds the position cap. Never called by any official arm
+        account; outside SIMULATOR_SEMANTICS entry semantics."""
+        fee = qty * fill * costs.fee
+        self.cash -= fee
+        p = Position(self._next_id, symbol, side, qty, fill, t,
+                     decision_ts, stop, target, r_dist, costs,
+                     fees_paid=fee)
+        self.positions[p.pos_id] = p
+        self._next_id += 1
+        self._emit(t, "fill_open", pos_id=p.pos_id, symbol=symbol,
+                   side=side, qty=qty, price=fill, fee=fee, stop=stop,
+                   target=target, decision_ts=decision_ts, cloned=True)
+        n_open = len(self.open_positions())
+        if n_open > self.max_positions:
+            self._emit(t, "diagnostic_over_cap", n_open=n_open,
+                       cap=self.max_positions)
+        return p.pos_id
+
     @staticmethod
     def _entry_fill_price(ref: float, side: int, c: Costs) -> float:
         return ref * (1 + side * (c.half_spread + c.slippage))

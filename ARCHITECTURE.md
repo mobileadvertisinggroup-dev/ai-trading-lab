@@ -31,7 +31,12 @@ records why the §27-default server stack is not used in the research phase)
    no-lookahead proven by test; canonical FEATURE_NAMES order).
 6. **Orchestration** — `lab/orchestration/`: `rounds.py` (synchronized
    rounds; any-arm failure voids the round), `competition.py` (seven arms
-   + G-shadow, shared single-pass candidates).
+   + TWO versioned G diagnostics per SPEC_AMENDMENT_A1_GSHADOW.md —
+   G_matched (clones actual G fills, conventional management,
+   over-cap recorded; matched trade-level attribution only) and
+   G_feasible (same pre-RL pipeline under its own limits; fully
+   explained divergence) — shared single-pass candidates; G actual
+   gates on its own state only).
 7. **Risk** — `lab/risk/governor.py`: external deterministic governor
    wrapping every arm (approve/restrict/reject; pauses; action filter).
 8. **Tools** — `lab/tools/`: verify_lake, run_arm_a, build_features,

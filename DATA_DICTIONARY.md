@@ -84,3 +84,23 @@ finalized, its sha256 recorded in BUILD_STATE and the Checkpoint-2
 manifest, and `lab/features/build.py` (to be written against this table)
 becomes the only feature builder. Any later change is a §16 material
 change.
+
+## G diagnostic ledgers (SPEC_AMENDMENT_A1_GSHADOW.md, D61)
+
+Neither ledger is an official arm; both are diagnostics.
+
+- `events_G_matched` / `equity_G_matched`: the matched-entry management
+  shadow. Every actual G fill is cloned at identical timestamp, symbol,
+  side, quantity, price, and initial protection (`fill_open` events with
+  `cloned: true`), then managed conventionally. `diagnostic_over_cap`
+  events record any excursion beyond ten simultaneous diagnostic
+  positions (the ledger is not an independently feasible portfolio).
+  Use: matched trade-level attribution of RL-management effects only.
+- `events_G_feasible` / `equity_G_feasible` / `decisions_G_feasible`:
+  the feasible conventional counterfactual. Same pre-RL entry pipeline
+  under its own capital/exposure/position limits with conventional
+  management. Its decision ledger records one entry per shared candidate
+  with `stage` in {submitted, already_open, filter_rejected, rank_cut,
+  regime_blocked}; submitted-but-unfilled entries carry a governor or
+  engine rejection — every divergence from G actual is explained.
+  No strict entry identity is claimed after state divergence.
