@@ -13,7 +13,7 @@
   "root_hash_v3": "befcb96db4486f56ea3b755ec1cc96860255a280ef5ea06179c614167b775640",
   "root_hash_v3_not_approved": "befcb96db4486f56ea3b755ec1cc96860255a280ef5ea06179c614167b775640",
   "root_hash_v4": "0de3c9ab4dd1b0bc4e774d10550ffe3e1fc2a972173d780cb28484bdeb469fe9",
-  "status": "REPLACEMENT v4 SUBMITTED \u2014 awaiting adjudication"
+  "status": "PASSED \u2014 v4 APPROVED by independent review 2026-08-29"
  },
  "checkpoint_2": "not_reached",
  "closed_blockers": [
@@ -23,7 +23,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "REPLACEMENT CHECKPOINT 1 (v4) REACHED 2026-08-28 (D63-D65) \u2014 STOPPED, awaiting independent adjudication; root v4 to preserve externally; roots v1/v2/v3 preserved NOT APPROVED",
+ "current_phase": "CHECKPOINT 1 PASSED (v4 APPROVED, D66) \u2014 executing permitted pre-Checkpoint-2 READINESS work only (authorization + one-time opening procedure, fail-closed verification, frozen evaluation plan); then STOP at Checkpoint 2. Holdout untouched; key never requested.",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -97,7 +97,8 @@
   "D62",
   "D63",
   "D64",
-  "D65"
+  "D65",
+  "D66"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -219,7 +220,7 @@
    "reason": "D63 blocker 2: HOLD is not the frozen Arm A conventional manager"
   }
  ],
- "last_completed_gate": "invalid shakedown complete (runs preserved); constitutional lock c423f782...",
+ "last_completed_gate": "Checkpoint 1 (v4 approved)",
  "material_changes": [],
  "model_hashes": {
   "arm_b.txt": {
@@ -255,8 +256,9 @@
   }
  },
  "pending_actions": [
-  "await independent adjudication of replacement Checkpoint 1 (v4)",
-  "prohibited: private key, holdout, Checkpoint-2, real money, evidence deletion, silent changes"
+  "pre-Checkpoint-2 readiness: authorization procedure doc, fail-closed verification, frozen evaluation plan",
+  "STOP at Checkpoint 2 awaiting separate explicit authorization",
+  "prohibited until authorization: holdout access/decrypt/inspect/summarize/evaluate; key request/acceptance"
  ],
  "pending_user_inputs": [
   "age PUBLIC key (age1...) for the holdout seal recipient"
@@ -359,7 +361,7 @@
  "tests": {
   "dev_suite": "153/153 (worktree 4bdecf0, verbatim output preserved)"
  },
- "updated": "2026-08-28",
+ "updated": "2026-08-29",
  "user_constraints_2026_08_25": [
   "engine_v7_location_must_be_established_not_assumed; requirements report before Phase 5",
   "actions: no holdout rows in logs; no raw data/secrets/decrypted holdout in git; no decrypted holdout artifacts; least-privilege secrets; paper-only",

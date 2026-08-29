@@ -85,3 +85,10 @@ Chronological, append-only. Decision IDs refer to BUILD_STATE.md.
   evaluation; finalized B threshold 0.30, C top-K 3, E mapping M3 under
   the frozen SPEC utility; anomaly explanations recorded; honest
   negatives preserved (data/models/bce_finalization.json).
+
+## 2026-08-29 (Checkpoint 1 PASSED)
+- D66: independent review APPROVED Checkpoint 1 v4 (root 0de3c9ab…
+  preserved externally by the reviewer). Approval recorded append-only;
+  no approved evidence modified. Proceeding only with pre-Checkpoint-2
+  readiness (authorization + one-time opening procedure, fail-closed
+  verification, frozen evaluation plan), then stopping at Checkpoint 2.
