@@ -16,7 +16,11 @@
   "root_hash_v4": "0de3c9ab4dd1b0bc4e774d10550ffe3e1fc2a972173d780cb28484bdeb469fe9",
   "status": "PASSED \u2014 v4 APPROVED by independent review 2026-08-29"
  },
- "checkpoint_2": "not_reached",
+ "checkpoint_2": {
+  "frozen_plan": "PREREGISTRATION_CHECKPOINT2_EVALUATION.md",
+  "procedure": "CHECKPOINT2_AUTHORIZATION_PROCEDURE.md",
+  "status": "READY \u2014 awaiting separate explicit authorization"
+ },
  "closed_blockers": [
   {
    "closed": "2026-08-25",
@@ -24,7 +28,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "CHECKPOINT 1 PASSED (v4 APPROVED, D66) \u2014 executing permitted pre-Checkpoint-2 READINESS work only (authorization + one-time opening procedure, fail-closed verification, frozen evaluation plan); then STOP at Checkpoint 2. Holdout untouched; key never requested.",
+ "current_phase": "STOPPED AT CHECKPOINT 2 (D67): readiness complete \u2014 frozen evaluation plan pre-registered, frozen evaluator plugged into the fail-closed gate, authorization procedure documented, all fail-closed controls verified (34/34 batteries + live refusal probes). Holdout sealed; key never requested; awaiting the reviewer's separate explicit Checkpoint-2 authorization.",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -99,7 +103,8 @@
   "D63",
   "D64",
   "D65",
-  "D66"
+  "D66",
+  "D67"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -257,9 +262,8 @@
   }
  },
  "pending_actions": [
-  "pre-Checkpoint-2 readiness: authorization procedure doc, fail-closed verification, frozen evaluation plan",
-  "STOP at Checkpoint 2 awaiting separate explicit authorization",
-  "prohibited until authorization: holdout access/decrypt/inspect/summarize/evaluate; key request/acceptance"
+  "await the reviewer's separate explicit Checkpoint-2 authorization",
+  "prohibited: holdout access/decrypt/inspect/summarize/evaluate; key request/acceptance; real money"
  ],
  "pending_user_inputs": [
   "age PUBLIC key (age1...) for the holdout seal recipient"
@@ -360,7 +364,7 @@
   "version": "FINAL-1.2.1"
  },
  "tests": {
-  "dev_suite": "153/153 (worktree 4bdecf0, verbatim output preserved)"
+  "dev_suite": "159/159"
  },
  "updated": "2026-08-29",
  "user_constraints_2026_08_25": [

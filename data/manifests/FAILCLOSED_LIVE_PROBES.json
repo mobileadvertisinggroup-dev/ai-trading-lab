@@ -1,0 +1,12 @@
+{
+ "authz_refuses_without_record": true,
+ "ledger_no_prior_opening": true,
+ "guardedlake_refusals": {
+  "klines_range": "HoldoutAccessError",
+  "klines_partial": "HoldoutAccessError",
+  "funding_range": "HoldoutAccessError"
+ },
+ "all_reads_refused": true,
+ "audit_log_rows": 3,
+ "audit_log_tail_refused": true
+}
