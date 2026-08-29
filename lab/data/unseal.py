@@ -268,11 +268,40 @@ def evaluate_holdout(artifact_path: str, manifests_dir: str, evaluator,
 
 
 def main():  # pragma: no cover — interactive entry point
-    raise SystemExit(
-        "The holdout gate is not implementation-complete: the real frozen "
-        "holdout evaluator does not exist yet. When it does, it is plugged "
-        "into evaluate_holdout() and invoked from here — never a bare "
-        "decrypt. (Delta review correction B.)")
+    """The ONE sanctioned interactive Checkpoint-2 command (run locally
+    by the key holder; the private key is entered on the TTY and never
+    stored). Everything upstream of the evaluator is the unchanged
+    fail-closed gate; the evaluator is the FROZEN plan of
+    PREREGISTRATION_CHECKPOINT2_EVALUATION.md — plugged in per delta
+    review correction B, completing the gate."""
+    import argparse
+
+    from lab.tools.holdout_evaluator import make_evaluator
+
+    ap = argparse.ArgumentParser(
+        description="One-time Checkpoint-2 holdout evaluation "
+                    "(interactive; single use; fail closed)")
+    ap.add_argument("--artifact", required=True,
+                    help="downloaded holdout-raw-v1.tar.age (basename and "
+                         "sha256 are verified against the approved "
+                         "dataset manifest before anything opens)")
+    ap.add_argument("--manifests-dir", required=True)
+    ap.add_argument("--pre-lake", required=True,
+                    help="verified pre-holdout lake directory")
+    ap.add_argument("--model-dir", required=True,
+                    help="frozen B/C/E artifacts + selection records")
+    ap.add_argument("--sb3-dir", required=True,
+                    help="frozen SB3 Arm F artifacts")
+    ap.add_argument("--results", required=True,
+                    help="output path for the results JSON (the only "
+                         "thing that leaves the gate)")
+    args = ap.parse_args()
+    evaluator = make_evaluator(args.pre_lake, args.manifests_dir,
+                               args.model_dir, args.sb3_dir)
+    evaluate_holdout(args.artifact, args.manifests_dir, evaluator,
+                     args.results)
+    print("Holdout evaluation complete; the state ledger records "
+          f"CONSUMED. Results: {args.results}")
 
 
 if __name__ == "__main__":  # pragma: no cover

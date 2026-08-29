@@ -6,6 +6,7 @@
    "summary": "repo name deviates from spec; rename deferred per user atomicity constraint"
   }
  ],
+ "approved_external_root_hash": "0de3c9ab4dd1b0bc4e774d10550ffe3e1fc2a972173d780cb28484bdeb469fe9",
  "branch": "main",
  "checkpoint_1": {
   "root_hash_v1_not_approved": "80c7c5b578ce168a4a391812e560aa451a3f2dc20af8993d950158d11dcabcaf",
