@@ -104,7 +104,8 @@
   "D64",
   "D65",
   "D66",
-  "D67"
+  "D67",
+  "D68"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -262,8 +263,8 @@
   }
  },
  "pending_actions": [
-  "await the reviewer's separate explicit Checkpoint-2 authorization",
-  "prohibited: holdout access/decrypt/inspect/summarize/evaluate; key request/acceptance; real money"
+  "await independent review of CHECKPOINT2_READINESS_BUNDLE.zip",
+  "prohibited: creating the real authorization record; running the unseal command; holdout access; key request/acceptance"
  ],
  "pending_user_inputs": [
   "age PUBLIC key (age1...) for the holdout seal recipient"
