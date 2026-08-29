@@ -17,8 +17,11 @@
   "status": "PASSED \u2014 v4 APPROVED by independent review 2026-08-29"
  },
  "checkpoint_2": {
+  "dress_rehearsal": "SUCCESS 2026-08-29 (readiness/DRESS_REHEARSAL_EVIDENCE.json); real ledger unchanged; real authorization not created; ephemeral key only",
+  "frozen_inputs_manifest_sha256": "edb0806d43d4d96ce7cfb228eec37a699365f80f513226841279f0d20d8bddc6",
   "frozen_plan": "PREREGISTRATION_CHECKPOINT2_EVALUATION.md",
   "procedure": "CHECKPOINT2_AUTHORIZATION_PROCEDURE.md",
+  "resource_profile": "data/manifests/checkpoint2_resource_profile.json (measured full-size surrogate rehearsal: peak RSS 7,777,550,336 B; tmpfs high-water 1,002,794,052 B; 842.9 s)",
   "status": "READY \u2014 awaiting separate explicit authorization"
  },
  "closed_blockers": [
@@ -28,7 +31,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "STOPPED AT CHECKPOINT 2 (D67): readiness complete \u2014 frozen evaluation plan pre-registered, frozen evaluator plugged into the fail-closed gate, authorization procedure documented, all fail-closed controls verified (34/34 batteries + live refusal probes). Holdout sealed; key never requested; awaiting the reviewer's separate explicit Checkpoint-2 authorization.",
+ "current_phase": "STOPPED AT CHECKPOINT 2 (D70): D69 five-blocker corrections executed and dress-rehearsed at full size on a non-holdout surrogate; readiness bundle v2 produced; awaiting the reviewer's independent review / separate explicit Checkpoint-2 authorization; opening count zero",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -106,7 +109,8 @@
   "D66",
   "D67",
   "D68",
-  "D69"
+  "D69",
+  "D70"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -264,10 +268,8 @@
   }
  },
  "pending_actions": [
-  "execute D69 readiness blockers 1-5",
-  "surrogate dress rehearsal",
-  "CHECKPOINT2_READINESS_BUNDLE_V2.zip; STOP",
-  "prohibited: real authorization record; real unseal run; holdout access; key request"
+  "await independent review of CHECKPOINT2_READINESS_BUNDLE_V2.zip",
+  "Checkpoint-2 opening only after the reviewer's separate explicit authorization (CHECKPOINT2_AUTHORIZATION_PROCEDURE.md)"
  ],
  "pending_user_inputs": [
   "age PUBLIC key (age1...) for the holdout seal recipient"
@@ -368,7 +370,7 @@
   "version": "FINAL-1.2.1"
  },
  "tests": {
-  "dev_suite": "159/159"
+  "dev_suite": "191/191 (clean worktree 18cbad9)"
  },
  "updated": "2026-08-29",
  "user_constraints_2026_08_25": [

@@ -1,0 +1,8 @@
+{
+ "commit": "18cbad9b498f8c53b7ff856b291db02b1dab4e82",
+ "worktree": "/home/user/lake-work/wt-d69 (detached, clean)",
+ "result": "191 passed in 59.42s",
+ "output_sha256": "d54675f84747ae041ee7e82ea46a25fe0f78dd398eca401c34478481aaf35901",
+ "utc": "2026-08-29T18:16:51Z",
+ "note": "D69 closure: full suite from clean detached worktree; fail-closed batteries (test_holdout_gate, test_authz_negative, test_checkpoint2_readiness, test_seal_access, test_pipelines_leaks, test_gate_fault_injection) 50/50 within"
+}

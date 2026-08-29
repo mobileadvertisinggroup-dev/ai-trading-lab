@@ -1,0 +1,315 @@
+{
+ "_description": "Statistics-only summary of the SURROGATE dress rehearsal results (built exclusively from NON-holdout validation-span rows; NOT a holdout result and adjudicates nothing). Full per-arm ledgers remain in the rehearsal workdir.",
+ "honest_note": "Pre-registered prior expectation: no challenger meets the success criterion; negative results are preserved as-is.",
+ "il_assessment": {
+  "ci95": {
+   "auc": [
+    0.47252445708054636,
+    0.5941499217901899
+   ],
+   "rank_ic": [
+    -0.09600847045422567,
+    0.06878374542307464
+   ]
+  },
+  "conditions": {
+   "a_p": true,
+   "b_ci": true,
+   "c_power": false
+  },
+  "method": "fixed-score rotation permutation + circular moving-block bootstrap (Amendment A1; no refitting)",
+  "n": 760,
+  "observed": {
+   "auc": 0.5368200077341352,
+   "rank_ic": -0.012449677116185422
+  },
+  "p_upper": {
+   "auc": 0.14427860696517414,
+   "rank_ic": 0.7562189054726368
+  },
+  "power_at_mue": {
+   "auc": 0.5941276490579736,
+   "rank_ic": 0.28237217190799746
+  },
+  "seeds": {
+   "bootstrap": 20260904,
+   "permutation": 20260903
+  },
+  "unique_boundaries": 454,
+  "verdict": "UNDERPOWERED \u2014 NO EVIDENCE EITHER WAY"
+ },
+ "rounds": {
+  "invalid": 0,
+  "total": 2463,
+  "valid": 2463
+ },
+ "statistics": {
+  "arms": {
+   "A": {
+    "dd95_bootstrap_decimal": 0.6327808612513391,
+    "final_equity": 10462.958310962455,
+    "max_drawdown_observed_decimal": 0.3593105016688485,
+    "sortino_annualized_observed": 0.5146903892547827
+   },
+   "B": {
+    "dd95_bootstrap_decimal": 0.2077702903756127,
+    "final_equity": 9981.01068021761,
+    "max_drawdown_observed_decimal": 0.111898590317698,
+    "sortino_annualized_observed": 0.023909800125761833
+   },
+   "C": {
+    "dd95_bootstrap_decimal": 0.644190467901969,
+    "final_equity": 9153.502773852571,
+    "max_drawdown_observed_decimal": 0.4834422125620348,
+    "sortino_annualized_observed": 0.05620979212618527
+   },
+   "D": {
+    "dd95_bootstrap_decimal": 0.6374703437633601,
+    "final_equity": 7421.892327651655,
+    "max_drawdown_observed_decimal": 0.33266700938948557,
+    "sortino_annualized_observed": -0.657773889889452
+   },
+   "E": {
+    "dd95_bootstrap_decimal": 0.4399022837088265,
+    "final_equity": 11024.383137551355,
+    "max_drawdown_observed_decimal": 0.2293102859844337,
+    "sortino_annualized_observed": 0.6286899190967319
+   },
+   "F": {
+    "dd95_bootstrap_decimal": 0.5737780448403696,
+    "final_equity": 9354.88812486409,
+    "max_drawdown_observed_decimal": 0.3459803287666239,
+    "sortino_annualized_observed": 0.05857519260108764
+   },
+   "G": {
+    "dd95_bootstrap_decimal": 0.019038047936536115,
+    "final_equity": 9963.161503229296,
+    "max_drawdown_observed_decimal": 0.00983800108349242,
+    "sortino_annualized_observed": -0.44544574914106616
+   }
+  },
+  "inference": {
+   "B": {
+    "drawdown_constraint_pass": true,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.5274725274725275
+   },
+   "C": {
+    "drawdown_constraint_pass": false,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.7132867132867133
+   },
+   "D": {
+    "drawdown_constraint_pass": false,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.8801198801198801
+   },
+   "E": {
+    "drawdown_constraint_pass": true,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.3826173826173826
+   },
+   "F": {
+    "drawdown_constraint_pass": true,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.6093906093906094
+   },
+   "G": {
+    "drawdown_constraint_pass": true,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.7322677322677322
+   },
+   "_procedure": {
+    "bootstrap": {
+     "block_len_4h": 168,
+     "n": 1000,
+     "paired": true,
+     "seed": 20260902
+    },
+    "correction": "Holm-Bonferroni, family alpha 0.05 (frozen)",
+    "drawdown_constraint": "DD95(X) <= DD95(A), paired (frozen)"
+   }
+  },
+  "primary_statistic": "annualized Sortino of 4h portfolio returns (frozen)"
+ },
+ "supporting_metrics": {
+  "A": {
+   "average_trade_net": 0.5701457031557429,
+   "calmar": 0.12884630669357114,
+   "fees_paid": 1045.2485460978733,
+   "funding_net": 0,
+   "max_drawdown_observed": 0.3593105016688485,
+   "mean_exposure_frac": 0.6429664345770942,
+   "n_closed_trades": 812,
+   "n_closes": 812,
+   "net_return": 0.046295831096245355,
+   "net_return_ex_top3_trades": -0.05149387110692005,
+   "profit_factor": 1.0111522293589625,
+   "sharpe_ann": 0.3438514757392671,
+   "slippage_estimate": 608.774121916799,
+   "sortino_ann": 0.5146903892547827,
+   "stability_halves": [
+    0.1595782896430482,
+    -0.09769280742715014
+   ],
+   "tail_loss_mean_worst5pct": -0.027260114840213418,
+   "time_in_cash_frac": 0.244417377182298,
+   "turnover_notional_over_mean_equity": 178.41621982559974
+  },
+  "B": {
+   "average_trade_net": -0.5828700294612392,
+   "calmar": -0.01697011528784778,
+   "fees_paid": 38.229478276972664,
+   "funding_net": 0,
+   "max_drawdown_observed": 0.111898590317698,
+   "mean_exposure_frac": 0.024635737268159614,
+   "n_closed_trades": 37,
+   "n_closes": 37,
+   "net_return": -0.0018989319782389824,
+   "net_return_ex_top3_trades": -0.07239617296332468,
+   "profit_factor": 0.9871964674511273,
+   "sharpe_ann": 0.019083620566109332,
+   "slippage_estimate": 19.85684576588104,
+   "sortino_ann": 0.023909800125761833,
+   "stability_halves": [
+    0.040679773147909826,
+    -0.040914319875127614
+   ],
+   "tail_loss_mean_worst5pct": -0.00346648271932205,
+   "time_in_cash_frac": 0.8120178643930166,
+   "turnover_notional_over_mean_equity": 7.453048592763624
+  },
+  "C": {
+   "average_trade_net": -1.252214831579023,
+   "calmar": -0.17509791328757984,
+   "fees_paid": 872.2471548622676,
+   "funding_net": 0,
+   "max_drawdown_observed": 0.4834422125620348,
+   "mean_exposure_frac": 0.5586300756462613,
+   "n_closed_trades": 676,
+   "n_closes": 676,
+   "net_return": -0.0846497226147429,
+   "net_return_ex_top3_trades": -0.19325855880606702,
+   "profit_factor": 0.975341237114802,
+   "sharpe_ann": 0.037456402098561166,
+   "slippage_estimate": 545.7215057901468,
+   "sortino_ann": 0.05620979212618527,
+   "stability_halves": [
+    0.30116832016681605,
+    -0.2965166280194218
+   ],
+   "tail_loss_mean_worst5pct": -0.021768106803779736,
+   "time_in_cash_frac": 0.24116930572472595,
+   "turnover_notional_over_mean_equity": 149.07543965405716
+  },
+  "D": {
+   "average_trade_net": -3.0188614430308705,
+   "calmar": -0.7749814678286608,
+   "fees_paid": 633.697957665422,
+   "funding_net": 0,
+   "max_drawdown_observed": 0.33266700938948557,
+   "mean_exposure_frac": 0.46296629571355946,
+   "n_closed_trades": 854,
+   "n_closes": 854,
+   "net_return": -0.2578107672348344,
+   "net_return_ex_top3_trades": -0.3275611976048566,
+   "profit_factor": 0.902521132608547,
+   "sharpe_ann": -0.46620168729067496,
+   "slippage_estimate": 367.8010915488045,
+   "sortino_ann": -0.657773889889452,
+   "stability_halves": [
+    -0.06719784528908546,
+    -0.20434442714685064
+   ],
+   "tail_loss_mean_worst5pct": -0.021323496999727656,
+   "time_in_cash_frac": 0.2001624035728786,
+   "turnover_notional_over_mean_equity": 141.3867522744447
+  },
+  "E": {
+   "average_trade_net": 0.6802861352015984,
+   "calmar": 0.4467235881520347,
+   "fees_paid": 785.4334529358019,
+   "funding_net": 0,
+   "max_drawdown_observed": 0.2293102859844337,
+   "mean_exposure_frac": 0.5398329219643587,
+   "n_closed_trades": 1081,
+   "n_closes": 1081,
+   "net_return": 0.10243831375513546,
+   "net_return_ex_top3_trades": 0.026645110821389872,
+   "profit_factor": 1.0237200068329184,
+   "sharpe_ann": 0.4163239108180385,
+   "slippage_estimate": 448.2201574766468,
+   "sortino_ann": 0.6286899190967319,
+   "stability_halves": [
+    0.011039849799400203,
+    0.09040045649423867
+   ],
+   "tail_loss_mean_worst5pct": -0.018863591601803457,
+   "time_in_cash_frac": 0.00243605359317905,
+   "turnover_notional_over_mean_equity": 143.73641135493162
+  },
+  "F": {
+   "average_trade_net": -0.25624341676113094,
+   "calmar": -0.18645911963713427,
+   "fees_paid": 3167.9812619488553,
+   "funding_net": 0,
+   "max_drawdown_observed": 0.3459803287666239,
+   "mean_exposure_frac": 0.3374810166268854,
+   "n_closed_trades": 2666,
+   "n_closes": 2666,
+   "net_return": -0.06451118751359097,
+   "net_return_ex_top3_trades": -0.1360863141215567,
+   "profit_factor": 0.9861165578455272,
+   "sharpe_ann": 0.03857854097289085,
+   "slippage_estimate": 1937.540050502951,
+   "sortino_ann": 0.05857519260108764,
+   "stability_halves": [
+    -0.022017364718525778,
+    -0.043450488037382384
+   ],
+   "tail_loss_mean_worst5pct": -0.019467831672826577,
+   "time_in_cash_frac": 0.26958993097848155,
+   "turnover_notional_over_mean_equity": 618.6173328428265
+  },
+  "G": {
+   "average_trade_net": -3.2842299853679697,
+   "calmar": -0.37445103388449025,
+   "fees_paid": 8.22671035323835,
+   "funding_net": 0,
+   "max_drawdown_observed": 0.00983800108349242,
+   "mean_exposure_frac": 0.001991877390669106,
+   "n_closed_trades": 12,
+   "n_closes": 12,
+   "net_return": -0.003683849677070472,
+   "net_return_ex_top3_trades": -0.011607103968603427,
+   "profit_factor": 0.681824698443791,
+   "sharpe_ann": -0.3288477750568242,
+   "slippage_estimate": 4.18558684895214,
+   "sortino_ann": -0.44544574914106616,
+   "stability_halves": [
+    0.003958166904707738,
+    -0.007611887460748035
+   ],
+   "tail_loss_mean_worst5pct": -0.00024650262230845033,
+   "time_in_cash_frac": 0.9715793747462445,
+   "turnover_notional_over_mean_equity": 1.6451629490994069
+  }
+ },
+ "symbol_census": {
+  "combined": 500,
+  "overlay_only": 0,
+  "pre_only": 12
+ },
+ "window": {
+  "end_ms": 1752134400000,
+  "n_boundaries": 2463,
+  "n_valid_rounds": 2463,
+  "start_ms": 1716681600000
+ }
+}
