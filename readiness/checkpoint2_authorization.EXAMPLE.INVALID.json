@@ -1,0 +1,13 @@
+{
+  "_WARNING": "NON-AUTHORIZING EXAMPLE — every value below is a DELIBERATELY INVALID placeholder. Placing this file at data/manifests/checkpoint2_authorization.json will REFUSE (and audit-log the refusal): each hash is re-verified against independently recomputed values. Only the key holder creates the real record, per CHECKPOINT2_AUTHORIZATION_PROCEDURE.md.",
+  "user_authorization_utc": "0000-00-00T00:00:00Z",
+  "protocol_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "git_commit": "0000000000000000000000000000000000000000",
+  "dataset_manifest_file": "lake_manifest_raw-v1.json",
+  "dataset_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "model_manifest_file": "INVALID-PLACEHOLDER.json",
+  "model_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "integrity_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "external_root_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "consumed": false
+}

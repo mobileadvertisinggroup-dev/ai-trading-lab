@@ -1,0 +1,53 @@
+{
+ "_description": "Exact frozen evaluator inputs (Checkpoint-1-v4-approved artifacts) and their sha256 hashes; the gate/evaluator consumes these read-only.",
+ "arm_b_booster": {
+  "path": "data-release models arm_b.txt",
+  "sha256_local": "61baa40ddb5cfaa9c9e1716d1583f60c1ed81273ff4e708badfa77da1e235978"
+ },
+ "arm_c_booster": {
+  "path": "arm_c.txt",
+  "sha256_local": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a"
+ },
+ "arm_e_booster": {
+  "path": "arm_e.txt",
+  "sha256_local": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a"
+ },
+ "arm_e_cuts": {
+  "path": "arm_e_cuts.npz",
+  "sha256_local": "6a6ba2cc8a559d0c19e74c71d33bb2de54370d2167e918f437742d30c8a79d98"
+ },
+ "arm_e_portfolio_selection": {
+  "path": "data/models/arm_e_portfolio_selection.json",
+  "sha256": "94570d6e9c4deef75d198338b42f4c30aa16309d1a6bb8971681d92846d6e29c"
+ },
+ "arm_f_sb3_manifest": {
+  "path": "data/models_sb3/arm_f_sb3_manifest.json",
+  "sha256": "c7e650f8a68258d37fc34990546c025ad74acb4f2fb9c8aaa64431c96283f8a5"
+ },
+ "arm_f_sb3_selected": {
+  "path": "data/models_sb3/arm_f_sb3_seed4.zip",
+  "sha256": "5112d080dd276ef5ad781d04014421c632db49d754b1a5a92db10f06ca4f663c"
+ },
+ "bc_train_selection": {
+  "path": "data/models/bc_train_selection.json",
+  "sha256": "0c51af3a0b48eb738ba8db06503aff2afe3dc9c4abf5ec57c7c29b5215d619c0"
+ },
+ "holdout_artifact": {
+  "bytes": 791233451,
+  "name": "holdout-raw-v1.tar.age",
+  "note": "verified by the gate against the approved dataset manifest before opening",
+  "sha256": "47795aa6a9775e6f191def5c121212c00642eb666daf3cb8df46bf3a495a1067"
+ },
+ "lake_manifest": {
+  "path": "data/manifests/lake_manifest_raw-v1.json",
+  "sha256": "c1ef7262f62b9cbb1cc12b6405ecc21c1898233e8e699c89bd16d31e8e2211ac"
+ },
+ "partition_meta": {
+  "path": "data/manifests/partition_meta.json",
+  "sha256": "735f0ecaef51c17deeebd95e543c7f272220f5d730f2780f7c7ecb1f7dd69305"
+ },
+ "preregistration": {
+  "path": "PREREGISTRATION_CHECKPOINT2_EVALUATION.md",
+  "sha256": "f5b208043df225ee8a3213d521046746279466faa9782d71a43f274356f73e92"
+ }
+}
