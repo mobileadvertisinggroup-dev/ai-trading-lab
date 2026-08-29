@@ -58,6 +58,31 @@ def env(tmp_path):
     mm_path = manifests / "model_manifest.json"
     mm_path.write_text("{}")
 
+    # frozen recipient (D69 blocker 5): the test identity's public key
+    (manifests / "holdout_recipient.txt").write_text(
+        str(ident.to_public()) + "\n")
+
+    # frozen-input manifest (D69 blocker 2): pins every consumed file,
+    # including staged model/sb3 dirs under STRICT census
+    model_dir = tmp_path / "models"
+    sb3_dir = tmp_path / "models_sb3"
+    model_dir.mkdir()
+    sb3_dir.mkdir()
+    (model_dir / "arm_b.txt").write_text("frozen booster b\n")
+    (sb3_dir / "arm_f_sb3_seed4.zip").write_bytes(b"frozen sb3 seed4")
+    fi = {"repo_files": {"EXPERIMENT_PROTOCOL.md":
+                         hashlib.sha256(b"frozen protocol\n").hexdigest()},
+          "manifest_files": {
+              "lake_manifest_raw-v1.json": sha(str(dm_path)),
+              "holdout_recipient.txt":
+                  sha(str(manifests / "holdout_recipient.txt"))},
+          "model_dir_files": {"arm_b.txt":
+                              sha(str(model_dir / "arm_b.txt"))},
+          "sb3_dir_files": {"arm_f_sb3_seed4.zip":
+                            sha(str(sb3_dir / "arm_f_sb3_seed4.zip"))}}
+    fi_path = manifests / "checkpoint2_frozen_inputs.json"
+    fi_path.write_text(json.dumps(fi, sort_keys=True))
+
     # build_state with a "locked" integrity manifest + approved root
     (root / "build_state.json").write_text(json.dumps(
         {"integrity_manifest_hash": "i" * 64,
@@ -81,13 +106,16 @@ def env(tmp_path):
             "model_manifest_file": "model_manifest.json",
             "integrity_manifest_sha256": "i" * 64,
             "external_root_hash": "r" * 64,
+            "frozen_inputs_manifest_file": "checkpoint2_frozen_inputs.json",
+            "frozen_inputs_manifest_sha256": sha(str(fi_path)),
             "user_authorization_utc": "2026-08-26T00:00:00Z"}
     (manifests / "checkpoint2_authorization.json").write_text(
         json.dumps(auth, sort_keys=True))
 
     return {"root": str(root), "manifests": str(manifests),
             "artifact": str(artifact), "identity": ident,
-            "tmp": tmp_path,
+            "tmp": tmp_path, "model_dir": str(model_dir),
+            "sb3_dir": str(sb3_dir),
             "provide": lambda: str(ident)}
 
 
@@ -103,13 +131,16 @@ def shm_dir():
     return f"/dev/shm/akra-test-{uuid.uuid4().hex}"
 
 
-def run_gate(env, artifact=None, out_dir=None):
+def run_gate(env, artifact=None, out_dir=None, provider=None,
+             evaluator=None, results=None):
     out_dir = out_dir or shm_dir()
-    results = str(env["tmp"] / "results.json")
+    results = results or str(env["tmp"] / "results.json")
     return evaluate_holdout(artifact or env["artifact"], env["manifests"],
-                            dummy_evaluator, results, out_dir=out_dir,
-                            repo_root=env["root"],
-                            identity_provider=env["provide"]), out_dir, results
+                            evaluator or dummy_evaluator, results,
+                            out_dir=out_dir, repo_root=env["root"],
+                            identity_provider=provider or env["provide"],
+                            model_dir=env["model_dir"],
+                            sb3_dir=env["sb3_dir"]), out_dir, results
 
 
 def events(env):
@@ -180,10 +211,8 @@ def test_cleanup_and_failed_closed_after_evaluator_failure(env):
         raise RuntimeError("evaluator crashed")
 
     with pytest.raises(RuntimeError, match="evaluator crashed"):
-        evaluate_holdout(env["artifact"], env["manifests"],
-                         exploding_evaluator, results, out_dir=out_dir,
-                         repo_root=env["root"],
-                         identity_provider=env["provide"])
+        run_gate(env, out_dir=out_dir, evaluator=exploding_evaluator,
+                 results=results)
     # cleanup executed after evaluator FAILURE; nothing remains
     assert not os.path.exists(out_dir)
     assert events(env) == ["OPENING_STARTED", "FAILED_CLOSED"]
@@ -219,17 +248,28 @@ def test_disk_backed_output_directory_refused(env):
     assert events(env) == []                   # refused BEFORE the claim
 
 
-def test_identity_failure_after_claim_is_failed_closed(env):
+def test_identity_failure_refuses_BEFORE_the_claim(env):
+    # D69 blocker 5: identity entry/parsing/verification all happen
+    # before the claim — an aborted entry does NOT spend the opening.
     def bad_identity():
         raise RuntimeError("user aborted identity entry")
     out_dir = shm_dir()
-    with pytest.raises(RuntimeError, match="user aborted"):
-        evaluate_holdout(env["artifact"], env["manifests"],
-                         dummy_evaluator, str(env["tmp"] / "r.json"),
-                         out_dir=out_dir, repo_root=env["root"],
-                         identity_provider=bad_identity)
-    assert events(env) == ["OPENING_STARTED", "FAILED_CLOSED"]
+    with pytest.raises(UnsealRefused, match="NOT spent"):
+        run_gate(env, out_dir=out_dir, provider=bad_identity)
+    assert events(env) == []                   # opening unspent
     assert not os.path.exists(out_dir)
+    run_gate(env)                              # still openable
+    assert events(env) == ["OPENING_STARTED", "CONSUMED"]
+
+
+def test_wrong_key_refused_against_frozen_recipient_before_claim(env):
+    # a VALID age identity that is not the frozen recipient's
+    other = pyrage.x25519.Identity.generate()
+    with pytest.raises(UnsealRefused, match="frozen holdout recipient"):
+        run_gate(env, provider=lambda: str(other))
+    assert events(env) == []                   # refused pre-claim
+    run_gate(env)                              # the right key still opens
+    assert events(env) == ["OPENING_STARTED", "CONSUMED"]
 
 
 def _claim_worker(args):

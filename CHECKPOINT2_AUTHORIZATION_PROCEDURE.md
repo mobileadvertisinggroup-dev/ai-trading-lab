@@ -40,6 +40,8 @@ Create `data/manifests/checkpoint2_authorization.json`:
   "dataset_manifest_sha256": "<sha256 of data/manifests/lake_manifest_raw-v1.json>",
   "model_manifest_file":    "<the frozen model manifest file in data/manifests you authorize>",
   "model_manifest_sha256":  "<its sha256>",
+  "frozen_inputs_manifest_file": "checkpoint2_frozen_inputs.json",
+  "frozen_inputs_manifest_sha256": "<sha256 of data/manifests/checkpoint2_frozen_inputs.json — currently edb0806d43d4d96ce7cfb228eec37a699365f80f513226841279f0d20d8bddc6>",
   "integrity_manifest_sha256": "<build_state.json .integrity_manifest_hash (v4: ee518f082580e2e4a342cb17a242226e6fc03a824643c74f2dd4cb47f0cb686e)>",
   "external_root_hash":     "0de3c9ab4dd1b0bc4e774d10550ffe3e1fc2a972173d780cb28484bdeb469fe9",
   "consumed": false
@@ -52,11 +54,20 @@ refusal is immutably audit-logged). The file is an input record only —
 consumption is established by the ledger, never by editing this JSON.
 
 ## 3. The one-time opening (run LOCALLY by you)
-Requirements: Linux with tmpfs (`/dev/shm`), python env with the pinned
-requirements, `pyrage`, the verified pre-holdout lake, the frozen
-model artifacts, and the downloaded `holdout-raw-v1.tar.age` (the gate
-verifies its exact basename and sha256 against the approved manifest —
-791,233,451 bytes, sha256 47795aa6…067).
+Requirements: Linux with tmpfs (`/dev/shm`), NO active swap (the gate's
+resource preflight refuses if `/proc/swaps` lists any device — tmpfs
+pages must never be able to reach persistent storage), python env with
+the pinned requirements, `pyrage`, the verified pre-holdout lake, the
+frozen model artifacts, and the downloaded `holdout-raw-v1.tar.age`
+(the gate verifies its exact basename and sha256 against the approved
+manifest — 791,233,451 bytes, sha256 47795aa6…067).
+
+Stage the frozen artifacts in TWO dedicated directories containing
+EXACTLY the pinned files and nothing else (strict census — an
+additional file refuses):
+- `--model-dir`: arm_b.txt, arm_c.txt, arm_e.txt, arm_e_cuts.npz,
+  bc_train_selection.json, arm_e_portfolio_selection.json
+- `--sb3-dir`: arm_f_sb3_manifest.json, arm_f_sb3_seed4.zip
 
 ```
 python3 -m lab.data.unseal \
@@ -68,22 +79,50 @@ python3 -m lab.data.unseal \
   --results   /path/outside/repo/checkpoint2_results.json
 ```
 
-What the gate then does, in order (any failure ⇒ FAILED_CLOSED, the
-opening stays spent, the holdout stays blocked):
+What the gate then does, in order (D69 blockers 2/4/5). EVERYTHING
+that can be checked without the holdout runs BEFORE the claim — a
+failure there refuses and the opening is NOT spent:
 1. verifies the authorization record strictly (recomputed hashes) and
    the hash-chained state ledger (corrupt chain blocks);
 2. verifies the artifact's exact manifest-bound name and sha256;
-3. atomically CLAIMS the single opening (OS lock + chain verify +
-   no-prior-opening + fsync) — from here the opening is spent;
-4. prompts YOU for the age identity on the TTY (never echoed, never
-   stored, deleted from memory after parsing);
-5. decrypts only into a fresh, verified tmpfs/ramfs directory outside
-   the repository;
-6. runs the FROZEN evaluator once (seven arms + both G diagnostics,
+3. verifies EVERY frozen input against checkpoint2_frozen_inputs.json
+   (itself hash-bound to your authorization): governing docs,
+   dataset/partition manifests, the frozen recipient, and the staged
+   model/sb3 files under strict census — missing, additional,
+   substituted, symlinked, or path-escaping inputs refuse;
+4. verifies the output directory is fresh, outside the repository, on
+   verified tmpfs/ramfs;
+5. prompts YOU for the age identity on the TTY (never echoed, never
+   stored), parses it, and VERIFIES its derived public key equals the
+   frozen recipient (data/manifests/holdout_recipient.txt) — a
+   mistyped or wrong key refuses HERE, with the opening still unspent;
+6. runs the resource preflight: ciphertext size, tmpfs capacity,
+   available RAM, no-swap, results-directory capacity, expected peak
+   from the measured surrogate profile, 1.5x margin;
+7. only now atomically CLAIMS the single opening (OS lock + chain
+   verify + no-prior-opening + fsync) — from here the opening is
+   spent; any later failure is FAILED_CLOSED;
+8. STREAM-decrypts (pyrage.decrypt_io, bounded memory) into the
+   verified tmpfs, stream-extracts, and chunk-wipes the intermediate
+   tar before evaluation;
+9. runs the FROZEN evaluator once (seven arms + both G diagnostics,
    frozen statistics of the pre-registration);
-7. writes ONLY the results JSON (ledgers + statistics; no raw rows);
-8. wipes the decrypted material and VERIFIES its absence;
-9. appends CONSUMED (or FAILED_CLOSED) to the chained ledger.
+10. writes the results FIRST to a protected temp file (mode 0600,
+    fsync) next to your chosen results path;
+11. chunk-wipes ALL decrypted material and VERIFIES its absence —
+    cleanup failure ⇒ FAILED_CLOSED, temp results removed, no success
+    reported;
+12. only after verified cleanup: atomically publishes the results
+    (rename) and appends CONSUMED. If the CONSUMED append fails, the
+    published results are removed again and the run reports failure —
+    success is never represented with a failed ledger.
+
+Crash containment: a hard crash (power loss, kill -9) between steps 7
+and 12 leaves OPENING_STARTED as the last ledger event (the opening is
+permanently spent) and possibly decrypted material on the tmpfs.
+Because it is memory-backed it vanishes on power-off; otherwise remove
+the `/dev/shm/akra-holdout-eval-*` tree, verify absence, and report.
+Do not re-run; recovery is not self-authorizing.
 
 ## 4. After the run
 Commit (append-only): the results JSON's sha256, the updated

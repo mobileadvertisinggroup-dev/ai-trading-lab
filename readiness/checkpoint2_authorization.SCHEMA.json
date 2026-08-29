@@ -7,6 +7,7 @@
     "user_authorization_utc", "protocol_sha256", "git_commit",
     "dataset_manifest_file", "dataset_manifest_sha256",
     "model_manifest_file", "model_manifest_sha256",
+    "frozen_inputs_manifest_file", "frozen_inputs_manifest_sha256",
     "integrity_manifest_sha256", "external_root_hash", "consumed"
   ],
   "properties": {
@@ -21,6 +22,10 @@
     "dataset_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "model_manifest_file": {"type": "string"},
     "model_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "frozen_inputs_manifest_file": {"const": "checkpoint2_frozen_inputs.json",
+      "description": "D69 blocker 2: must name exactly checkpoint2_frozen_inputs.json — the ONE manifest pinning every consumed file (governing docs, dataset/partition manifests, frozen recipient, model artifacts); the gate recomputes every pinned hash BEFORE the atomic claim and refuses missing/additional/substituted/symlinked/path-escaping inputs"},
+    "frozen_inputs_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$",
+      "description": "sha256 of data/manifests/checkpoint2_frozen_inputs.json, recomputed at run time"},
     "integrity_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$",
       "description": "must equal build_state.json .integrity_manifest_hash"},
     "external_root_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$",

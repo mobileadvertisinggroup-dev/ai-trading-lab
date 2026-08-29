@@ -13,6 +13,12 @@ Verified, all required to match EXACTLY:
   model_manifest_sha256      == sha256 of the named model manifest file
   integrity_manifest_sha256  == build_state.json integrity_manifest_hash
   external_root_hash         == build_state.json approved_external_root_hash
+  frozen_inputs_manifest_sha256 == sha256 of the named frozen-input
+                                manifest (D69 blocker 2 — the single
+                                manifest that pins EVERY file the gate
+                                and evaluator consume; the gate then
+                                verifies every pinned hash before the
+                                atomic claim via lab.data.frozen_inputs)
 plus: user_authorization_utc present, consumed is false.
 """
 from __future__ import annotations
@@ -72,9 +78,15 @@ def verify_authorization(manifests_dir: str,
     if not head or auth.get("git_commit") != head:
         failures.append("git_commit does not match current HEAD")
 
-    # dataset + model manifests — hashes of the NAMED files
+    # dataset + model + frozen-input manifests — hashes of the NAMED files
+    from lab.data.frozen_inputs import FROZEN_INPUTS
+    if auth.get("frozen_inputs_manifest_file") != FROZEN_INPUTS:
+        failures.append("frozen_inputs_manifest_file must name exactly "
+                        f"{FROZEN_INPUTS!r}")
     for key, file_key in (("dataset_manifest_sha256", "dataset_manifest_file"),
-                          ("model_manifest_sha256", "model_manifest_file")):
+                          ("model_manifest_sha256", "model_manifest_file"),
+                          ("frozen_inputs_manifest_sha256",
+                           "frozen_inputs_manifest_file")):
         fname = auth.get(file_key)
         digest = _sha256(os.path.join(manifests_dir, fname)) if fname else None
         if not digest or auth.get(key) != digest:

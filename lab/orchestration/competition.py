@@ -558,6 +558,9 @@ class Competition:
                 for st in (list(self.arms.values())
                            + self._diagnostic_states()):
                     st.equity_curve.append(
-                        {"t": t, "equity": st.engine.equity(marks)})
+                        {"t": t, "equity": st.engine.equity(marks),
+                         # D69 blocker 3: exposure/time-in-cash metrics
+                         "gross_exposure":
+                             st.engine.gross_exposure(marks)})
             t += P.BAR_15M_MS
         return self

@@ -96,5 +96,6 @@ def test_gate_still_fail_closed_with_evaluator_plugged_in(tmp_path):
         evaluate_holdout(str(art), str(mdir),
                          evaluator=lambda d: {},
                          results_path=str(tmp_path / "res.json"),
-                         repo_root=str(tmp_path))
+                         repo_root=str(tmp_path),
+                         model_dir=str(tmp_path), sb3_dir=str(tmp_path))
     assert os.path.exists(mdir / "access_audit.jsonl")

@@ -98,3 +98,38 @@ Execution happens ONLY through `evaluate_holdout` (strict authorization
 + hash-chained ledger + atomic single claim + TTY-only key entry +
 verified tmpfs + wipe-and-verify + CONSUMED/FAILED_CLOSED). Any failure
 permanently blocks a second opening; recovery is not self-authorizing.
+
+## Amendment A1 (2026-08-29, D69 blocker 3 — BEFORE any opening)
+Formal amendment, committed before any authorization or opening exists:
+1. **IL-assessment mechanics pinned.** The frozen INSUFFICIENT-
+   LEARNABLE-VARIATION rule is applied to Checkpoint-2 evidence with
+   FIXED frozen-model scores and NO refitting: labels = Arm A's closed
+   holdout trades' net R (net of fees and funding, per unit risk),
+   keyed by decision boundary; scores = the frozen B probability and C
+   score recorded at the same (t, symbol) during the run. Statistics:
+   AUC/rank-IC of fixed scores vs labels; exact-multiset circular-
+   rotation permutation of the label vector against the FIXED scores
+   (200 rotations, seed **20260903**, >=28-day displacement); TRUE
+   circular moving-block bootstrap CIs over labeled boundaries (1000
+   resamples, seed **20260904**, 28-day blocks); approximate power at
+   the frozen MUE; then the frozen (a)/(b)/(c) verdict. Too little
+   data for eligible rotations => "INSUFFICIENT DATA FOR IL
+   ASSESSMENT — reported, not adjudicated".
+2. **Supporting-metric definitions pinned** (all mechanical, unit-
+   tested): profit factor = gross positive trade net / |gross negative
+   trade net| (per-closed-trade net = realized − fees − funding);
+   average trade = mean per-closed-trade net; turnover = total filled
+   notional (opens + closes) / mean 4h equity; slippage ESTIMATE =
+   Σ fill notional × that position's frozen slippage rate (labeled an
+   estimate — slippage is embedded in fill prices); exposure = mean
+   gross_exposure/equity over 4h boundaries; time in cash = fraction
+   of 4h boundaries with zero gross exposure; outlier dependence =
+   net return recomputed with the three largest-GAIN trades' net pnl
+   removed from final equity.
+3. **Holdout symbol universe pinned** (D69 blocker 1): the validated
+   UNION of pre-lake and decrypted-overlay kline symbols, with
+   explicit pre-only / overlay-only / combined classes and per-class
+   schema/timestamp/duplicate/ordering/funding/quarantine validation;
+   the symbol census (counts per class) is reported in the results.
+No statistic, seed, correction, constraint, or success criterion of
+the original pre-registration changes.

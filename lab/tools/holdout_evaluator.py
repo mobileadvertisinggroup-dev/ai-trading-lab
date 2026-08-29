@@ -49,6 +49,14 @@ FAMILY_ALPHA = 0.05
 
 
 # ------------------------------------------------------------- loading
+KLINE_COLS = ("open_time", "open", "high", "low", "close", "quote_volume")
+
+
+class CombinedDataError(RuntimeError):
+    """Combined-data validation failure — inside the gate this becomes
+    FAILED_CLOSED; nothing is silently skipped or imputed."""
+
+
 def _read_overlay(plain_dir: str, kind: str, symbol: str) -> pd.DataFrame | None:
     files = sorted(glob.glob(os.path.join(plain_dir, kind, symbol, "*.parquet")))
     if not files:
@@ -56,36 +64,108 @@ def _read_overlay(plain_dir: str, kind: str, symbol: str) -> pd.DataFrame | None
     return pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
 
 
+def _validate_klines(sym: str, klass: str, pre: pd.DataFrame | None,
+                     post: pd.DataFrame | None, q: int) -> pd.DataFrame:
+    """Schema, timestamp-grid, duplicate, ordering, and quarantine-
+    boundary validation for one symbol of any class."""
+    parts = [d for d in (pre, post) if d is not None and len(d)]
+    if not parts:
+        raise CombinedDataError(f"{sym} [{klass}]: no kline rows")
+    for name, d in (("pre", pre), ("overlay", post)):
+        if d is None or not len(d):
+            continue
+        missing = [c for c in KLINE_COLS if c not in d.columns]
+        if missing:
+            raise CombinedDataError(
+                f"{sym} [{klass}] {name}: missing columns {missing}")
+        ot = d["open_time"].to_numpy(np.int64)
+        if (ot % P.BAR_15M_MS).any():
+            raise CombinedDataError(
+                f"{sym} [{klass}] {name}: off-grid 15m timestamps")
+        if name == "pre" and len(ot) and int(ot.max()) >= q:
+            raise CombinedDataError(
+                f"{sym} [{klass}]: pre-lake rows at/after quarantine")
+        if name == "overlay" and len(ot) and int(ot.min()) < q:
+            raise CombinedDataError(
+                f"{sym} [{klass}]: overlay rows before quarantine "
+                f"(seal invariant violated)")
+    df = (pd.concat(parts, ignore_index=True)
+          .sort_values("open_time", kind="mergesort")
+          .reset_index(drop=True))
+    ot = df["open_time"].to_numpy(np.int64)
+    if len(np.unique(ot)) != len(ot):
+        raise CombinedDataError(f"{sym} [{klass}]: duplicate timestamps")
+    return df
+
+
+def _validate_funding(sym: str, klass: str, fpre: pd.DataFrame | None,
+                      fpost: pd.DataFrame | None, q: int) -> dict:
+    parts = [d for d in (fpre, fpost) if d is not None and len(d)]
+    if not parts:
+        return {}
+    for name, d in (("pre", fpre), ("overlay", fpost)):
+        if d is None or not len(d):
+            continue
+        if "funding_time" not in d.columns or "funding_rate" not in d.columns:
+            raise CombinedDataError(
+                f"{sym} [{klass}] funding {name}: missing columns")
+        ft = d["funding_time"].to_numpy(np.int64)
+        if name == "pre" and len(ft) and int(ft.max()) >= q:
+            raise CombinedDataError(
+                f"{sym} [{klass}]: pre funding at/after quarantine")
+        if name == "overlay" and len(ft) and int(ft.min()) < q:
+            raise CombinedDataError(
+                f"{sym} [{klass}]: overlay funding before quarantine")
+    fdf = (pd.concat(parts, ignore_index=True)
+           .sort_values("funding_time", kind="mergesort"))
+    ft = fdf["funding_time"].to_numpy(np.int64)
+    if len(np.unique(ft)) != len(ft):
+        raise CombinedDataError(
+            f"{sym} [{klass}]: duplicate funding timestamps")
+    return dict(zip(ft, fdf["funding_rate"].astype(float)))
+
+
+def discover_symbols(pre_lake_dir: str, plain_dir: str) -> dict[str, str]:
+    """D69 blocker 1: the holdout universe is the VALIDATED UNION of
+    pre-lake symbols and decrypted-overlay kline symbols — markets first
+    listed after quarantine (overlay-only) are included, never silently
+    omitted. Returns {symbol: class} with class in
+    {pre_only, overlay_only, combined}."""
+    pre = set(os.listdir(os.path.join(pre_lake_dir, "klines15m")))
+    op = os.path.join(plain_dir, "klines15m")
+    post = set(os.listdir(op)) if os.path.isdir(op) else set()
+    return {s: ("combined" if s in pre and s in post else
+                "pre_only" if s in pre else "overlay_only")
+            for s in sorted(pre | post)}
+
+
 def load_combined(pre_lake_dir: str, manifests_dir: str,
-                  plain_dir: str) -> tuple[dict, dict, dict]:
-    """Merge the verified pre-holdout lake with the decrypted overlay.
-    Returns (bars_by_symbol, funding_by_symbol, partition)."""
+                  plain_dir: str) -> tuple[dict, dict, dict, dict]:
+    """Merge the verified pre-holdout lake with the decrypted overlay
+    over the validated symbol UNION. Returns
+    (bars_by_symbol, funding_by_symbol, partition, symbol_census)."""
     lake = GuardedLake(pre_lake_dir, manifests_dir)
     part = lake.partition
     q = int(part["quarantine_start_ms"])
-    symbols = sorted(os.listdir(os.path.join(pre_lake_dir, "klines15m")))
+    classes = discover_symbols(pre_lake_dir, plain_dir)
     bars, funding = {}, {}
-    for sym in symbols:
-        pre = lake.read_klines(sym, 0, q - P.BAR_15M_MS)
-        post = _read_overlay(plain_dir, "klines15m", sym)
-        df = (pd.concat([pre, post], ignore_index=True)
-              if post is not None else pre)
-        df = df.sort_values("open_time", kind="mergesort")
-        assert int(df.open_time.min()) < q or post is None
-        # overlay must contain ONLY holdout-range rows (seal invariant)
-        if post is not None:
-            assert int(post.open_time.min()) >= q, sym
+    census = {"pre_only": 0, "overlay_only": 0, "combined": 0}
+    for sym, klass in classes.items():
+        census[klass] += 1
+        pre = (lake.read_klines(sym, 0, q - P.BAR_15M_MS)
+               if klass != "overlay_only" else None)
+        post = (_read_overlay(plain_dir, "klines15m", sym)
+                if klass != "pre_only" else None)
+        df = _validate_klines(sym, klass, pre, post, q)
         bars[sym] = {k: df[k].to_numpy(np.float64 if k != "open_time"
                                        else np.int64)
-                     for k in ("open_time", "open", "high", "low",
-                               "close", "quote_volume")}
-        fpre = lake.read_funding(sym, 0, q - P.BAR_15M_MS)
-        fpost = _read_overlay(plain_dir, "funding", sym)
-        fdf = (pd.concat([fpre, fpost], ignore_index=True)
-               if fpost is not None else fpre)
-        funding[sym] = dict(zip(fdf["funding_time"].astype(np.int64),
-                                fdf["funding_rate"].astype(float)))
-    return bars, funding, part
+                     for k in KLINE_COLS}
+        fpre = (lake.read_funding(sym, 0, q - P.BAR_15M_MS)
+                if klass != "overlay_only" else None)
+        fpost = (_read_overlay(plain_dir, "funding", sym)
+                 if klass != "pre_only" else None)
+        funding[sym] = _validate_funding(sym, klass, fpre, fpost, q)
+    return bars, funding, part, {"classes": classes, "counts": census}
 
 
 class CombinedProvider:
@@ -165,7 +245,14 @@ def evaluation_statistics(curves: dict[str, np.ndarray]) -> dict:
     return out
 
 
-def supporting_metrics(curve: np.ndarray, events: list[dict]) -> dict:
+def supporting_metrics(curve: np.ndarray, events: list[dict],
+                       positions: dict | None = None,
+                       equity_curve: list[dict] | None = None) -> dict:
+    """Every SPEC-§18 supporting metric promised by the pre-registration
+    (D69 blocker 3): profit factor, average trade, turnover, slippage
+    estimate, exposure, time in cash, tail loss, stability halves, and
+    the top-three-trades-removed outlier-dependence result — each
+    mechanical and unit-tested."""
     r = curve[1:] / curve[:-1] - 1.0
     fills = [e for e in events if e["kind"] == "fill_close"]
     fees = sum(e.get("fee", 0.0) for e in events
@@ -174,9 +261,8 @@ def supporting_metrics(curve: np.ndarray, events: list[dict]) -> dict:
                   if e["kind"] == "funding")
     dd = max_drawdown_decimal(curve)
     mean, sd = float(np.mean(r)), float(np.std(r))
-    down = float(np.sqrt(np.mean(np.minimum(r, 0.0) ** 2)))
     half = len(r) // 2
-    return {
+    out = {
         "net_return": float(curve[-1] / curve[0] - 1.0),
         "max_drawdown_observed": dd,
         "sharpe_ann": (mean / sd * math.sqrt(2191.5)) if sd else 0.0,
@@ -189,6 +275,145 @@ def supporting_metrics(curve: np.ndarray, events: list[dict]) -> dict:
         "stability_halves": [float(np.prod(1 + r[:half]) - 1),
                              float(np.prod(1 + r[half:]) - 1)],
     }
+    # per-closed-trade nets (fees + funding included) — trade metrics
+    if positions is not None:
+        nets = np.array([p.realized_pnl - p.fees_paid - p.funding_paid
+                         for p in positions.values() if p.closed])
+        gains = float(nets[nets > 0].sum()) if len(nets) else 0.0
+        losses = float(-nets[nets < 0].sum()) if len(nets) else 0.0
+        out["n_closed_trades"] = int(len(nets))
+        out["profit_factor"] = (gains / losses if losses > 0
+                                else (1e6 if gains > 0 else 0.0))
+        out["average_trade_net"] = (float(nets.mean()) if len(nets)
+                                    else 0.0)
+        # outlier dependence: net return with the (up to) three
+        # largest-GAIN trades' net pnl removed from the final equity —
+        # only gains are ever removed
+        top3 = float(np.sort(nets[nets > 0])[-3:].sum()) if len(nets) \
+            else 0.0
+        out["net_return_ex_top3_trades"] = float(
+            (curve[-1] - top3) / curve[0] - 1.0)
+        # slippage ESTIMATE: per fill, notional x that position's frozen
+        # slippage rate (labeled estimate — slip is embedded in fills)
+        slip_rate = {pid: p.costs.slippage for pid, p in positions.items()}
+        est = 0.0
+        for e in events:
+            if e["kind"] in ("fill_open", "fill_close") \
+                    and e.get("pos_id") in slip_rate:
+                est += abs(e.get("qty", 0.0)) * e.get("price", 0.0) \
+                    * slip_rate[e["pos_id"]]
+        out["slippage_estimate"] = est
+        # turnover: total filled notional / mean equity
+        notional = sum(abs(e.get("qty", 0.0)) * e.get("price", 0.0)
+                       for e in events
+                       if e["kind"] in ("fill_open", "fill_close"))
+        out["turnover_notional_over_mean_equity"] = \
+            float(notional / np.mean(curve))
+    if equity_curve is not None and equity_curve:
+        ge = np.array([row.get("gross_exposure", np.nan)
+                       for row in equity_curve], float)
+        eq = np.array([row["equity"] for row in equity_curve], float)
+        if np.isfinite(ge).all():
+            frac = np.divide(ge, eq, out=np.zeros_like(ge),
+                             where=eq > 0)
+            out["mean_exposure_frac"] = float(frac.mean())
+            out["time_in_cash_frac"] = float((ge == 0.0).mean())
+    return out
+
+
+# -------------------- frozen IL assessment (Amendment A1, pre-opening)
+IL_PERM_SEED = 20260903
+IL_BOOT_SEED = 20260904
+IL_N_PERM = 200
+IL_N_BOOT = 1000
+
+
+def il_assessment(t: np.ndarray, net_r: np.ndarray, prob: np.ndarray,
+                  score: np.ndarray) -> dict:
+    """The frozen INSUFFICIENT-LEARNABLE-VARIATION rule applied to
+    Checkpoint-2 evidence with FIXED frozen-model scores (no refitting —
+    Amendment A1 of the CP2 pre-registration): AUC/IC of the frozen
+    scores against holdout labels; exact-multiset circular-rotation
+    permutation of the label vector vs the FIXED scores; TRUE circular
+    moving-block bootstrap CIs; approximate power at the frozen MUE;
+    then the frozen (a)/(b)/(c) verdict."""
+    from lab.tools.learnability import auc as _auc
+    from lab.tools.learnability import spearman as _spearman
+    from lab.tools.learnability_v2 import MUE_AUC_DEV, MUE_IC, two_sided_p
+    from lab.tools.learnability_v3 import (draw_rotations,
+                                          eligible_rotation_boundaries,
+                                          rotate_labels)
+
+    order = np.argsort(t, kind="stable")
+    t, net_r = t[order], net_r[order]
+    prob, score = prob[order], score[order]
+    y = (net_r > 0).astype(int)
+    ub = np.unique(t)
+    out: dict = {"n": int(len(t)), "unique_boundaries": int(len(ub)),
+                 "seeds": {"permutation": IL_PERM_SEED,
+                           "bootstrap": IL_BOOT_SEED},
+                 "method": "fixed-score rotation permutation + circular "
+                           "moving-block bootstrap (Amendment A1; no "
+                           "refitting)"}
+    if len(ub) < 4 or len(eligible_rotation_boundaries(ub)) == 0:
+        out["verdict"] = ("INSUFFICIENT DATA FOR IL ASSESSMENT — "
+                          "reported, not adjudicated")
+        return out
+    obs_auc = _auc(y, prob)
+    obs_ic = _spearman(net_r, score)
+    rots = draw_rotations(t, IL_N_PERM, IL_PERM_SEED)
+    null_auc, null_ic = [], []
+    for j in rots:
+        yp = rotate_labels(net_r, t, j)
+        null_auc.append(_auc((yp > 0).astype(int), prob))
+        null_ic.append(_spearman(yp, score))
+    null_auc, null_ic = np.array(null_auc), np.array(null_ic)
+    p_auc = two_sided_p(null_auc, obs_auc, 0.5)
+    p_ic = two_sided_p(null_ic, obs_ic, 0.0)
+    rows_by_b = [np.where(t == b)[0] for b in ub]
+    span_days = (int(ub[-1]) - int(ub[0])) / 86_400_000
+    l_block = max(1, math.ceil(len(ub) * 28 / max(span_days, 28)))
+    seqs = circular_moving_block_sequences(len(ub), l_block, IL_N_BOOT,
+                                           IL_BOOT_SEED)
+    b_auc, b_ic = [], []
+    for seq in seqs:
+        rows = np.concatenate([rows_by_b[j] for j in seq])
+        b_auc.append(_auc(y[rows], prob[rows]))
+        b_ic.append(_spearman(net_r[rows], score[rows]))
+    b_auc, b_ic = np.array(b_auc, float), np.array(b_ic, float)
+    ci_auc = [float(np.nanquantile(b_auc, .025)),
+              float(np.nanquantile(b_auc, .975))]
+    ci_ic = [float(np.nanquantile(b_ic, .025)),
+             float(np.nanquantile(b_ic, .975))]
+    se_auc, se_ic = float(np.nanstd(b_auc)), float(np.nanstd(b_ic))
+
+    def power(null, center, se, mue):
+        c = float(np.quantile(np.abs(null - center), 0.95))
+        if se <= 0:
+            return float(mue > c)
+        return float(1.0 - 0.5 * (1.0 + math.erf(
+            (c - mue) / se / math.sqrt(2.0))))
+    pw_auc = power(null_auc, 0.5, se_auc, MUE_AUC_DEV)
+    pw_ic = power(null_ic, 0.0, se_ic, MUE_IC)
+    a_cond = p_auc["p_upper"] >= 0.05 and p_ic["p_upper"] >= 0.05
+    b_cond = (ci_auc[0] <= 0.5 <= ci_auc[1]) and (ci_ic[0] <= 0 <= ci_ic[1])
+    c_cond = pw_auc >= 0.60 and pw_ic >= 0.60
+    if a_cond and b_cond and c_cond:
+        verdict = "INSUFFICIENT LEARNABLE VARIATION"
+    elif a_cond and b_cond:
+        verdict = "UNDERPOWERED — NO EVIDENCE EITHER WAY"
+    else:
+        verdict = ("frozen IL rule conditions not all met — see "
+                   "statistics; adjudication is the reviewer's")
+    out.update({"observed": {"auc": obs_auc, "rank_ic": obs_ic},
+                "p_upper": {"auc": p_auc["p_upper"],
+                            "rank_ic": p_ic["p_upper"]},
+                "ci95": {"auc": ci_auc, "rank_ic": ci_ic},
+                "power_at_mue": {"auc": pw_auc, "rank_ic": pw_ic},
+                "conditions": {"a_p": bool(a_cond), "b_ci": bool(b_cond),
+                               "c_power": bool(c_cond)},
+                "verdict": verdict})
+    return out
 
 
 # --------------------------------------------------------------- runs
@@ -205,7 +430,12 @@ def run_evaluation(provider, part: dict, manifests_dir: str,
     cals = {s: PT.build_symbol_calendar(
         s, provider.bars_15m(s)["open_time"],
         provider.bars_15m(s)["quote_volume"]) for s in symbols}
-    validity = PT.round_validity_fast(boundaries, cals)   # frozen rule
+    d_btc = provider.bars_15m(P.CONTEXT_SYMBOL)
+    g4 = (d_btc["open_time"] // P.BAR_4H_MS) * P.BAR_4H_MS
+    u, c = np.unique(g4, return_counts=True)
+    btc_map = {int(k): int(v) for k, v in zip(u, c)}
+    validity = PT.round_validity_fast(boundaries, cals,
+                                      btc_map)             # frozen rule
     vmap = {int(t): bool(v) for t, v in
             zip(boundaries, np.asarray(validity))}
     liq = np.full((len(boundaries), len(symbols)), np.nan)
@@ -261,6 +491,37 @@ def run_evaluation(provider, part: dict, manifests_dir: str,
                            for r in comp.arms[a].equity_curve])
               for a in ARMS7}
     stats = evaluation_statistics(curves)
+
+    # frozen IL assessment (Amendment A1): Arm A's closed holdout trades
+    # give labels; the FIXED frozen B probability and C score recorded
+    # in those arms' decision ledgers at the same (t, symbol) give the
+    # scores — no refitting anywhere.
+    a_state = comp.arms["A"]
+    close_net = {p.pos_id: p.realized_pnl - p.fees_paid - p.funding_paid
+                 for p in a_state.engine.positions.values() if p.closed}
+    risk = {p.pos_id: p.qty * p.r_dist
+            for p in a_state.engine.positions.values() if p.closed}
+    a_opens = {e["pos_id"]: (e["decision_ts"], e["symbol"])
+               for e in a_state.engine.events if e["kind"] == "fill_open"}
+    b_prob = {(r["t"], r["symbol"]): r["probability"]
+              for r in comp.arms["B"].decisions if "probability" in r}
+    c_score = {(r["t"], r["symbol"]): r["score"]
+               for r in comp.arms["C"].decisions if "score" in r}
+    il_rows = []
+    for pid, net in close_net.items():
+        key = a_opens.get(pid)
+        if key is None or key not in b_prob or key not in c_score:
+            continue
+        il_rows.append((key[0], net / risk[pid], b_prob[key],
+                        c_score[key]))
+    if il_rows:
+        arr = np.array(il_rows, float)
+        il = il_assessment(arr[:, 0].astype(np.int64), arr[:, 1],
+                           arr[:, 2], arr[:, 3])
+    else:
+        il = {"n": 0, "verdict": "INSUFFICIENT DATA FOR IL ASSESSMENT — "
+                                 "reported, not adjudicated"}
+
     results = {
         "preregistration": "PREREGISTRATION_CHECKPOINT2_EVALUATION.md",
         "window": {"start_ms": start, "end_ms": end,
@@ -268,8 +529,11 @@ def run_evaluation(provider, part: dict, manifests_dir: str,
                    "n_valid_rounds": int(sum(vmap.values()))},
         "rounds": comp.coordinator.counts(),
         "statistics": stats,
+        "il_assessment": il,
         "supporting_metrics": {
-            a: supporting_metrics(curves[a], comp.arms[a].engine.events)
+            a: supporting_metrics(curves[a], comp.arms[a].engine.events,
+                                  comp.arms[a].engine.positions,
+                                  comp.arms[a].equity_curve)
             for a in ARMS7},
         "ledgers": {
             a: {"decisions": comp.arms[a].decisions,
@@ -298,9 +562,11 @@ def make_evaluator(pre_lake_dir: str, manifests_dir: str, model_dir: str,
     """Bind the frozen inputs; the gate calls the returned closure with
     the decrypted overlay directory."""
     def evaluator(plain_dir: str) -> dict:
-        bars, funding, part = load_combined(pre_lake_dir, manifests_dir,
-                                            plain_dir)
+        bars, funding, part, census = load_combined(
+            pre_lake_dir, manifests_dir, plain_dir)
         provider = CombinedProvider(bars, funding)
-        return run_evaluation(provider, part, manifests_dir, model_dir,
-                              sb3_dir)
+        results = run_evaluation(provider, part, manifests_dir,
+                                 model_dir, sb3_dir)
+        results["symbol_census"] = census["counts"]
+        return results
     return evaluator

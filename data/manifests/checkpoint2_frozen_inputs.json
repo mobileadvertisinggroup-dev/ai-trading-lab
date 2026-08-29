@@ -1,0 +1,29 @@
+{
+  "generated_utc": "2026-08-29T17:57:35Z",
+  "manifest_files": {
+    "holdout_recipient.txt": "57d18b5d52389740b7bce03de0aa8332dd4d062e526a56fdf98f77c1342f93ca",
+    "lake_manifest_raw-v1.json": "c1ef7262f62b9cbb1cc12b6405ecc21c1898233e8e699c89bd16d31e8e2211ac",
+    "partition_meta.json": "735f0ecaef51c17deeebd95e543c7f272220f5d730f2780f7c7ecb1f7dd69305"
+  },
+  "model_dir_files": {
+    "arm_b.txt": "61baa40ddb5cfaa9c9e1716d1583f60c1ed81273ff4e708badfa77da1e235978",
+    "arm_c.txt": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a",
+    "arm_e.txt": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a",
+    "arm_e_cuts.npz": "6a6ba2cc8a559d0c19e74c71d33bb2de54370d2167e918f437742d30c8a79d98",
+    "arm_e_portfolio_selection.json": "94570d6e9c4deef75d198338b42f4c30aa16309d1a6bb8971681d92846d6e29c",
+    "bc_train_selection.json": "0c51af3a0b48eb738ba8db06503aff2afe3dc9c4abf5ec57c7c29b5215d619c0"
+  },
+  "notes": "model_dir_files / sb3_dir_files are enforced with a STRICT census: the staged directories must contain exactly these files and nothing else.",
+  "purpose": "D69 blocker 2 \u2014 the single frozen-input manifest the one-time Checkpoint-2 gate verifies, hash by hash, BEFORE the atomic opening claim",
+  "repo_files": {
+    "EXPERIMENT_PROTOCOL.md": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+    "PREREGISTRATION_CHECKPOINT2_EVALUATION.md": "ec8f69e3154f3e14d23e35865b7965ea1cd126146bd0f84522c69976c38145ee",
+    "PREREGISTRATION_LEARNABILITY_BLOCKS.md": "6e27872eecfb54918cd7453520bb086c350fe536dfed8695a089407ed2ede9f2",
+    "SPEC_AMENDMENT_A1_GSHADOW.md": "baef30966ffa047f2c629a5990bf7901e33dab176b8b88e1ff7c739f10f20b3b",
+    "SPEC_FINAL-1.2.1.md": "84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8"
+  },
+  "sb3_dir_files": {
+    "arm_f_sb3_manifest.json": "c7e650f8a68258d37fc34990546c025ad74acb4f2fb9c8aaa64431c96283f8a5",
+    "arm_f_sb3_seed4.zip": "5112d080dd276ef5ad781d04014421c632db49d754b1a5a92db10f06ca4f663c"
+  }
+}

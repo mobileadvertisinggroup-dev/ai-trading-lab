@@ -71,7 +71,8 @@ def test_fabricated_auth_never_grants_evaluation(guarded, tmp_path):
                          lambda d: {}, str(tmp_path / "r.json"),
                          out_dir=str(tmp_path / "out"),
                          repo_root=str(guarded["tmp"]),
-                         identity_provider=lambda: "never-reached")
+                         identity_provider=lambda: "never-reached",
+                         model_dir=str(tmp_path), sb3_dir=str(tmp_path))
     msg = str(exc.value)
     assert "refused" in msg.lower()
     assert "recorded in the audit log" in msg
@@ -117,4 +118,6 @@ def test_evaluation_refuses_fabricated_auth_before_anything_else(guarded):
                          "/dev/null",
                          out_dir=os.path.join(str(guarded["tmp"]), "elsewhere"),
                          repo_root=str(guarded["tmp"]),
-                         identity_provider=lambda: "never-reached")
+                         identity_provider=lambda: "never-reached",
+                         model_dir=str(guarded["tmp"]),
+                         sb3_dir=str(guarded["tmp"]))

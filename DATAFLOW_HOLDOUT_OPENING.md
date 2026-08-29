@@ -16,18 +16,22 @@ useless without the key.
 
 ## Where plaintext temporarily exists — and nowhere else
 Plaintext exists in exactly two forms, both transient:
-1. **In process memory** of the single gate process: the decrypted tar
-   bytes (`pyrage.decrypt`), which are deleted (`del`) immediately
-   after extraction; and the private-identity string, read from the
-   terminal with no echo, parsed, and deleted immediately after
-   parsing.
-2. **On a verified memory-backed filesystem**: the extracted overlay is
-   written only into a FRESH directory (mode 0700) whose mount is
-   checked against `/proc/mounts` and must be tmpfs/ramfs (default
-   `/dev/shm/akra-holdout-eval-<pid>`). Disk-backed paths are refused;
-   pre-existing directories are refused; any path inside the repository
-   tree is refused. Memory-backed means the plaintext never touches
-   persistent storage and vanishes on power loss.
+1. **In process memory** of the single gate process: bounded streaming
+   buffers only — decryption uses `pyrage.decrypt_io` (never a
+   whole-file bytes object) and extraction streams from the tar; plus
+   the private-identity string, read from the terminal with no echo,
+   parsed, verified against the frozen recipient, and deleted.
+2. **On a verified memory-backed filesystem**: the decrypted tar and
+   the extracted overlay are written only into a FRESH directory (mode
+   0700) whose mount is checked against `/proc/mounts` and must be
+   tmpfs/ramfs (default `/dev/shm/akra-holdout-eval-<pid>`). The
+   intermediate tar is chunk-wiped and deleted before the evaluator
+   runs. Disk-backed paths are refused; pre-existing directories are
+   refused; any path inside the repository tree is refused; the
+   resource preflight refuses if ANY swap is active, so tmpfs pages
+   can never be swapped to persistent storage. Memory-backed means the
+   plaintext never touches persistent storage and vanishes on power
+   loss.
 
 ## Which process reads the plaintext
 Exactly one: the gate process running the FROZEN evaluator
@@ -61,15 +65,26 @@ only what the evaluator returns.
   extraction uses the in-memory tar with `filter="data"` (no device
   nodes, no path escapes).
 
-## How wiping is verified
+## How wiping is verified — and how success is (not) represented
 After the evaluator returns — and equally on ANY failure — the gate
-removes the tmpfs directory tree and then VERIFIES its absence on the
-filesystem. If verification fails, the run is recorded FAILED_CLOSED
-and the process raises; success is never reported with plaintext left
-behind.
+zero-overwrites every file in bounded 1 MiB chunks (never a
+size-of-file buffer), removes the tmpfs directory tree, and then
+VERIFIES its absence on the filesystem. The results are written FIRST
+to a protected temp file (mode 0600, fsync); only after VERIFIED
+cleanup are they atomically renamed to the final path and CONSUMED
+appended. If cleanup verification fails, the run is recorded
+FAILED_CLOSED, the temp results are removed, and the process raises.
+If the atomic rename or the CONSUMED append fails, the published
+results are removed again and the run reports failure — success is
+never represented with plaintext left behind or with a failed ledger.
 
 ## How any failure permanently prevents a second opening
-Before decryption, the gate atomically appends `OPENING_STARTED` to the
+Everything checkable without the holdout — authorization, ledger,
+artifact identity, EVERY frozen-input hash, the output directory, the
+identity itself (its derived public key must equal the frozen
+recipient), and the resource preflight — runs BEFORE the claim, so a
+failure there refuses with the opening unspent. Immediately before
+real decryption the gate atomically appends `OPENING_STARTED` to the
 append-only, hash-chained state ledger (OS file lock + full chain
 verification + no-prior-opening check + fsync). From that instant the
 single opening is spent: `opening_permitted` refuses whenever ANY
@@ -79,6 +94,17 @@ refuses — fail closed, never open. No application code can append a
 recovery event, and the gate would not honor one; recovery would
 require a future versioned, explicitly user-approved procedure that
 does not exist.
+
+## Crash states and manual containment
+A hard crash (power loss, SIGKILL) after the claim can leave: (a) the
+ledger ending at `OPENING_STARTED` with no terminal event — the
+opening is permanently spent either way; (b) decrypted material on the
+tmpfs — memory-backed, so it vanishes on power-off; otherwise the
+operator removes the `/dev/shm/akra-holdout-eval-*` tree, verifies its
+absence, and reports; (c) a `<results>.tmp` file (mode 0600,
+simulation outputs only, no raw rows) — delete it. No crash state
+leaves raw market rows on persistent storage, and no crash state
+permits a second opening.
 
 ## How the evaluator prevents holdout-driven retraining, reselection, or parameter changes
 - The evaluator contains NO training, fitting, tuning, or selection
