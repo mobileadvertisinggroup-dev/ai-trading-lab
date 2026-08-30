@@ -1,0 +1,3386 @@
+{
+ "_description": "D74 acceptance evidence: v5-vs-v6 shakedown reconciliation proving the entry-bar exemption affected ONLY the G_matched diagnostic, plus the staggered stress-fixture checks and the FAIL-under-V5 / PASS-after-fix regression proof",
+ "arms_final_equity_identical_v5_v6": {
+  "identical": true,
+  "v5": {
+   "A": 8315.026488039635,
+   "B": 9654.619152228403,
+   "C": 8881.819028449041,
+   "D": 7972.912791348201,
+   "E": 10794.674067886965,
+   "F": 8044.710351918111,
+   "G": 10079.793449647053
+  },
+  "v6": {
+   "A": 8315.026488039635,
+   "B": 9654.619152228403,
+   "C": 8881.819028449041,
+   "D": 7972.912791348201,
+   "E": 10794.674067886965,
+   "F": 8044.710351918111,
+   "G": 10079.793449647053
+  }
+ },
+ "g_feasible_unchanged": {
+  "v5": {
+   "n_applied": 52,
+   "n_missing": 24,
+   "total_paid": 1.0801156465906836
+  },
+  "v6": {
+   "n_applied": 52,
+   "n_missing": 24,
+   "total_paid": 1.0801156465906836
+  }
+ },
+ "g_matched_funding_v5_vs_v6": {
+  "note": "entry-bar funding AND entry-bar funding_missing events are now correctly absent from the matched diagnostic; every other engine's reconciliation is unchanged",
+  "v5": {
+   "n_applied": 53,
+   "n_missing": 27,
+   "total_paid": 1.021826152955152
+  },
+  "v6": {
+   "n_applied": 52,
+   "n_missing": 24,
+   "total_paid": 1.0611662957909722
+  }
+ },
+ "generated_utc": "2026-08-30T20:04:28Z",
+ "regression_proof": {
+  "fail_under_v5": "readiness/D74_REGRESSION_FAIL_UNDER_V5.txt (4 failed, 15 passed)",
+  "pass_after_fix": "readiness/D74_REGRESSION_PASS_AFTER_FIX.txt (19 passed)"
+ },
+ "shakedown_v6": {
+  "funding_reconciliation": {
+   "A": {
+    "by_period": {
+     "2025-01": 18.09458485766187,
+     "2025-02": -24.537036317382885,
+     "2025-03": -20.88798405068089,
+     "2025-04": -17.038253223627983,
+     "2025-05": 46.853164187443646
+    },
+    "by_side": {
+     "long_paid": -100.70921405234134,
+     "short_paid": 103.19368950575517
+    },
+    "by_sign": {
+     "paid_negative_count": 1199,
+     "paid_negative_sum": -185.24392910906013,
+     "paid_positive_count": 1057,
+     "paid_positive_sum": 187.72840456247363,
+     "paid_zero_count": 14
+    },
+    "by_symbol": {
+     "1000BONKUSDT": {
+      "applied": 25,
+      "missing": 9,
+      "paid": -0.5467811581328891
+     },
+     "1000FLOKIUSDT": {
+      "applied": 15,
+      "missing": 6,
+      "paid": 0.36404960214609927
+     },
+     "1000PEPEUSDT": {
+      "applied": 59,
+      "missing": 25,
+      "paid": 0.8001012677611655
+     },
+     "1000SATSUSDT": {
+      "applied": 44,
+      "missing": 14,
+      "paid": -0.4610954174836644
+     },
+     "1000SHIBUSDT": {
+      "applied": 19,
+      "missing": 10,
+      "paid": -0.9498134168851988
+     },
+     "1MBABYDOGEUSDT": {
+      "applied": 4,
+      "missing": 2,
+      "paid": -0.11179917849352577
+     },
+     "AAVEUSDT": {
+      "applied": 28,
+      "missing": 15,
+      "paid": 0.7727300990640289
+     },
+     "ACHUSDT": {
+      "applied": 15,
+      "missing": 6,
+      "paid": -0.3092463239511438
+     },
+     "ACTUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 0.21354309625413362
+     },
+     "ADAUSDT": {
+      "applied": 33,
+      "missing": 25,
+      "paid": 2.0496505159488376
+     },
+     "AGLDUSDT": {
+      "applied": 21,
+      "missing": 4,
+      "paid": -1.102136334280916
+     },
+     "AI16ZUSDT": {
+      "applied": 16,
+      "missing": 10,
+      "paid": 0.21410317196243375
+     },
+     "AIUSDT": {
+      "applied": 4,
+      "missing": 1,
+      "paid": -0.09666672371502769
+     },
+     "AIXBTUSDT": {
+      "applied": 10,
+      "missing": 11,
+      "paid": -0.2701679552162123
+     },
+     "ALCHUSDT": {
+      "applied": 15,
+      "missing": 4,
+      "paid": 1.6368954612315285
+     },
+     "ALGOUSDT": {
+      "applied": 9,
+      "missing": 4,
+      "paid": 0.5430034101065142
+     },
+     "API3USDT": {
+      "applied": 17,
+      "missing": 4,
+      "paid": -0.18297652416865362
+     },
+     "APTUSDT": {
+      "applied": 12,
+      "missing": 8,
+      "paid": -0.007989940702315387
+     },
+     "ARBUSDT": {
+      "applied": 7,
+      "missing": 0,
+      "paid": -0.584697948545
+     },
+     "ARCUSDT": {
+      "applied": 3,
+      "missing": 4,
+      "paid": -0.12824734786138509
+     },
+     "ARKUSDT": {
+      "applied": 6,
+      "missing": 3,
+      "paid": -0.3129999156011056
+     },
+     "ATOMUSDT": {
+      "applied": 31,
+      "missing": 3,
+      "paid": -0.5064519872949098
+     },
+     "AUCTIONUSDT": {
+      "applied": 38,
+      "missing": 12,
+      "paid": -2.6729605848661695
+     },
+     "AVAXUSDT": {
+      "applied": 45,
+      "missing": 21,
+      "paid": 1.9507315386917228
+     },
+     "BANUSDT": {
+      "applied": 5,
+      "missing": 0,
+      "paid": -21.320603777429177
+     },
+     "BCHUSDT": {
+      "applied": 15,
+      "missing": 17,
+      "paid": 0.024146521124764203
+     },
+     "BNBUSDT": {
+      "applied": 39,
+      "missing": 5,
+      "paid": -7.094447911795652
+     },
+     "BNXUSDT": {
+      "applied": 28,
+      "missing": 4,
+      "paid": 5.104322656963963
+     },
+     "BOMEUSDT": {
+      "applied": 28,
+      "missing": 4,
+      "paid": -0.6983637608572703
+     },
+     "BTCUSDT": {
+      "applied": 43,
+      "missing": 35,
+      "paid": -0.7316396081749942
+     },
+     "CAKEUSDT": {
+      "applied": 26,
+      "missing": 6,
+      "paid": 0.4330857078527613
+     },
+     "CRVUSDT": {
+      "applied": 46,
+      "missing": 13,
+      "paid": -1.8051298056054457
+     },
+     "DOGEUSDT": {
+      "applied": 28,
+      "missing": 16,
+      "paid": 1.1884873695509315
+     },
+     "DOTUSDT": {
+      "applied": 22,
+      "missing": 5,
+      "paid": 1.0456616617491974
+     },
+     "DYDXUSDT": {
+      "applied": 20,
+      "missing": 2,
+      "paid": 0.4134121741471559
+     },
+     "EIGENUSDT": {
+      "applied": 17,
+      "missing": 1,
+      "paid": 0.7143872253858963
+     },
+     "ENAUSDT": {
+      "applied": 47,
+      "missing": 19,
+      "paid": 2.849811137648017
+     },
+     "EOSUSDT": {
+      "applied": 4,
+      "missing": 7,
+      "paid": 0.2233854470257601
+     },
+     "ETHUSDT": {
+      "applied": 28,
+      "missing": 26,
+      "paid": 1.1205234447972943
+     },
+     "FARTCOINUSDT": {
+      "applied": 40,
+      "missing": 20,
+      "paid": 0.6271203167363181
+     },
+     "FETUSDT": {
+      "applied": 29,
+      "missing": 3,
+      "paid": -2.440203729558814
+     },
+     "FILUSDT": {
+      "applied": 9,
+      "missing": 3,
+      "paid": 0.23905612086634928
+     },
+     "GALAUSDT": {
+      "applied": 8,
+      "missing": 1,
+      "paid": 0.08804582008464615
+     },
+     "GMTUSDT": {
+      "applied": 18,
+      "missing": 3,
+      "paid": 2.103643858582445
+     },
+     "GOATUSDT": {
+      "applied": 33,
+      "missing": 2,
+      "paid": -0.342132432757175
+     },
+     "HBARUSDT": {
+      "applied": 27,
+      "missing": 10,
+      "paid": -0.12639947939807689
+     },
+     "INJUSDT": {
+      "applied": 35,
+      "missing": 8,
+      "paid": -0.0023445442865119015
+     },
+     "IOTAUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": 0.06608793964457679
+     },
+     "IOUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": 0.3543744785378439
+     },
+     "LAYERUSDT": {
+      "applied": 8,
+      "missing": 10,
+      "paid": -0.00943664987973431
+     },
+     "LDOUSDT": {
+      "applied": 39,
+      "missing": 13,
+      "paid": 0.36662553999218295
+     },
+     "LINKUSDT": {
+      "applied": 32,
+      "missing": 19,
+      "paid": 2.335914827121306
+     },
+     "LTCUSDT": {
+      "applied": 8,
+      "missing": 3,
+      "paid": 0.6412072683474473
+     },
+     "MKRUSDT": {
+      "applied": 19,
+      "missing": 8,
+      "paid": -0.015582783538983201
+     },
+     "MOVEUSDT": {
+      "applied": 43,
+      "missing": 18,
+      "paid": 64.89300086174165
+     },
+     "NEARUSDT": {
+      "applied": 3,
+      "missing": 6,
+      "paid": 0.314074333757255
+     },
+     "NEIROUSDT": {
+      "applied": 37,
+      "missing": 9,
+      "paid": -0.5955029124780431
+     },
+     "NEOUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -1.2906198389424899
+     },
+     "OMUSDT": {
+      "applied": 48,
+      "missing": 6,
+      "paid": -25.140043439561225
+     },
+     "ONDOUSDT": {
+      "applied": 61,
+      "missing": 7,
+      "paid": 6.252098327005953
+     },
+     "OPUSDT": {
+      "applied": 7,
+      "missing": 12,
+      "paid": -0.19732571649199046
+     },
+     "ORCAUSDT": {
+      "applied": 12,
+      "missing": 2,
+      "paid": -51.465272661438895
+     },
+     "ORDIUSDT": {
+      "applied": 40,
+      "missing": 8,
+      "paid": -0.8714388144959114
+     },
+     "PENDLEUSDT": {
+      "applied": 4,
+      "missing": 5,
+      "paid": 0.42094635314925477
+     },
+     "PENGUUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": -0.033901497494793466
+     },
+     "PEOPLEUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": 0.11859580134610581
+     },
+     "PNUTUSDT": {
+      "applied": 25,
+      "missing": 2,
+      "paid": 0.8060002378626747
+     },
+     "POPCATUSDT": {
+      "applied": 50,
+      "missing": 14,
+      "paid": -0.22756580924140532
+     },
+     "QTUMUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 1.0114034718798246
+     },
+     "RAREUSDT": {
+      "applied": 5,
+      "missing": 1,
+      "paid": 5.706171619535115
+     },
+     "RENDERUSDT": {
+      "applied": 20,
+      "missing": 12,
+      "paid": 0.8697227813912761
+     },
+     "RUNEUSDT": {
+      "applied": 11,
+      "missing": 1,
+      "paid": 0.3822420524685375
+     },
+     "SANDUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 0.2112068712021194
+     },
+     "SEIUSDT": {
+      "applied": 8,
+      "missing": 7,
+      "paid": -0.1310633838643559
+     },
+     "SOLUSDT": {
+      "applied": 93,
+      "missing": 34,
+      "paid": 2.1700505540233817
+     },
+     "SPXUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": -0.03207405994534199
+     },
+     "STEEMUSDT": {
+      "applied": 18,
+      "missing": 3,
+      "paid": 10.444141160393423
+     },
+     "SUIUSDT": {
+      "applied": 34,
+      "missing": 30,
+      "paid": 0.7790717915876565
+     },
+     "SUSDT": {
+      "applied": 8,
+      "missing": 6,
+      "paid": -0.1035518099780669
+     },
+     "TAOUSDT": {
+      "applied": 39,
+      "missing": 16,
+      "paid": -3.3216455037150623
+     },
+     "TIAUSDT": {
+      "applied": 12,
+      "missing": 10,
+      "paid": 0.38664317911653645
+     },
+     "TONUSDT": {
+      "applied": 61,
+      "missing": 19,
+      "paid": 0.6771345627944368
+     },
+     "TRUMPUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": 0.052927145973649344
+     },
+     "TRXUSDT": {
+      "applied": 43,
+      "missing": 5,
+      "paid": 10.544112942324395
+     },
+     "TURBOUSDT": {
+      "applied": 21,
+      "missing": 4,
+      "paid": -0.504529560936215
+     },
+     "UNIUSDT": {
+      "applied": 31,
+      "missing": 4,
+      "paid": -1.3211777695901745
+     },
+     "USUALUSDT": {
+      "applied": 12,
+      "missing": 2,
+      "paid": -0.0028182557832441557
+     },
+     "UXLINKUSDT": {
+      "applied": 28,
+      "missing": 4,
+      "paid": -1.2410718903360602
+     },
+     "VANAUSDT": {
+      "applied": 6,
+      "missing": 0,
+      "paid": -8.58235605178697
+     },
+     "VETUSDT": {
+      "applied": 5,
+      "missing": 2,
+      "paid": 0.5524110226406146
+     },
+     "VINEUSDT": {
+      "applied": 4,
+      "missing": 3,
+      "paid": 0.14452478932980972
+     },
+     "VIRTUALUSDT": {
+      "applied": 17,
+      "missing": 12,
+      "paid": -1.206697075406718
+     },
+     "VOXELUSDT": {
+      "applied": 1,
+      "missing": 2,
+      "paid": -0.008060805365524155
+     },
+     "WIFUSDT": {
+      "applied": 90,
+      "missing": 19,
+      "paid": -0.5264656647273608
+     },
+     "WLDUSDT": {
+      "applied": 19,
+      "missing": 8,
+      "paid": -0.5783504445118264
+     },
+     "WUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "XLMUSDT": {
+      "applied": 25,
+      "missing": 8,
+      "paid": 2.4706738588878903
+     },
+     "XRPUSDT": {
+      "applied": 57,
+      "missing": 15,
+      "paid": 4.803752803701536
+     },
+     "ZENUSDT": {
+      "applied": 20,
+      "missing": 4,
+      "paid": -0.43402717254275636
+     },
+     "ZROUSDT": {
+      "applied": 6,
+      "missing": 9,
+      "paid": 0.635336631089749
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": -2.4844754534137627,
+    "guard": {
+     "n_closed_trades": 359,
+     "ok": true,
+     "reason": "funding active and reconciled"
+    },
+    "n_applied": 2270,
+    "n_boundary_crossings": 3076,
+    "n_missing": 806,
+    "position_funding_paid_sum": 2.4844754534137587,
+    "total_paid": 2.4844754534137627
+   },
+   "B": {
+    "by_period": {
+     "2025-01": -0.046990510725898556,
+     "2025-02": 0.1618616781282219,
+     "2025-03": 0.043821299827926416,
+     "2025-04": 2.382043219854713,
+     "2025-05": 35.984836611336995,
+     "2025-06": -0.4514969804638224
+    },
+    "by_side": {
+     "long_paid": -0.3729728516879885,
+     "short_paid": 38.447048169646145
+    },
+    "by_sign": {
+     "paid_negative_count": 73,
+     "paid_negative_sum": -3.383073939053209,
+     "paid_positive_count": 71,
+     "paid_positive_sum": 41.457149257011366,
+     "paid_zero_count": 1
+    },
+    "by_symbol": {
+     "ADAUSDT": {
+      "applied": 5,
+      "missing": 0,
+      "paid": -0.13180563789387614
+     },
+     "AUCTIONUSDT": {
+      "applied": 30,
+      "missing": 10,
+      "paid": 2.8486989268189955
+     },
+     "BNBUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": 0.17452622101027218
+     },
+     "BTCUSDT": {
+      "applied": 5,
+      "missing": 4,
+      "paid": -0.3729728516879885
+     },
+     "DOGEUSDT": {
+      "applied": 7,
+      "missing": 0,
+      "paid": -0.05027464784471017
+     },
+     "ENAUSDT": {
+      "applied": 14,
+      "missing": 22,
+      "paid": -0.06556072596798657
+     },
+     "ETHUSDT": {
+      "applied": 8,
+      "missing": 1,
+      "paid": -0.29653773890469304
+     },
+     "LINKUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": -0.14397703048326801
+     },
+     "MASKUSDT": {
+      "applied": 8,
+      "missing": 13,
+      "paid": 0.27737933922546326
+     },
+     "MOVEUSDT": {
+      "applied": 10,
+      "missing": 11,
+      "paid": 35.9663075107007
+     },
+     "ONDOUSDT": {
+      "applied": 5,
+      "missing": 6,
+      "paid": 0.2807216097748325
+     },
+     "SOLUSDT": {
+      "applied": 21,
+      "missing": 1,
+      "paid": 0.19366549966876226
+     },
+     "SUIUSDT": {
+      "applied": 9,
+      "missing": 13,
+      "paid": -0.3691038709144016
+     },
+     "TRBUSDT": {
+      "applied": 9,
+      "missing": 12,
+      "paid": -0.1856965779690024
+     },
+     "UNIUSDT": {
+      "applied": 6,
+      "missing": 1,
+      "paid": -0.045258080108707785
+     },
+     "XRPUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": -0.006036627466250985
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": -38.07407531795816,
+    "guard": {
+     "n_closed_trades": 26,
+     "ok": true,
+     "reason": "window/trade count below the multi-month threshold"
+    },
+    "n_applied": 145,
+    "n_boundary_crossings": 240,
+    "n_missing": 95,
+    "position_funding_paid_sum": 38.074075317958126,
+    "total_paid": 38.07407531795816
+   },
+   "C": {
+    "by_period": {
+     "2025-01": -1.4169014924534906,
+     "2025-02": -35.409682107668715,
+     "2025-03": -15.093804431130922,
+     "2025-04": -25.4485480909683,
+     "2025-05": 48.62005698126523,
+     "2025-06": 1.2040606481898473
+    },
+    "by_side": {
+     "long_paid": -121.66514958764525,
+     "short_paid": 94.12033109487886
+    },
+    "by_sign": {
+     "paid_negative_count": 1121,
+     "paid_negative_sum": -204.8214094780701,
+     "paid_positive_count": 942,
+     "paid_positive_sum": 177.2765909853036,
+     "paid_zero_count": 15
+    },
+    "by_symbol": {
+     "1000BONKUSDT": {
+      "applied": 29,
+      "missing": 2,
+      "paid": -0.4504310246132125
+     },
+     "1000FLOKIUSDT": {
+      "applied": 15,
+      "missing": 6,
+      "paid": 0.4247150411139214
+     },
+     "1000PEPEUSDT": {
+      "applied": 37,
+      "missing": 12,
+      "paid": -0.014342002591427316
+     },
+     "1000SATSUSDT": {
+      "applied": 43,
+      "missing": 14,
+      "paid": -0.4556574730807204
+     },
+     "1000SHIBUSDT": {
+      "applied": 5,
+      "missing": 10,
+      "paid": 0.4715818048208869
+     },
+     "1MBABYDOGEUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "AAVEUSDT": {
+      "applied": 39,
+      "missing": 20,
+      "paid": 0.40698343721485736
+     },
+     "ACHUSDT": {
+      "applied": 15,
+      "missing": 6,
+      "paid": -0.43088489801815527
+     },
+     "ACTUSDT": {
+      "applied": 42,
+      "missing": 11,
+      "paid": -0.3099257466744459
+     },
+     "ADAUSDT": {
+      "applied": 5,
+      "missing": 1,
+      "paid": 0.009295549253144977
+     },
+     "AGLDUSDT": {
+      "applied": 21,
+      "missing": 4,
+      "paid": -1.1526961555137487
+     },
+     "AI16ZUSDT": {
+      "applied": 13,
+      "missing": 2,
+      "paid": 0.26824586681781504
+     },
+     "AIXBTUSDT": {
+      "applied": 31,
+      "missing": 13,
+      "paid": -0.28049012079002444
+     },
+     "ALCHUSDT": {
+      "applied": 17,
+      "missing": 11,
+      "paid": 2.622422027552427
+     },
+     "ALGOUSDT": {
+      "applied": 8,
+      "missing": 3,
+      "paid": 0.5667013918992208
+     },
+     "API3USDT": {
+      "applied": 20,
+      "missing": 1,
+      "paid": -0.22804514362953163
+     },
+     "APTUSDT": {
+      "applied": 25,
+      "missing": 10,
+      "paid": 0.34213354587313793
+     },
+     "ARBUSDT": {
+      "applied": 10,
+      "missing": 0,
+      "paid": -0.8971588021345263
+     },
+     "ARCUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "ARKUSDT": {
+      "applied": 6,
+      "missing": 3,
+      "paid": -0.33591014106839584
+     },
+     "ATOMUSDT": {
+      "applied": 34,
+      "missing": 3,
+      "paid": -0.15704609193363991
+     },
+     "AUCTIONUSDT": {
+      "applied": 49,
+      "missing": 12,
+      "paid": -2.9659611688006473
+     },
+     "AVAXUSDT": {
+      "applied": 28,
+      "missing": 10,
+      "paid": 1.563303713382936
+     },
+     "BANUSDT": {
+      "applied": 9,
+      "missing": 0,
+      "paid": -24.22822860186022
+     },
+     "BCHUSDT": {
+      "applied": 21,
+      "missing": 21,
+      "paid": 2.0068774982248403
+     },
+     "BERAUSDT": {
+      "applied": 1,
+      "missing": 7,
+      "paid": 0.047403263846772806
+     },
+     "BIGTIMEUSDT": {
+      "applied": 5,
+      "missing": 8,
+      "paid": -0.054282670447212786
+     },
+     "BNBUSDT": {
+      "applied": 48,
+      "missing": 21,
+      "paid": -7.874679581281977
+     },
+     "BNXUSDT": {
+      "applied": 23,
+      "missing": 3,
+      "paid": 5.929419379548223
+     },
+     "BOMEUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": -0.4622050878816111
+     },
+     "BSWUSDT": {
+      "applied": 12,
+      "missing": 9,
+      "paid": 0.32698445322247627
+     },
+     "BTCUSDT": {
+      "applied": 34,
+      "missing": 17,
+      "paid": 2.0294863707387876
+     },
+     "CAKEUSDT": {
+      "applied": 26,
+      "missing": 11,
+      "paid": 0.6083300721574152
+     },
+     "CHILLGUYUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": 0.023289388225658833
+     },
+     "CRVUSDT": {
+      "applied": 36,
+      "missing": 6,
+      "paid": -1.939495233610238
+     },
+     "DOGEUSDT": {
+      "applied": 4,
+      "missing": 7,
+      "paid": 0.5456527325523209
+     },
+     "DOTUSDT": {
+      "applied": 27,
+      "missing": 18,
+      "paid": 1.4592530862999318
+     },
+     "DYDXUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": 0.10929252586801536
+     },
+     "EIGENUSDT": {
+      "applied": 12,
+      "missing": 1,
+      "paid": 0.40899359182496725
+     },
+     "ENAUSDT": {
+      "applied": 25,
+      "missing": 13,
+      "paid": 1.5955176583094755
+     },
+     "EOSUSDT": {
+      "applied": 7,
+      "missing": 10,
+      "paid": 0.10442675208158894
+     },
+     "ETHFIUSDT": {
+      "applied": 3,
+      "missing": 3,
+      "paid": 0.0601303475269909
+     },
+     "ETHUSDT": {
+      "applied": 29,
+      "missing": 14,
+      "paid": 0.5753755548120597
+     },
+     "FARTCOINUSDT": {
+      "applied": 39,
+      "missing": 26,
+      "paid": 0.5599932615425725
+     },
+     "FETUSDT": {
+      "applied": 35,
+      "missing": 7,
+      "paid": -2.8437824319760874
+     },
+     "FILUSDT": {
+      "applied": 11,
+      "missing": 0,
+      "paid": 0.4832980188540562
+     },
+     "GALAUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": -0.09549784658682854
+     },
+     "GMTUSDT": {
+      "applied": 33,
+      "missing": 9,
+      "paid": -0.4733820065871045
+     },
+     "GOATUSDT": {
+      "applied": 34,
+      "missing": 8,
+      "paid": -0.37241949992360596
+     },
+     "HBARUSDT": {
+      "applied": 24,
+      "missing": 9,
+      "paid": 0.09517560327232157
+     },
+     "INJUSDT": {
+      "applied": 23,
+      "missing": 11,
+      "paid": -0.4116964716847124
+     },
+     "IOTAUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": 0.06816559252511596
+     },
+     "IOUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": 0.38115040470997785
+     },
+     "JTOUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.033537988488650056
+     },
+     "KAITOUSDT": {
+      "applied": 0,
+      "missing": 3,
+      "paid": 0.0
+     },
+     "LAYERUSDT": {
+      "applied": 8,
+      "missing": 10,
+      "paid": -0.00973627283522607
+     },
+     "LDOUSDT": {
+      "applied": 20,
+      "missing": 0,
+      "paid": 0.9185788725164926
+     },
+     "LINKUSDT": {
+      "applied": 27,
+      "missing": 8,
+      "paid": 1.2172576417206982
+     },
+     "LTCUSDT": {
+      "applied": 4,
+      "missing": 4,
+      "paid": 0.5325744384497837
+     },
+     "MKRUSDT": {
+      "applied": 18,
+      "missing": 10,
+      "paid": -0.1019446255809015
+     },
+     "MOODENGUSDT": {
+      "applied": 17,
+      "missing": 1,
+      "paid": -0.4028869529307687
+     },
+     "MOVEUSDT": {
+      "applied": 52,
+      "missing": 30,
+      "paid": 73.91349898437424
+     },
+     "NEARUSDT": {
+      "applied": 22,
+      "missing": 4,
+      "paid": 1.780875691425359
+     },
+     "NEIROUSDT": {
+      "applied": 8,
+      "missing": 4,
+      "paid": -0.1201620537328927
+     },
+     "NEOUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -1.360706403059919
+     },
+     "NOTUSDT": {
+      "applied": 15,
+      "missing": 4,
+      "paid": -0.48869757095800376
+     },
+     "OMUSDT": {
+      "applied": 70,
+      "missing": 11,
+      "paid": -37.148551291048626
+     },
+     "ONDOUSDT": {
+      "applied": 48,
+      "missing": 11,
+      "paid": -2.0448296541865565
+     },
+     "OPUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 0.528139232711773
+     },
+     "ORCAUSDT": {
+      "applied": 16,
+      "missing": 9,
+      "paid": -56.98103260209633
+     },
+     "ORDIUSDT": {
+      "applied": 23,
+      "missing": 6,
+      "paid": -0.1932185199025535
+     },
+     "PENDLEUSDT": {
+      "applied": 14,
+      "missing": 13,
+      "paid": 0.9887508590752343
+     },
+     "PENGUUSDT": {
+      "applied": 2,
+      "missing": 2,
+      "paid": -0.0738167222938663
+     },
+     "PEOPLEUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": 0.13995811473448255
+     },
+     "PNUTUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": 0.06890487466659352
+     },
+     "POPCATUSDT": {
+      "applied": 26,
+      "missing": 12,
+      "paid": 0.012405954470967331
+     },
+     "QTUMUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 1.1401458543778729
+     },
+     "RAREUSDT": {
+      "applied": 5,
+      "missing": 1,
+      "paid": 6.153581762274556
+     },
+     "RAYSOLUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": 0.04347561419336916
+     },
+     "RENDERUSDT": {
+      "applied": 15,
+      "missing": 12,
+      "paid": 0.7846343463478604
+     },
+     "RUNEUSDT": {
+      "applied": 19,
+      "missing": 7,
+      "paid": -0.024600838183611168
+     },
+     "SANDUSDT": {
+      "applied": 8,
+      "missing": 1,
+      "paid": -0.1567160875747376
+     },
+     "SEIUSDT": {
+      "applied": 10,
+      "missing": 7,
+      "paid": -2.2955933319107666
+     },
+     "SOLUSDT": {
+      "applied": 72,
+      "missing": 28,
+      "paid": 1.1754599959369152
+     },
+     "SPXUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": -0.03474260696154452
+     },
+     "STEEMUSDT": {
+      "applied": 13,
+      "missing": 2,
+      "paid": -0.5070653214968596
+     },
+     "SUIUSDT": {
+      "applied": 16,
+      "missing": 3,
+      "paid": 0.2875436160376836
+     },
+     "SUSDT": {
+      "applied": 18,
+      "missing": 17,
+      "paid": -0.4077804065795995
+     },
+     "TAOUSDT": {
+      "applied": 63,
+      "missing": 14,
+      "paid": -2.6064151166775713
+     },
+     "TIAUSDT": {
+      "applied": 38,
+      "missing": 16,
+      "paid": -0.5248983345206539
+     },
+     "TONUSDT": {
+      "applied": 48,
+      "missing": 25,
+      "paid": 0.8582366832987715
+     },
+     "TRUMPUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": 0.05645487108145507
+     },
+     "TRXUSDT": {
+      "applied": 49,
+      "missing": 10,
+      "paid": 13.24101600515411
+     },
+     "TURBOUSDT": {
+      "applied": 23,
+      "missing": 2,
+      "paid": -0.5960562396364675
+     },
+     "UNIUSDT": {
+      "applied": 17,
+      "missing": 4,
+      "paid": -0.7087853154774855
+     },
+     "USUALUSDT": {
+      "applied": 12,
+      "missing": 2,
+      "paid": -0.0032508183706830597
+     },
+     "UXLINKUSDT": {
+      "applied": 18,
+      "missing": 3,
+      "paid": -0.9651495122533605
+     },
+     "VANAUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": -3.1581659789098047
+     },
+     "VIDTUSDT": {
+      "applied": 18,
+      "missing": 3,
+      "paid": 1.2778304927520434
+     },
+     "VINEUSDT": {
+      "applied": 4,
+      "missing": 3,
+      "paid": 0.15296044817216536
+     },
+     "VIRTUALUSDT": {
+      "applied": 11,
+      "missing": 16,
+      "paid": -1.1390754418778937
+     },
+     "VOXELUSDT": {
+      "applied": 2,
+      "missing": 5,
+      "paid": -0.017392730205775045
+     },
+     "WIFUSDT": {
+      "applied": 43,
+      "missing": 21,
+      "paid": -0.6439073921824274
+     },
+     "WLDUSDT": {
+      "applied": 9,
+      "missing": 6,
+      "paid": -0.34270772365437724
+     },
+     "WUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "XLMUSDT": {
+      "applied": 9,
+      "missing": 3,
+      "paid": 0.5083710906140597
+     },
+     "XRPUSDT": {
+      "applied": 29,
+      "missing": 5,
+      "paid": 1.9337391951914602
+     },
+     "ZENUSDT": {
+      "applied": 20,
+      "missing": 3,
+      "paid": -0.46338606500286184
+     },
+     "ZEREBROUSDT": {
+      "applied": 2,
+      "missing": 5,
+      "paid": -0.04192109014333317
+     },
+     "ZROUSDT": {
+      "applied": 5,
+      "missing": 8,
+      "paid": 0.6781381430060252
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": 27.544818492766368,
+    "guard": {
+     "n_closed_trades": 310,
+     "ok": true,
+     "reason": "funding active and reconciled"
+    },
+    "n_applied": 2078,
+    "n_boundary_crossings": 2860,
+    "n_missing": 782,
+    "position_funding_paid_sum": -27.544818492766286,
+    "total_paid": -27.544818492766368
+   },
+   "D": {
+    "by_period": {
+     "2025-01": 8.72529646756508,
+     "2025-02": -0.22956160097195402,
+     "2025-03": -0.28678637829120973,
+     "2025-04": -7.9413299480770325,
+     "2025-05": 5.638905029516736,
+     "2025-06": 0.15049330637301894
+    },
+    "by_side": {
+     "long_paid": -30.472018073884293,
+     "short_paid": 36.5290349499989
+    },
+    "by_sign": {
+     "paid_negative_count": 1080,
+     "paid_negative_sum": -86.300398257512,
+     "paid_positive_count": 1024,
+     "paid_positive_sum": 92.35741513362673,
+     "paid_zero_count": 9
+    },
+    "by_symbol": {
+     "1000BONKUSDT": {
+      "applied": 18,
+      "missing": 2,
+      "paid": -0.3304488057114176
+     },
+     "1000FLOKIUSDT": {
+      "applied": 17,
+      "missing": 6,
+      "paid": 0.12788817829783028
+     },
+     "1000PEPEUSDT": {
+      "applied": 58,
+      "missing": 19,
+      "paid": 0.08520534512741199
+     },
+     "1000SATSUSDT": {
+      "applied": 44,
+      "missing": 13,
+      "paid": -0.32228516298959214
+     },
+     "1000SHIBUSDT": {
+      "applied": 4,
+      "missing": 7,
+      "paid": 0.21689291095029944
+     },
+     "AAVEUSDT": {
+      "applied": 31,
+      "missing": 23,
+      "paid": 0.969509585647534
+     },
+     "ACHUSDT": {
+      "applied": 15,
+      "missing": 6,
+      "paid": -0.16375703696432858
+     },
+     "ACTUSDT": {
+      "applied": 12,
+      "missing": 1,
+      "paid": -0.7924110183158972
+     },
+     "ADAUSDT": {
+      "applied": 33,
+      "missing": 16,
+      "paid": 0.14124360141161224
+     },
+     "AGLDUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": -0.3307629025642311
+     },
+     "AI16ZUSDT": {
+      "applied": 16,
+      "missing": 10,
+      "paid": 0.2008878053373903
+     },
+     "AIUSDT": {
+      "applied": 4,
+      "missing": 1,
+      "paid": -0.049471741521495013
+     },
+     "AIXBTUSDT": {
+      "applied": 12,
+      "missing": 16,
+      "paid": -0.23770926597013797
+     },
+     "ALCHUSDT": {
+      "applied": 15,
+      "missing": 4,
+      "paid": 0.7610713481411407
+     },
+     "ALGOUSDT": {
+      "applied": 7,
+      "missing": 4,
+      "paid": 0.18063234536747913
+     },
+     "API3USDT": {
+      "applied": 17,
+      "missing": 4,
+      "paid": -0.16909731582386867
+     },
+     "APTUSDT": {
+      "applied": 19,
+      "missing": 10,
+      "paid": 0.5276782993921499
+     },
+     "ARBUSDT": {
+      "applied": 7,
+      "missing": 0,
+      "paid": -0.5856432470402657
+     },
+     "ARCUSDT": {
+      "applied": 3,
+      "missing": 4,
+      "paid": -0.05978950390370558
+     },
+     "ATOMUSDT": {
+      "applied": 7,
+      "missing": 2,
+      "paid": 0.5381190755077668
+     },
+     "AUCTIONUSDT": {
+      "applied": 43,
+      "missing": 14,
+      "paid": -1.2606066060341095
+     },
+     "AVAXUSDT": {
+      "applied": 55,
+      "missing": 26,
+      "paid": 1.5139779702319687
+     },
+     "BANUSDT": {
+      "applied": 4,
+      "missing": 0,
+      "paid": -0.0022089174129068037
+     },
+     "BCHUSDT": {
+      "applied": 28,
+      "missing": 27,
+      "paid": -0.42327715967942037
+     },
+     "BNBUSDT": {
+      "applied": 25,
+      "missing": 6,
+      "paid": -2.673391359475008
+     },
+     "BNXUSDT": {
+      "applied": 28,
+      "missing": 4,
+      "paid": 1.6370217829008349
+     },
+     "BOMEUSDT": {
+      "applied": 28,
+      "missing": 3,
+      "paid": -0.4675509602952984
+     },
+     "BTCUSDT": {
+      "applied": 39,
+      "missing": 38,
+      "paid": -0.6391884718597871
+     },
+     "CAKEUSDT": {
+      "applied": 22,
+      "missing": 6,
+      "paid": 0.1848457820653703
+     },
+     "CRVUSDT": {
+      "applied": 29,
+      "missing": 9,
+      "paid": -0.5471791943742454
+     },
+     "DOGEUSDT": {
+      "applied": 19,
+      "missing": 4,
+      "paid": 0.45457751630180915
+     },
+     "DOTUSDT": {
+      "applied": 41,
+      "missing": 7,
+      "paid": 1.2008275777540047
+     },
+     "DYDXUSDT": {
+      "applied": 20,
+      "missing": 2,
+      "paid": 0.1990029675289247
+     },
+     "EIGENUSDT": {
+      "applied": 16,
+      "missing": 2,
+      "paid": 0.4762754994209221
+     },
+     "ENAUSDT": {
+      "applied": 48,
+      "missing": 15,
+      "paid": 2.2320060123265137
+     },
+     "ENSUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "EOSUSDT": {
+      "applied": 18,
+      "missing": 21,
+      "paid": 1.0935131625281551
+     },
+     "ETCUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": 0.3110726623530014
+     },
+     "ETHFIUSDT": {
+      "applied": 0,
+      "missing": 3,
+      "paid": 0.0
+     },
+     "ETHUSDT": {
+      "applied": 25,
+      "missing": 28,
+      "paid": 0.7000737104690578
+     },
+     "FARTCOINUSDT": {
+      "applied": 37,
+      "missing": 20,
+      "paid": 0.7265657562513554
+     },
+     "FETUSDT": {
+      "applied": 29,
+      "missing": 3,
+      "paid": -1.9109883126308298
+     },
+     "FILUSDT": {
+      "applied": 9,
+      "missing": 3,
+      "paid": 0.31224849065170734
+     },
+     "GALAUSDT": {
+      "applied": 8,
+      "missing": 1,
+      "paid": -0.002267837837620787
+     },
+     "GMTUSDT": {
+      "applied": 22,
+      "missing": 2,
+      "paid": -0.9350776090580685
+     },
+     "GOATUSDT": {
+      "applied": 28,
+      "missing": 7,
+      "paid": -0.021600082870535
+     },
+     "HBARUSDT": {
+      "applied": 27,
+      "missing": 10,
+      "paid": -0.21487658574919405
+     },
+     "INJUSDT": {
+      "applied": 37,
+      "missing": 12,
+      "paid": -0.1925051762620296
+     },
+     "IOTAUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": 0.03206458820316759
+     },
+     "IOUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": 0.18244763746165005
+     },
+     "KAITOUSDT": {
+      "applied": 0,
+      "missing": 3,
+      "paid": 0.0
+     },
+     "LAYERUSDT": {
+      "applied": 4,
+      "missing": 7,
+      "paid": -0.015544175900870762
+     },
+     "LDOUSDT": {
+      "applied": 22,
+      "missing": 7,
+      "paid": 0.246980946233065
+     },
+     "LINKUSDT": {
+      "applied": 32,
+      "missing": 18,
+      "paid": 1.2522143258706642
+     },
+     "LTCUSDT": {
+      "applied": 13,
+      "missing": 3,
+      "paid": 0.9010201531920027
+     },
+     "MKRUSDT": {
+      "applied": 15,
+      "missing": 10,
+      "paid": -0.1850609067432209
+     },
+     "MOODENGUSDT": {
+      "applied": 9,
+      "missing": 0,
+      "paid": -0.11891275592148992
+     },
+     "MOVEUSDT": {
+      "applied": 33,
+      "missing": 7,
+      "paid": 14.178901437149866
+     },
+     "NEARUSDT": {
+      "applied": 15,
+      "missing": 12,
+      "paid": 1.4612316326683894
+     },
+     "NEIROUSDT": {
+      "applied": 23,
+      "missing": 5,
+      "paid": -0.08020567704176404
+     },
+     "NEOUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -1.2091075007055982
+     },
+     "OMUSDT": {
+      "applied": 50,
+      "missing": 6,
+      "paid": -12.012328635904897
+     },
+     "ONDOUSDT": {
+      "applied": 61,
+      "missing": 7,
+      "paid": 6.52212375092762
+     },
+     "OPUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": -0.005073436739070291
+     },
+     "ORCAUSDT": {
+      "applied": 16,
+      "missing": 9,
+      "paid": -24.192177701061258
+     },
+     "ORDIUSDT": {
+      "applied": 29,
+      "missing": 5,
+      "paid": -0.11986945103722686
+     },
+     "PENDLEUSDT": {
+      "applied": 15,
+      "missing": 20,
+      "paid": 0.8792285005148287
+     },
+     "PENGUUSDT": {
+      "applied": 6,
+      "missing": 9,
+      "paid": 0.06930127504838467
+     },
+     "PEOPLEUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": 0.058252016199730805
+     },
+     "PNUTUSDT": {
+      "applied": 25,
+      "missing": 2,
+      "paid": 0.37037752034064325
+     },
+     "POPCATUSDT": {
+      "applied": 30,
+      "missing": 13,
+      "paid": 0.12815018636523756
+     },
+     "QTUMUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 1.0041052576815992
+     },
+     "RAREUSDT": {
+      "applied": 5,
+      "missing": 1,
+      "paid": 2.661693374414055
+     },
+     "RENDERUSDT": {
+      "applied": 38,
+      "missing": 14,
+      "paid": 0.5187259466077924
+     },
+     "RUNEUSDT": {
+      "applied": 11,
+      "missing": 1,
+      "paid": 0.18062241463968629
+     },
+     "SANDUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 0.20996792409099574
+     },
+     "SEIUSDT": {
+      "applied": 14,
+      "missing": 13,
+      "paid": -2.3655461379965
+     },
+     "SOLUSDT": {
+      "applied": 94,
+      "missing": 36,
+      "paid": 1.7527937705887284
+     },
+     "SPELLUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": 0.8939476715339523
+     },
+     "SUIUSDT": {
+      "applied": 24,
+      "missing": 18,
+      "paid": -0.42051798423828496
+     },
+     "SUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": 0.05539779254265838
+     },
+     "TAOUSDT": {
+      "applied": 42,
+      "missing": 11,
+      "paid": -1.457834965275374
+     },
+     "THEUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": -0.018788615594896193
+     },
+     "TIAUSDT": {
+      "applied": 19,
+      "missing": 6,
+      "paid": -0.2586445673910187
+     },
+     "TONUSDT": {
+      "applied": 45,
+      "missing": 27,
+      "paid": 0.49659723905684877
+     },
+     "TRUMPUSDT": {
+      "applied": 14,
+      "missing": 8,
+      "paid": 0.5780984301472117
+     },
+     "TRXUSDT": {
+      "applied": 43,
+      "missing": 5,
+      "paid": 10.264514487921446
+     },
+     "UNIUSDT": {
+      "applied": 37,
+      "missing": 12,
+      "paid": -1.495816757075548
+     },
+     "USUALUSDT": {
+      "applied": 12,
+      "missing": 2,
+      "paid": -0.0013433736352022035
+     },
+     "UXLINKUSDT": {
+      "applied": 10,
+      "missing": 1,
+      "paid": -0.3076258895753
+     },
+     "VANAUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.05080405591225463
+     },
+     "VETUSDT": {
+      "applied": 5,
+      "missing": 2,
+      "paid": 0.268019128075746
+     },
+     "VINEUSDT": {
+      "applied": 4,
+      "missing": 3,
+      "paid": 0.13576810395321606
+     },
+     "VIRTUALUSDT": {
+      "applied": 19,
+      "missing": 18,
+      "paid": -1.119119300294365
+     },
+     "WIFUSDT": {
+      "applied": 74,
+      "missing": 14,
+      "paid": -0.4488072630413884
+     },
+     "WLDUSDT": {
+      "applied": 19,
+      "missing": 7,
+      "paid": -0.21338001276135865
+     },
+     "XLMUSDT": {
+      "applied": 21,
+      "missing": 13,
+      "paid": 1.3938049217059802
+     },
+     "XRPUSDT": {
+      "applied": 60,
+      "missing": 27,
+      "paid": 2.8543106933041784
+     },
+     "ZENUSDT": {
+      "applied": 4,
+      "missing": 3,
+      "paid": 0.14382180190193342
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": -6.05701687611465,
+    "guard": {
+     "n_closed_trades": 361,
+     "ok": true,
+     "reason": "funding active and reconciled"
+    },
+    "n_applied": 2113,
+    "n_boundary_crossings": 2930,
+    "n_missing": 817,
+    "position_funding_paid_sum": 6.0570168761146395,
+    "total_paid": 6.05701687611465
+   },
+   "E": {
+    "by_period": {
+     "2025-01": 16.38381297976049,
+     "2025-02": -17.0747828021995,
+     "2025-03": 12.177161734167667,
+     "2025-04": -1.7457870270130895,
+     "2025-05": 51.90151893374272,
+     "2025-06": 6.830966213040866,
+     "2025-07": 1.2275550500369603
+    },
+    "by_side": {
+     "long_paid": -38.286804691929746,
+     "short_paid": 107.98724977346583
+    },
+    "by_sign": {
+     "paid_negative_count": 1465,
+     "paid_negative_sum": -108.69387361602526,
+     "paid_positive_count": 1291,
+     "paid_positive_sum": 178.3943186975616,
+     "paid_zero_count": 13
+    },
+    "by_symbol": {
+     "1000BONKUSDT": {
+      "applied": 28,
+      "missing": 17,
+      "paid": -0.32169189823511896
+     },
+     "1000FLOKIUSDT": {
+      "applied": 17,
+      "missing": 7,
+      "paid": 0.12225878970698516
+     },
+     "1000PEPEUSDT": {
+      "applied": 65,
+      "missing": 29,
+      "paid": 0.4648802113699951
+     },
+     "1000SATSUSDT": {
+      "applied": 40,
+      "missing": 12,
+      "paid": -0.763912621104021
+     },
+     "1000SHIBUSDT": {
+      "applied": 19,
+      "missing": 10,
+      "paid": -0.5118305601481794
+     },
+     "1MBABYDOGEUSDT": {
+      "applied": 4,
+      "missing": 2,
+      "paid": -0.06744204237944822
+     },
+     "AAVEUSDT": {
+      "applied": 36,
+      "missing": 41,
+      "paid": 0.6502403572311174
+     },
+     "ACHUSDT": {
+      "applied": 15,
+      "missing": 6,
+      "paid": -0.269246009339908
+     },
+     "ACTUSDT": {
+      "applied": 32,
+      "missing": 2,
+      "paid": -0.06981561659074678
+     },
+     "ADAUSDT": {
+      "applied": 18,
+      "missing": 30,
+      "paid": 0.06354813009560703
+     },
+     "AGLDUSDT": {
+      "applied": 21,
+      "missing": 4,
+      "paid": -0.2505134058858056
+     },
+     "AI16ZUSDT": {
+      "applied": 23,
+      "missing": 14,
+      "paid": -0.07299710434914577
+     },
+     "AIUSDT": {
+      "applied": 4,
+      "missing": 1,
+      "paid": -0.05300134087971947
+     },
+     "AIXBTUSDT": {
+      "applied": 16,
+      "missing": 23,
+      "paid": -0.16470887989415128
+     },
+     "ALCHUSDT": {
+      "applied": 15,
+      "missing": 4,
+      "paid": 0.9715247602071827
+     },
+     "ALGOUSDT": {
+      "applied": 9,
+      "missing": 4,
+      "paid": 0.27275845411773414
+     },
+     "ANIMEUSDT": {
+      "applied": 10,
+      "missing": 19,
+      "paid": 2.0113585068850433
+     },
+     "APEUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 0.2695715140358417
+     },
+     "API3USDT": {
+      "applied": 20,
+      "missing": 1,
+      "paid": -0.23120883538217904
+     },
+     "APTUSDT": {
+      "applied": 41,
+      "missing": 18,
+      "paid": 1.2290097547803283
+     },
+     "ARBUSDT": {
+      "applied": 26,
+      "missing": 2,
+      "paid": -0.13429829589859177
+     },
+     "ARCUSDT": {
+      "applied": 17,
+      "missing": 11,
+      "paid": -0.4461533529323818
+     },
+     "ARKUSDT": {
+      "applied": 6,
+      "missing": 3,
+      "paid": -0.2586366468732611
+     },
+     "ATOMUSDT": {
+      "applied": 28,
+      "missing": 3,
+      "paid": -0.4755588985058574
+     },
+     "AUCTIONUSDT": {
+      "applied": 55,
+      "missing": 14,
+      "paid": 3.2636894316188894
+     },
+     "AVAXUSDT": {
+      "applied": 43,
+      "missing": 19,
+      "paid": 1.0558892835403144
+     },
+     "BANANAS31USDT": {
+      "applied": 0,
+      "missing": 3,
+      "paid": 0.0
+     },
+     "BANUSDT": {
+      "applied": 5,
+      "missing": 0,
+      "paid": -12.047357745700921
+     },
+     "BCHUSDT": {
+      "applied": 35,
+      "missing": 28,
+      "paid": 1.4420555384174292
+     },
+     "BERAUSDT": {
+      "applied": 9,
+      "missing": 12,
+      "paid": 1.6517641233785876
+     },
+     "BIDUSDT": {
+      "applied": 1,
+      "missing": 5,
+      "paid": 0.04761859731126477
+     },
+     "BMTUSDT": {
+      "applied": 3,
+      "missing": 10,
+      "paid": 0.6213924239107965
+     },
+     "BNBUSDT": {
+      "applied": 38,
+      "missing": 13,
+      "paid": -3.1921496960273426
+     },
+     "BNXUSDT": {
+      "applied": 28,
+      "missing": 4,
+      "paid": 4.538730444531502
+     },
+     "BOMEUSDT": {
+      "applied": 28,
+      "missing": 4,
+      "paid": -0.49564986403289446
+     },
+     "BSWUSDT": {
+      "applied": 12,
+      "missing": 9,
+      "paid": 0.2706581771651466
+     },
+     "BTCUSDT": {
+      "applied": 53,
+      "missing": 56,
+      "paid": -0.9780392346208808
+     },
+     "CAKEUSDT": {
+      "applied": 44,
+      "missing": 9,
+      "paid": 0.09351098418580533
+     },
+     "CHILLGUYUSDT": {
+      "applied": 19,
+      "missing": 18,
+      "paid": -0.2018822230654183
+     },
+     "COOKIEUSDT": {
+      "applied": 6,
+      "missing": 4,
+      "paid": 0.13002995857126062
+     },
+     "CRVUSDT": {
+      "applied": 58,
+      "missing": 27,
+      "paid": -1.2801153910410734
+     },
+     "DOGEUSDT": {
+      "applied": 45,
+      "missing": 33,
+      "paid": -0.18658526499437722
+     },
+     "DOTUSDT": {
+      "applied": 5,
+      "missing": 9,
+      "paid": 0.28271759145660086
+     },
+     "DYDXUSDT": {
+      "applied": 20,
+      "missing": 2,
+      "paid": 0.20711135490665888
+     },
+     "EIGENUSDT": {
+      "applied": 15,
+      "missing": 1,
+      "paid": 0.28506338246502994
+     },
+     "ENAUSDT": {
+      "applied": 46,
+      "missing": 14,
+      "paid": 1.8545577414011476
+     },
+     "EOSUSDT": {
+      "applied": 10,
+      "missing": 17,
+      "paid": 0.6321916934539211
+     },
+     "ETCUSDT": {
+      "applied": 12,
+      "missing": 1,
+      "paid": 0.07927938676071589
+     },
+     "ETHFIUSDT": {
+      "applied": 3,
+      "missing": 3,
+      "paid": 0.0668640356396909
+     },
+     "ETHUSDT": {
+      "applied": 45,
+      "missing": 34,
+      "paid": 0.5552974815814039
+     },
+     "FARTCOINUSDT": {
+      "applied": 50,
+      "missing": 44,
+      "paid": 0.5643322137101148
+     },
+     "FETUSDT": {
+      "applied": 29,
+      "missing": 3,
+      "paid": -1.389251231505473
+     },
+     "FILUSDT": {
+      "applied": 11,
+      "missing": 7,
+      "paid": 0.39764062841327685
+     },
+     "GALAUSDT": {
+      "applied": 8,
+      "missing": 1,
+      "paid": 0.0915694557832397
+     },
+     "GMTUSDT": {
+      "applied": 18,
+      "missing": 3,
+      "paid": 1.6278372536561798
+     },
+     "GOATUSDT": {
+      "applied": 33,
+      "missing": 2,
+      "paid": -0.17912352040348023
+     },
+     "GRIFFAINUSDT": {
+      "applied": 14,
+      "missing": 7,
+      "paid": -0.009043463395358891
+     },
+     "HBARUSDT": {
+      "applied": 39,
+      "missing": 26,
+      "paid": -0.06542870384960872
+     },
+     "INJUSDT": {
+      "applied": 17,
+      "missing": 9,
+      "paid": -0.07024819366939222
+     },
+     "IOTAUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": 0.015967323137402307
+     },
+     "IOUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": 0.1943103866974308
+     },
+     "JTOUSDT": {
+      "applied": 2,
+      "missing": 6,
+      "paid": -0.013069796120437006
+     },
+     "KAIAUSDT": {
+      "applied": 3,
+      "missing": 18,
+      "paid": 0.025049331256027915
+     },
+     "KAITOUSDT": {
+      "applied": 23,
+      "missing": 34,
+      "paid": 2.0510651315551045
+     },
+     "LAYERUSDT": {
+      "applied": 8,
+      "missing": 10,
+      "paid": -0.0054446179520494
+     },
+     "LDOUSDT": {
+      "applied": 39,
+      "missing": 13,
+      "paid": 0.13901136088090987
+     },
+     "LINKUSDT": {
+      "applied": 26,
+      "missing": 8,
+      "paid": 0.909339181496583
+     },
+     "LPTUSDT": {
+      "applied": 6,
+      "missing": 17,
+      "paid": -0.4134914515971051
+     },
+     "LTCUSDT": {
+      "applied": 10,
+      "missing": 10,
+      "paid": 0.43312930331298793
+     },
+     "MASKUSDT": {
+      "applied": 20,
+      "missing": 15,
+      "paid": 2.722569477140982
+     },
+     "MKRUSDT": {
+      "applied": 25,
+      "missing": 18,
+      "paid": 0.04066957287432272
+     },
+     "MOODENGUSDT": {
+      "applied": 9,
+      "missing": 12,
+      "paid": -0.08972592842216873
+     },
+     "MOVEUSDT": {
+      "applied": 73,
+      "missing": 42,
+      "paid": 68.62808188017038
+     },
+     "MUBARAKUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": 0.011534457923345941
+     },
+     "NEARUSDT": {
+      "applied": 3,
+      "missing": 4,
+      "paid": 0.17725639732943108
+     },
+     "NEIROUSDT": {
+      "applied": 37,
+      "missing": 9,
+      "paid": -0.2471816994976872
+     },
+     "NEOUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.6964755447889059
+     },
+     "OMUSDT": {
+      "applied": 47,
+      "missing": 18,
+      "paid": -3.087358462737587
+     },
+     "ONDOUSDT": {
+      "applied": 51,
+      "missing": 5,
+      "paid": 5.38239021031194
+     },
+     "OPUSDT": {
+      "applied": 7,
+      "missing": 12,
+      "paid": -0.21385595117798106
+     },
+     "ORCAUSDT": {
+      "applied": 12,
+      "missing": 2,
+      "paid": -29.07026200250823
+     },
+     "ORDIUSDT": {
+      "applied": 32,
+      "missing": 8,
+      "paid": -0.1436056228737764
+     },
+     "PAXGUSDT": {
+      "applied": 3,
+      "missing": 8,
+      "paid": -0.182060955505164
+     },
+     "PENDLEUSDT": {
+      "applied": 4,
+      "missing": 5,
+      "paid": 0.12064819268227141
+     },
+     "PENGUUSDT": {
+      "applied": 31,
+      "missing": 18,
+      "paid": -0.9017535649390611
+     },
+     "PEOPLEUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": 0.04484714517629919
+     },
+     "PNUTUSDT": {
+      "applied": 30,
+      "missing": 15,
+      "paid": 0.6482349244281556
+     },
+     "POPCATUSDT": {
+      "applied": 47,
+      "missing": 14,
+      "paid": -0.19878193506547004
+     },
+     "QTUMUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 0.569030558221258
+     },
+     "RENDERUSDT": {
+      "applied": 20,
+      "missing": 12,
+      "paid": 0.37320197962730783
+     },
+     "RUNEUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": 0.027720248030900854
+     },
+     "RVNUSDT": {
+      "applied": 12,
+      "missing": 30,
+      "paid": 0.36840184880556215
+     },
+     "SANDUSDT": {
+      "applied": 19,
+      "missing": 2,
+      "paid": 0.17810874770323154
+     },
+     "SEIUSDT": {
+      "applied": 8,
+      "missing": 4,
+      "paid": -0.29511035162453414
+     },
+     "SOLUSDT": {
+      "applied": 88,
+      "missing": 47,
+      "paid": 1.1785973161587004
+     },
+     "SPXUSDT": {
+      "applied": 7,
+      "missing": 11,
+      "paid": 0.00222708758227725
+     },
+     "STEEMUSDT": {
+      "applied": 18,
+      "missing": 3,
+      "paid": 8.081863284020322
+     },
+     "SUIUSDT": {
+      "applied": 39,
+      "missing": 53,
+      "paid": 0.07037450645756373
+     },
+     "SUSDT": {
+      "applied": 17,
+      "missing": 18,
+      "paid": -0.0932678524371539
+     },
+     "TAOUSDT": {
+      "applied": 39,
+      "missing": 16,
+      "paid": -2.046944949809069
+     },
+     "TIAUSDT": {
+      "applied": 19,
+      "missing": 16,
+      "paid": 0.4366825599542239
+     },
+     "TONUSDT": {
+      "applied": 57,
+      "missing": 17,
+      "paid": 0.5654418692329769
+     },
+     "TRBUSDT": {
+      "applied": 9,
+      "missing": 12,
+      "paid": -0.15324785295559473
+     },
+     "TRUMPUSDT": {
+      "applied": 20,
+      "missing": 24,
+      "paid": 1.4305105028233756
+     },
+     "TRXUSDT": {
+      "applied": 55,
+      "missing": 34,
+      "paid": 9.397159321640427
+     },
+     "TURBOUSDT": {
+      "applied": 21,
+      "missing": 4,
+      "paid": -0.40322896069112385
+     },
+     "UNIUSDT": {
+      "applied": 31,
+      "missing": 4,
+      "paid": -0.990806366111937
+     },
+     "USUALUSDT": {
+      "applied": 12,
+      "missing": 2,
+      "paid": -0.0016046300136054788
+     },
+     "UXLINKUSDT": {
+      "applied": 29,
+      "missing": 3,
+      "paid": 1.3397907297752236
+     },
+     "VANAUSDT": {
+      "applied": 6,
+      "missing": 0,
+      "paid": -2.578322448300605
+     },
+     "VETUSDT": {
+      "applied": 5,
+      "missing": 2,
+      "paid": 0.13346648950780804
+     },
+     "VIDTUSDT": {
+      "applied": 18,
+      "missing": 3,
+      "paid": 0.9613252676371747
+     },
+     "VINEUSDT": {
+      "applied": 4,
+      "missing": 3,
+      "paid": 0.11942305744888326
+     },
+     "VIRTUALUSDT": {
+      "applied": 20,
+      "missing": 21,
+      "paid": -0.6113856430228136
+     },
+     "VOXELUSDT": {
+      "applied": 2,
+      "missing": 5,
+      "paid": -0.012138022198034865
+     },
+     "WIFUSDT": {
+      "applied": 71,
+      "missing": 17,
+      "paid": -0.48560454536629305
+     },
+     "WLDUSDT": {
+      "applied": 28,
+      "missing": 19,
+      "paid": -0.6551054909310463
+     },
+     "WUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "XLMUSDT": {
+      "applied": 24,
+      "missing": 12,
+      "paid": 0.7355942488566388
+     },
+     "XRPUSDT": {
+      "applied": 80,
+      "missing": 34,
+      "paid": 4.178986894063235
+     },
+     "ZENUSDT": {
+      "applied": 19,
+      "missing": 4,
+      "paid": -0.5669272124782067
+     },
+     "ZROUSDT": {
+      "applied": 7,
+      "missing": 9,
+      "paid": 0.5361345271570224
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": -69.70044508153609,
+    "guard": {
+     "n_closed_trades": 459,
+     "ok": true,
+     "reason": "funding active and reconciled"
+    },
+    "n_applied": 2769,
+    "n_boundary_crossings": 4254,
+    "n_missing": 1485,
+    "position_funding_paid_sum": 69.7004450815361,
+    "total_paid": 69.70044508153609
+   },
+   "F": {
+    "by_period": {
+     "2025-01": 2.395495493113154,
+     "2025-02": -0.012691294936296223,
+     "2025-03": 0.8453173666090962,
+     "2025-04": 7.5266624508986295,
+     "2025-05": 15.822171900309671,
+     "2025-06": 6.967626175422949,
+     "2025-07": 0.8374780004445003
+    },
+    "by_side": {
+     "long_paid": -23.87635296389242,
+     "short_paid": 58.25841305575415
+    },
+    "by_sign": {
+     "paid_negative_count": 377,
+     "paid_negative_sum": -58.506152726485674,
+     "paid_positive_count": 517,
+     "paid_positive_sum": 92.8882128183475,
+     "paid_zero_count": 4
+    },
+    "by_symbol": {
+     "1000BONKUSDT": {
+      "applied": 7,
+      "missing": 4,
+      "paid": -0.3395080054912363
+     },
+     "1000FLOKIUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": 0.0400826566008302
+     },
+     "1000PEPEUSDT": {
+      "applied": 16,
+      "missing": 9,
+      "paid": 0.605622359874031
+     },
+     "1000SATSUSDT": {
+      "applied": 16,
+      "missing": 6,
+      "paid": -0.19557768440122592
+     },
+     "1000SHIBUSDT": {
+      "applied": 8,
+      "missing": 4,
+      "paid": 0.724197419101059
+     },
+     "1MBABYDOGEUSDT": {
+      "applied": 1,
+      "missing": 2,
+      "paid": -0.03709297617931683
+     },
+     "AAVEUSDT": {
+      "applied": 21,
+      "missing": 13,
+      "paid": 0.6820679992295826
+     },
+     "ACHUSDT": {
+      "applied": 3,
+      "missing": 3,
+      "paid": -0.09016879951519373
+     },
+     "ACTUSDT": {
+      "applied": 6,
+      "missing": 1,
+      "paid": 0.029745529763038403
+     },
+     "ADAUSDT": {
+      "applied": 9,
+      "missing": 7,
+      "paid": 0.280813051381398
+     },
+     "AGLDUSDT": {
+      "applied": 5,
+      "missing": 2,
+      "paid": -0.2503812667930768
+     },
+     "AI16ZUSDT": {
+      "applied": 10,
+      "missing": 3,
+      "paid": 0.2730832123478054
+     },
+     "AIUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": -0.029118398938621802
+     },
+     "AIXBTUSDT": {
+      "applied": 3,
+      "missing": 3,
+      "paid": 0.054909625018304466
+     },
+     "ALCHUSDT": {
+      "applied": 4,
+      "missing": 0,
+      "paid": 0.17709425508260646
+     },
+     "ALGOUSDT": {
+      "applied": 8,
+      "missing": 2,
+      "paid": 0.18300868461801084
+     },
+     "ANIMEUSDT": {
+      "applied": 5,
+      "missing": 7,
+      "paid": 1.6532418707833254
+     },
+     "APEUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": 0.2272562903842131
+     },
+     "API3USDT": {
+      "applied": 6,
+      "missing": 0,
+      "paid": -0.11464358319671412
+     },
+     "APTUSDT": {
+      "applied": 10,
+      "missing": 1,
+      "paid": -0.3865134624020439
+     },
+     "ARBUSDT": {
+      "applied": 4,
+      "missing": 0,
+      "paid": 0.5182152089978898
+     },
+     "ARCUSDT": {
+      "applied": 0,
+      "missing": 3,
+      "paid": 0.0
+     },
+     "ARKMUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": -0.17933193029365818
+     },
+     "ATOMUSDT": {
+      "applied": 9,
+      "missing": 1,
+      "paid": 0.11565712253241023
+     },
+     "AUCTIONUSDT": {
+      "applied": 21,
+      "missing": 9,
+      "paid": 2.4638394213242387
+     },
+     "AVAXUSDT": {
+      "applied": 17,
+      "missing": 9,
+      "paid": 1.771399180530941
+     },
+     "BANUSDT": {
+      "applied": 4,
+      "missing": 0,
+      "paid": -0.0023227327088813504
+     },
+     "BCHUSDT": {
+      "applied": 15,
+      "missing": 7,
+      "paid": 0.5933089873556698
+     },
+     "BERAUSDT": {
+      "applied": 3,
+      "missing": 3,
+      "paid": 0.46873708078002113
+     },
+     "BIGTIMEUSDT": {
+      "applied": 0,
+      "missing": 3,
+      "paid": 0.0
+     },
+     "BMTUSDT": {
+      "applied": 0,
+      "missing": 2,
+      "paid": 0.0
+     },
+     "BNBUSDT": {
+      "applied": 7,
+      "missing": 7,
+      "paid": 1.3492547625933102
+     },
+     "BNXUSDT": {
+      "applied": 17,
+      "missing": 3,
+      "paid": 3.2721677537253795
+     },
+     "BOMEUSDT": {
+      "applied": 4,
+      "missing": 1,
+      "paid": -0.07327130922937122
+     },
+     "BSWUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": -0.0018906720151613925
+     },
+     "BTCUSDT": {
+      "applied": 10,
+      "missing": 13,
+      "paid": -0.19670809876911002
+     },
+     "CAKEUSDT": {
+      "applied": 8,
+      "missing": 0,
+      "paid": -0.04271187483524495
+     },
+     "CHILLGUYUSDT": {
+      "applied": 4,
+      "missing": 0,
+      "paid": -0.04526621987327445
+     },
+     "COOKIEUSDT": {
+      "applied": 1,
+      "missing": 3,
+      "paid": 0.05800930497692999
+     },
+     "CRVUSDT": {
+      "applied": 12,
+      "missing": 4,
+      "paid": 0.4956906502556364
+     },
+     "DOGEUSDT": {
+      "applied": 13,
+      "missing": 9,
+      "paid": 0.6395335002886169
+     },
+     "DOGSUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": -0.07346945160963836
+     },
+     "DOTUSDT": {
+      "applied": 10,
+      "missing": 1,
+      "paid": 0.8812485827644997
+     },
+     "DYDXUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": 0.21801013189485674
+     },
+     "EIGENUSDT": {
+      "applied": 8,
+      "missing": 6,
+      "paid": 0.5277190795019593
+     },
+     "ENAUSDT": {
+      "applied": 18,
+      "missing": 8,
+      "paid": 1.588200065214748
+     },
+     "ENSUSDT": {
+      "applied": 0,
+      "missing": 2,
+      "paid": 0.0
+     },
+     "EOSUSDT": {
+      "applied": 8,
+      "missing": 3,
+      "paid": -1.1773111887707803
+     },
+     "ETCUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": 0.03828344292932359
+     },
+     "ETHFIUSDT": {
+      "applied": 5,
+      "missing": 4,
+      "paid": 0.30017088990190866
+     },
+     "ETHUSDT": {
+      "applied": 9,
+      "missing": 8,
+      "paid": 0.26108331500341375
+     },
+     "FARTCOINUSDT": {
+      "applied": 15,
+      "missing": 8,
+      "paid": 0.5132436658250467
+     },
+     "FETUSDT": {
+      "applied": 14,
+      "missing": 2,
+      "paid": -1.159974861070703
+     },
+     "FILUSDT": {
+      "applied": 5,
+      "missing": 1,
+      "paid": 0.4446431617063228
+     },
+     "FUNUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "GALAUSDT": {
+      "applied": 5,
+      "missing": 3,
+      "paid": 0.3727775535264767
+     },
+     "GASUSDT": {
+      "applied": 1,
+      "missing": 2,
+      "paid": 0.3623540951613887
+     },
+     "GMTUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": -0.5911164336706134
+     },
+     "GOATUSDT": {
+      "applied": 18,
+      "missing": 5,
+      "paid": -0.12903825293673044
+     },
+     "GRIFFAINUSDT": {
+      "applied": 2,
+      "missing": 3,
+      "paid": -0.04753898848242531
+     },
+     "HBARUSDT": {
+      "applied": 12,
+      "missing": 3,
+      "paid": -0.10019280579715203
+     },
+     "INJUSDT": {
+      "applied": 5,
+      "missing": 8,
+      "paid": 0.2022068468590925
+     },
+     "IOTAUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.017163812039711547
+     },
+     "IOUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": 0.17194321291809625
+     },
+     "JTOUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": -0.05041664159922662
+     },
+     "KAIAUSDT": {
+      "applied": 1,
+      "missing": 7,
+      "paid": -0.04209731731338868
+     },
+     "KAITOUSDT": {
+      "applied": 3,
+      "missing": 6,
+      "paid": 0.7827715171983517
+     },
+     "LAYERUSDT": {
+      "applied": 8,
+      "missing": 6,
+      "paid": 0.14135835145568612
+     },
+     "LDOUSDT": {
+      "applied": 8,
+      "missing": 2,
+      "paid": 0.26436994400904434
+     },
+     "LINKUSDT": {
+      "applied": 17,
+      "missing": 7,
+      "paid": 1.012114927492224
+     },
+     "LPTUSDT": {
+      "applied": 0,
+      "missing": 2,
+      "paid": 0.0
+     },
+     "LTCUSDT": {
+      "applied": 16,
+      "missing": 7,
+      "paid": 1.4871633880710353
+     },
+     "MASKUSDT": {
+      "applied": 5,
+      "missing": 7,
+      "paid": 2.7102428590032073
+     },
+     "MKRUSDT": {
+      "applied": 5,
+      "missing": 5,
+      "paid": 0.3528194871408295
+     },
+     "MOODENGUSDT": {
+      "applied": 5,
+      "missing": 3,
+      "paid": 0.02273223248807775
+     },
+     "MOVEUSDT": {
+      "applied": 20,
+      "missing": 7,
+      "paid": 18.46004646538998
+     },
+     "MUBARAKUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": 0.03761441092790154
+     },
+     "NEARUSDT": {
+      "applied": 15,
+      "missing": 1,
+      "paid": 1.8204491896942425
+     },
+     "NEIROUSDT": {
+      "applied": 11,
+      "missing": 6,
+      "paid": 0.12338759501796641
+     },
+     "NEOUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -1.2190440315565774
+     },
+     "NOTUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": -0.014018857018884058
+     },
+     "OMUSDT": {
+      "applied": 9,
+      "missing": 3,
+      "paid": -3.9216427621700563
+     },
+     "ONDOUSDT": {
+      "applied": 18,
+      "missing": 5,
+      "paid": -0.32409120465633157
+     },
+     "OPUSDT": {
+      "applied": 6,
+      "missing": 3,
+      "paid": 0.023727239809138725
+     },
+     "ORCAUSDT": {
+      "applied": 2,
+      "missing": 2,
+      "paid": -14.613530499928359
+     },
+     "ORDIUSDT": {
+      "applied": 15,
+      "missing": 7,
+      "paid": 0.06177794346381278
+     },
+     "PAXGUSDT": {
+      "applied": 1,
+      "missing": 1,
+      "paid": -0.06568553993556504
+     },
+     "PENDLEUSDT": {
+      "applied": 6,
+      "missing": 6,
+      "paid": 0.2789265253467127
+     },
+     "PENGUUSDT": {
+      "applied": 5,
+      "missing": 8,
+      "paid": -0.1607267408760811
+     },
+     "PEOPLEUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": 0.028994893340638074
+     },
+     "PNUTUSDT": {
+      "applied": 15,
+      "missing": 7,
+      "paid": 1.094562263806267
+     },
+     "POPCATUSDT": {
+      "applied": 10,
+      "missing": 4,
+      "paid": 0.23339378393224894
+     },
+     "QTUMUSDT": {
+      "applied": 8,
+      "missing": 0,
+      "paid": 1.5425962360622962
+     },
+     "RAREUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": 5.006686286060011
+     },
+     "RENDERUSDT": {
+      "applied": 8,
+      "missing": 2,
+      "paid": 0.0008500449143740568
+     },
+     "RUNEUSDT": {
+      "applied": 8,
+      "missing": 1,
+      "paid": 0.845581629557421
+     },
+     "RVNUSDT": {
+      "applied": 3,
+      "missing": 8,
+      "paid": -0.028812804124925193
+     },
+     "SANDUSDT": {
+      "applied": 5,
+      "missing": 0,
+      "paid": 0.12318048925674496
+     },
+     "SEIUSDT": {
+      "applied": 8,
+      "missing": 5,
+      "paid": -0.009142665124535855
+     },
+     "SOLUSDT": {
+      "applied": 19,
+      "missing": 11,
+      "paid": 0.07933915501373201
+     },
+     "SPELLUSDT": {
+      "applied": 3,
+      "missing": 0,
+      "paid": 1.8927048330199878
+     },
+     "SPXUSDT": {
+      "applied": 2,
+      "missing": 4,
+      "paid": 0.0011488303362352792
+     },
+     "SUIUSDT": {
+      "applied": 10,
+      "missing": 9,
+      "paid": 0.4027413815593239
+     },
+     "SUSDT": {
+      "applied": 6,
+      "missing": 2,
+      "paid": 0.11999953425212198
+     },
+     "TAOUSDT": {
+      "applied": 13,
+      "missing": 1,
+      "paid": -2.159642112511231
+     },
+     "THEUSDT": {
+      "applied": 3,
+      "missing": 2,
+      "paid": -0.09917847736431393
+     },
+     "TIAUSDT": {
+      "applied": 16,
+      "missing": 5,
+      "paid": 0.19065824471688772
+     },
+     "TONUSDT": {
+      "applied": 8,
+      "missing": 5,
+      "paid": 0.1070594221317387
+     },
+     "TRBUSDT": {
+      "applied": 0,
+      "missing": 2,
+      "paid": 0.0
+     },
+     "TRUMPUSDT": {
+      "applied": 2,
+      "missing": 6,
+      "paid": 0.09845780871452536
+     },
+     "TRXUSDT": {
+      "applied": 14,
+      "missing": 9,
+      "paid": 5.694735632172435
+     },
+     "TURBOUSDT": {
+      "applied": 6,
+      "missing": 4,
+      "paid": -0.12098534874175763
+     },
+     "UNIUSDT": {
+      "applied": 11,
+      "missing": 6,
+      "paid": -0.5251610956814637
+     },
+     "USUALUSDT": {
+      "applied": 2,
+      "missing": 2,
+      "paid": -0.054343565881929234
+     },
+     "UXLINKUSDT": {
+      "applied": 6,
+      "missing": 0,
+      "paid": -0.20259178558037022
+     },
+     "VANAUSDT": {
+      "applied": 5,
+      "missing": 0,
+      "paid": -7.193208734032279
+     },
+     "VETUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": 0.11559097064772822
+     },
+     "VIDTUSDT": {
+      "applied": 5,
+      "missing": 0,
+      "paid": 0.974770555636731
+     },
+     "VINEUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": 0.045799040872750246
+     },
+     "VIRTUALUSDT": {
+      "applied": 7,
+      "missing": 9,
+      "paid": -0.14117001821896544
+     },
+     "VOXELUSDT": {
+      "applied": 1,
+      "missing": 3,
+      "paid": -0.007687508802306015
+     },
+     "WIFUSDT": {
+      "applied": 27,
+      "missing": 6,
+      "paid": -0.0026462153467455077
+     },
+     "WLDUSDT": {
+      "applied": 7,
+      "missing": 7,
+      "paid": 0.18050074853017845
+     },
+     "WUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "XLMUSDT": {
+      "applied": 5,
+      "missing": 9,
+      "paid": 1.0937807320174677
+     },
+     "XRPUSDT": {
+      "applied": 10,
+      "missing": 2,
+      "paid": 0.743729581344238
+     },
+     "ZENUSDT": {
+      "applied": 6,
+      "missing": 2,
+      "paid": -0.20530272956153459
+     },
+     "ZEREBROUSDT": {
+      "applied": 3,
+      "missing": 1,
+      "paid": -0.010568174919717215
+     },
+     "ZROUSDT": {
+      "applied": 3,
+      "missing": 3,
+      "paid": 0.07888358667145993
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": -34.3820600918617,
+    "guard": {
+     "n_closed_trades": 1341,
+     "ok": true,
+     "reason": "funding active and reconciled"
+    },
+    "n_applied": 898,
+    "n_boundary_crossings": 1358,
+    "n_missing": 460,
+    "position_funding_paid_sum": 34.382060091861696,
+    "total_paid": 34.3820600918617
+   },
+   "G": {
+    "by_period": {
+     "2025-01": -0.023495255362949278,
+     "2025-02": -0.1526177258738439,
+     "2025-04": 0.22438450700474322,
+     "2025-05": -0.324993171999294
+    },
+    "by_side": {
+     "long_paid": -0.324993171999294,
+     "short_paid": 0.048271525767950046
+    },
+    "by_sign": {
+     "paid_negative_count": 7,
+     "paid_negative_sum": -0.5011061532360872,
+     "paid_positive_count": 1,
+     "paid_positive_sum": 0.22438450700474322,
+     "paid_zero_count": 0
+    },
+    "by_symbol": {
+     "ADAUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.007968260970051325
+     },
+     "AUCTIONUSDT": {
+      "applied": 1,
+      "missing": 2,
+      "paid": 0.22438450700474322
+     },
+     "BNBUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "BTCUSDT": {
+      "applied": 2,
+      "missing": 1,
+      "paid": -0.324993171999294
+     },
+     "ETHUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.023495255362949278
+     },
+     "LINKUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.0464015168595479
+     },
+     "MASKUSDT": {
+      "applied": 0,
+      "missing": 3,
+      "paid": 0.0
+     },
+     "SOLUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": -0.09824794804424468
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": 0.276721646231344,
+    "guard": {
+     "n_closed_trades": 7,
+     "ok": true,
+     "reason": "window/trade count below the multi-month threshold"
+    },
+    "n_applied": 8,
+    "n_boundary_crossings": 15,
+    "n_missing": 7,
+    "position_funding_paid_sum": -0.276721646231344,
+    "total_paid": -0.276721646231344
+   },
+   "G_feasible": {
+    "by_period": {
+     "2025-01": -0.023495255362949278,
+     "2025-02": 0.18430127108769992,
+     "2025-03": -0.047364144880635506,
+     "2025-04": 1.2146979402410132,
+     "2025-05": -0.3956476418765556,
+     "2025-06": 0.14762347738211137
+    },
+    "by_side": {
+     "long_paid": -0.3956476418765556,
+     "short_paid": 1.4757632884672391
+    },
+    "by_sign": {
+     "paid_negative_count": 21,
+     "paid_negative_sum": -1.1791858209634118,
+     "paid_positive_count": 31,
+     "paid_positive_sum": 2.259301467554096,
+     "paid_zero_count": 0
+    },
+    "by_symbol": {
+     "ADAUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": -0.05549232030880545
+     },
+     "AUCTIONUSDT": {
+      "applied": 14,
+      "missing": 5,
+      "paid": 1.2146979402410132
+     },
+     "BNBUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "BTCUSDT": {
+      "applied": 5,
+      "missing": 4,
+      "paid": -0.3956476418765556
+     },
+     "ETHUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.023495255362949278
+     },
+     "LINKUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": -0.0840660715165513
+     },
+     "MASKUSDT": {
+      "applied": 8,
+      "missing": 13,
+      "paid": 0.14762347738211137
+     },
+     "SOLUSDT": {
+      "applied": 20,
+      "missing": 1,
+      "paid": 0.27649551803242123
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": -1.0801156465906836,
+    "guard": {
+     "n_closed_trades": 7,
+     "ok": true,
+     "reason": "window/trade count below the multi-month threshold"
+    },
+    "n_applied": 52,
+    "n_boundary_crossings": 76,
+    "n_missing": 24,
+    "position_funding_paid_sum": 1.0801156465906843,
+    "total_paid": 1.0801156465906836
+   },
+   "G_matched": {
+    "by_period": {
+     "2025-01": -0.023495255362949278,
+     "2025-02": 0.1825504649008119,
+     "2025-03": -0.046432298412781396,
+     "2025-04": 1.1919277056332473,
+     "2025-05": -0.3891815797947475,
+     "2025-06": 0.1457972588273915
+    },
+    "by_side": {
+     "long_paid": -0.3891815797947475,
+     "short_paid": 1.45034787558572
+    },
+    "by_sign": {
+     "paid_negative_count": 21,
+     "paid_negative_sum": -1.1668477162219937,
+     "paid_positive_count": 31,
+     "paid_positive_sum": 2.2280140120129657,
+     "paid_zero_count": 0
+    },
+    "by_symbol": {
+     "ADAUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": -0.054400559382832725
+     },
+     "AUCTIONUSDT": {
+      "applied": 14,
+      "missing": 5,
+      "paid": 1.1919277056332473
+     },
+     "BNBUSDT": {
+      "applied": 0,
+      "missing": 1,
+      "paid": 0.0
+     },
+     "BTCUSDT": {
+      "applied": 5,
+      "missing": 4,
+      "paid": -0.3891815797947475
+     },
+     "ETHUSDT": {
+      "applied": 1,
+      "missing": 0,
+      "paid": -0.023495255362949278
+     },
+     "LINKUSDT": {
+      "applied": 2,
+      "missing": 0,
+      "paid": -0.08424499205306549
+     },
+     "MASKUSDT": {
+      "applied": 8,
+      "missing": 13,
+      "paid": 0.1457972588273915
+     },
+     "SOLUSDT": {
+      "applied": 20,
+      "missing": 1,
+      "paid": 0.27476371792392856
+     }
+    },
+    "event_to_equity_reconciled": true,
+    "funding_net": -1.0611662957909722,
+    "guard": {
+     "n_closed_trades": 7,
+     "ok": true,
+     "reason": "window/trade count below the multi-month threshold"
+    },
+    "n_applied": 52,
+    "n_boundary_crossings": 76,
+    "n_missing": 24,
+    "position_funding_paid_sum": 1.0611662957909724,
+    "total_paid": 1.0611662957909722
+   }
+  },
+  "n_defects": 0,
+  "round_counts": {
+   "invalid": 0,
+   "total": 1080,
+   "valid": 1080
+  }
+ },
+ "stress_v6_defects": [],
+ "stress_v6_staggered_check": {
+  "g_entry_bar_funding_events": 0,
+  "g_first_fill_at_8h_boundary": true,
+  "matched_entry_bar_funding_events": 0,
+  "matched_later_funding_events": 20,
+  "other_arm_held_and_paid_at_entry": true
+ }
+}

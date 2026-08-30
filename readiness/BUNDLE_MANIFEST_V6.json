@@ -1,0 +1,106 @@
+{
+ "bundle": "CHECKPOINT1_V6_GMATCHED_FUNDING_BUNDLE",
+ "checkpoint1_root_hash_v6": "484f538d8b5f9587f2e4ff1f06a061b7aab337b195d6038fdf123d444a886cf0",
+ "files": {
+  "BUILD_STATE.md": {
+   "bytes": 107607,
+   "sha256": "efb48a3924129d99edbe9149f6f5be3c1fb264b894cd25e8b726c62621bb01e4"
+  },
+  "CHECKPOINT1_REPORT_V5.md": {
+   "bytes": 5808,
+   "sha256": "8262e16dc3714aadc336846fc137451a432045cd2d95881d414233d58a56d486"
+  },
+  "CHECKPOINT1_REPORT_V6.md": {
+   "bytes": 4517,
+   "sha256": "b18b4d55a3ab8ac4a6000c890e5e5d165b9ec61759cfbd650d529668b5300e35"
+  },
+  "LIMITATIONS_V5.md": {
+   "bytes": 2938,
+   "sha256": "86e8b896b8f9cbf33271e97050b965f37146ebd2027b2083622272124f23b28b"
+  },
+  "build_state.json": {
+   "bytes": 14496,
+   "sha256": "215ae34713bef2fadf2d994f37847d0acb3e7eba71be62225e4cec2d557d6518"
+  },
+  "data/manifests/TESTS_RERUN_e1c2a34.json": {
+   "bytes": 450,
+   "sha256": "87bb9ac375de006491edb3870896bf54e43e431eccb65aeeecd8b211ba50eb3c"
+  },
+  "data/manifests/TESTS_RERUN_e1c2a34.txt": {
+   "bytes": 271,
+   "sha256": "73ad17b968109ec0f6b06701bd59e725197dcd92ed52c6823652a03d7e61eead"
+  },
+  "data/manifests/checkpoint1_root_hash_v5.json": {
+   "bytes": 5057,
+   "sha256": "20f1583e07e4f426707c59736cae21ea723e446a038342ec02eb6d24f565cc7d"
+  },
+  "data/manifests/checkpoint1_root_hash_v6.json": {
+   "bytes": 6611,
+   "sha256": "fb3796f13285dcc423704b263306fbffff321c50557f07f78c9f7126b7d4bd12"
+  },
+  "data/manifests/integrity_manifest_v5.json": {
+   "bytes": 18577,
+   "sha256": "44b39c47164b10344202325d589fcfc16796fbf34cec01c311feb11660bd3234"
+  },
+  "data/manifests/integrity_manifest_v6.json": {
+   "bytes": 18449,
+   "sha256": "0787e52d528d2d3ec8fbaf65c7ad37d88ef2ba57372851160f746be3052db87b"
+  },
+  "docs/dashboard_shakedown_v6.html": {
+   "bytes": 3446,
+   "sha256": "6cbb26e873be3c55ed64f841863af09168c81162b0286bd7c6bb2028e83898b7"
+  },
+  "lab/orchestration/competition.py": {
+   "bytes": 29632,
+   "sha256": "ba9eb5dfb8db7977287890d8b6381acf392a82c8df7cef639e3f186ad19344a3"
+  },
+  "lab/sim/engine.py": {
+   "bytes": 19963,
+   "sha256": "9070e3e4aedcc48dabc0218159e7806e3b868064d3f880fa7042f4f5dd9450f3"
+  },
+  "lab/tools/lock_integrity_v6.py": {
+   "bytes": 5458,
+   "sha256": "97970e56d820aeab62057fd6506471016749c78a1ebc8086b8e42c3bc9d66042"
+  },
+  "lab/tools/stress_fixture.py": {
+   "bytes": 15999,
+   "sha256": "b6197fb4f96b13a04cf5a6d2dd3df8d4225a51650465a49ea1acaf61e8e2108c"
+  },
+  "official_v6/shakedown/PROVENANCE_shakedown.json": {
+   "bytes": 20413,
+   "sha256": "22d68f7ed2a29ee5f779e779f73c0dfcc8757fcca1ade170013748fe396921b6"
+  },
+  "official_v6/shakedown/SHAKEDOWN_INVALID_manifest.json": {
+   "bytes": 91622,
+   "sha256": "50d7eb096558c94c2ea4965f61cf561208663e6371bc3aa06cc203e7790f068a"
+  },
+  "official_v6/stress/PROVENANCE_stress_fixture.json": {
+   "bytes": 14891,
+   "sha256": "3ec440384671b1d9c36b58e66bd533fdecf3f1818de7b77629ba91799b9606b5"
+  },
+  "official_v6/stress/STRESS_INVALID_manifest.json": {
+   "bytes": 4514,
+   "sha256": "5258ae7a928e277561aa4ed165a5ba5a557fcb35c836a2a46b8e6299577b0464"
+  },
+  "readiness/D74_ACCEPTANCE_EVIDENCE.json": {
+   "bytes": 71325,
+   "sha256": "89d659d36e77c129f9ec0755fbdc3bf8ade50dbbd5739cb5d227b15eb0ff4eba"
+  },
+  "readiness/D74_REGRESSION_FAIL_UNDER_V5.txt": {
+   "bytes": 5615,
+   "sha256": "bf19bf6ce6693ca62eb2537ad0c56104fbf93e3c4b72f40997b913989f7e5fae"
+  },
+  "readiness/D74_REGRESSION_PASS_AFTER_FIX.txt": {
+   "bytes": 99,
+   "sha256": "970c7995e16e26ba88c9eb8702fee95d6ce335884257006b38c8b37dad17eb57"
+  },
+  "tests/test_funding_constitutional.py": {
+   "bytes": 22807,
+   "sha256": "9752f84f859783e2c491ec0d5008436d4a36d89592a5eed9024cc6d3670f23f0"
+  }
+ },
+ "generated_utc": "2026-08-30T20:05:50Z",
+ "lineage": "V5 root 7104e277bc578fab1e64205a7ea822823b33ca5e3ab031088c6c7a7a271059c3 preserved NOT APPROVED (D74); V6 supersedes with the G_matched entry-bar funding exemption",
+ "n_files_listed": 24,
+ "note": "self-excluding manifest: the zip holds these files plus this manifest itself"
+}

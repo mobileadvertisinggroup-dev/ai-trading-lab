@@ -1,0 +1,86 @@
+{
+ "checkpoint1_root_hash_v6": "484f538d8b5f9587f2e4ff1f06a061b7aab337b195d6038fdf123d444a886cf0",
+ "components": {
+  "arm_e_portfolio_selection_v5": "3fdc0ba03fb78df0ba2118abb8ac07200522b619fd8172f97100292ddc22ae89",
+  "arm_e_selection_no_funding_history": "94570d6e9c4deef75d198338b42f4c30aa16309d1a6bb8971681d92846d6e29c",
+  "arm_f_sb3_manifest_no_funding_history": "c7e650f8a68258d37fc34990546c025ad74acb4f2fb9c8aaa64431c96283f8a5",
+  "arm_f_sb3_manifest_v5": "cd00c9f9b1caef3c5ffc116f273bff5708bb12d48f449d19197dbaa3c9afd38a",
+  "arm_f_sb3_selected_seed3": "3be34270b067da17f945484b1be62f147f20f14ea5128bc58f86c3c2b1dc1bd0",
+  "arm_f_statistics_report_v1_history": "6902d7cf28c8926692412e48b2fd504a6cb3f9f0ae1fac4287aa8ed8a40a1caa",
+  "arm_f_statistics_report_v2_history": "97f86dc4aa207d43aa75563fcf048573c17f7fd9d8a0aab614b5b709ab2966fd",
+  "arm_f_statistics_report_v3": "ba1de8cca3f76a0db4d235269b1cf54a6f7fba9874256edad3a445f8eec1301f",
+  "bc_train_selection": "0c51af3a0b48eb738ba8db06503aff2afe3dc9c4abf5ec57c7c29b5215d619c0",
+  "checkpoint1_report_v5_history": "8262e16dc3714aadc336846fc137451a432045cd2d95881d414233d58a56d486",
+  "checkpoint1_report_v6": "b18b4d55a3ab8ac4a6000c890e5e5d165b9ec61759cfbd650d529668b5300e35",
+  "d74_acceptance_evidence": "89d659d36e77c129f9ec0755fbdc3bf8ade50dbbd5739cb5d227b15eb0ff4eba",
+  "d74_regression_fail_under_v5": "bf19bf6ce6693ca62eb2537ad0c56104fbf93e3c4b72f40997b913989f7e5fae",
+  "d74_regression_pass_after_fix": "970c7995e16e26ba88c9eb8702fee95d6ce335884257006b38c8b37dad17eb57",
+  "dashboard_v5_history": "11c57e0f4f9ad6bb4532504329f2cd1a21a574899db08906e3e926cc7ff668f7",
+  "dashboard_v6": "6cbb26e873be3c55ed64f841863af09168c81162b0286bd7c6bb2028e83898b7",
+  "funding_diffs": "c3c1780dd5aa5dec7234afa2fe2b5bd55da37cf4a10fb7fc686b0dba0f7c74a2",
+  "funding_evidence": "1553f38e04ff119ca6b41d952d42a98330e28c6ab2dc65110f2e4bad94b5c226",
+  "integrity_manifest_v4_history": "73818999ab3fc13937e11a49f5cb5835669c8b23b4c3bef2327afc6b4994c848",
+  "integrity_manifest_v5_history": "44b39c47164b10344202325d589fcfc16796fbf34cec01c311feb11660bd3234",
+  "integrity_manifest_v6": "0787e52d528d2d3ec8fbaf65c7ad37d88ef2ba57372851160f746be3052db87b",
+  "invalidation_lineage": "ad9336becae4e21931e5fe733bed0b397d41fb66c5c96ddb9e8d1a430e2d6876",
+  "lake_manifest": "c1ef7262f62b9cbb1cc12b6405ecc21c1898233e8e699c89bd16d31e8e2211ac",
+  "learnability_report_v3": "62abec0160eadc5450de902f6a2cf1ae3eb41a1a5e3887ea1da92e62807bbf65",
+  "limitations_v5": "86e8b896b8f9cbf33271e97050b965f37146ebd2027b2083622272124f23b28b",
+  "model_manifest_v5": "5f010c7d83fef9306b97f6458fb2c4c6a1cdf25b454ad3fba4e96fbf5eaf1859",
+  "partition_meta": "735f0ecaef51c17deeebd95e543c7f272220f5d730f2780f7c7ecb1f7dd69305",
+  "predecessor_root_v1_not_approved": "80c7c5b578ce168a4a391812e560aa451a3f2dc20af8993d950158d11dcabcaf",
+  "predecessor_root_v2_not_approved": "695823719461ef15b6adf2e3f3cdbcd74bbb76cf58b63da8db67f11680a88346",
+  "predecessor_root_v3_not_approved": "befcb96db4486f56ea3b755ec1cc96860255a280ef5ea06179c614167b775640",
+  "predecessor_root_v4_approved_superseded_for_cp2": "0de3c9ab4dd1b0bc4e774d10550ffe3e1fc2a972173d780cb28484bdeb469fe9",
+  "predecessor_root_v5_not_approved": "7104e277bc578fab1e64205a7ea822823b33ca5e3ab031088c6c7a7a271059c3",
+  "prereg_arm_e_portfolio_amended": "4bb0d5953fd3c7b79c10f1b32b161ddfa71c24b4c837e215b99d607f30f94a7a",
+  "prereg_arm_f_baseline": "7d9016b16c130c4c57e4f17e57967063a88a305a9eb5f39c2b6c746e3c9b57de",
+  "prereg_arm_f_sb3_amended": "41b63bcef865fbf5ee4d0d437f7d5111a9def0a7b938b02f65a2d92e31b8109a",
+  "protocol": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+  "provenance_arm_e_portfolio_v5": "0ecdd01489c182264ff94e99f17b1f6d228051f7e89619567584ff65e1b8d03e",
+  "provenance_report_arm_f_v3": "842dcd731bb3598ff2006d124916d4543d24ed4d65c60ea7798bbe336ce22f9b",
+  "provenance_shakedown_v5_history": "c795536a133417e81432b75bbf939b63e253f9bcaa3d63615b9b1d16085b2404",
+  "provenance_shakedown_v6": "22d68f7ed2a29ee5f779e779f73c0dfcc8757fcca1ade170013748fe396921b6",
+  "provenance_stress_fixture_v5_history": "bbfd68411b05b6d50045fe8c89691f0ae7379e8022c1b6055964331959e36582",
+  "provenance_stress_fixture_v6": "3ec440384671b1d9c36b58e66bd533fdecf3f1818de7b77629ba91799b9606b5",
+  "provenance_train_arm_f_sb3_v5": "214326d35ec54e2e1a83494bd1bc01ccafdf53e90e12293d172ad216230d5c9a",
+  "risk_policy": "9591f11da0bf6265ca8c7a6ba9b28b73941a33ac45060a5f37a746442f6f5608",
+  "shakedown_v5_manifest_history": "099a4a7e73e96e3abafee30230a6fcb8f216fde83f20764b78c4b03d8510052f",
+  "shakedown_v6_manifest": "50d7eb096558c94c2ea4965f61cf561208663e6371bc3aa06cc203e7790f068a",
+  "spec": "84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8",
+  "spec_amendment_a1_gshadow": "baef30966ffa047f2c629a5990bf7901e33dab176b8b88e1ff7c739f10f20b3b",
+  "stress_fixture_v5_manifest_history": "3919cb2f4b6d1bc47f1ca87bbe0c0f2b2beae7fb28b659d31af4e395307025dd",
+  "stress_fixture_v6_manifest": "5258ae7a928e277561aa4ed165a5ba5a557fcb35c836a2a46b8e6299577b0464",
+  "tests_rerun_8835529_history": "c7551113823c2a91c49a6fe3f19132d5b75563d65b05b68d85f62cebbf879433",
+  "tests_rerun_e1c2a34": "73ad17b968109ec0f6b06701bd59e725197dcd92ed52c6823652a03d7e61eead"
+ },
+ "computed_utc": "2026-08-30T20:05:13Z",
+ "note": "sha256 over the canonical JSON of the component hashes; preserve this hash EXTERNALLY per spec \u00a721. Replacement Checkpoint 1 V6 (D74 G_matched entry-bar funding fix); explicit V5->V6 lineage \u2014 V5 preserved NOT APPROVED.",
+ "predecessors": [
+  {
+   "file": "checkpoint1_root_hash.json",
+   "root_hash": "80c7c5b578ce168a4a391812e560aa451a3f2dc20af8993d950158d11dcabcaf",
+   "status": "PRESERVED EXTERNALLY, NOT APPROVED (v1)"
+  },
+  {
+   "file": "checkpoint1_root_hash_v2.json",
+   "root_hash": "695823719461ef15b6adf2e3f3cdbcd74bbb76cf58b63da8db67f11680a88346",
+   "status": "PRESERVED EXTERNALLY, NOT APPROVED (v2)"
+  },
+  {
+   "file": "checkpoint1_root_hash_v3.json",
+   "root_hash": "befcb96db4486f56ea3b755ec1cc96860255a280ef5ea06179c614167b775640",
+   "status": "PRESERVED EXTERNALLY, NOT APPROVED (v3)"
+  },
+  {
+   "file": "checkpoint1_root_hash_v4.json",
+   "root_hash": "0de3c9ab4dd1b0bc4e774d10550ffe3e1fc2a972173d780cb28484bdeb469fe9",
+   "status": "APPROVED (D66), PRESERVED EXTERNALLY; SUPERSEDED FOR CHECKPOINT-2 ELIGIBILITY (D72)"
+  },
+  {
+   "file": "checkpoint1_root_hash_v5.json",
+   "root_hash": "7104e277bc578fab1e64205a7ea822823b33ca5e3ab031088c6c7a7a271059c3",
+   "status": "PRESERVED EXTERNALLY, NOT APPROVED (v5 \u2014 D74 G_matched entry-bar funding ordering blocker)"
+  }
+ ]
+}

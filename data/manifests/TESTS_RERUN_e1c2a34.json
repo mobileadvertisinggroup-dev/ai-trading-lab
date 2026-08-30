@@ -1,0 +1,8 @@
+{
+ "commit": "e1c2a34",
+ "worktree": "/home/user/lake-work/wt-d74 (detached, clean)",
+ "result": "210 passed in 71.57s (0:01:11)",
+ "output_sha256": "73ad17b968109ec0f6b06701bd59e725197dcd92ed52c6823652a03d7e61eead",
+ "utc": "2026-08-30T19:58:29Z",
+ "note": "D74 closure: full suite incl. the differential harness and the 19-test funding battery (4 staggered D74 regressions proven FAIL under V5, PASS after the position-level entry-bar exemption)"
+}
