@@ -1,0 +1,209 @@
+{
+ "_description": "D76 item 5: funding is NONZERO and event-to-equity reconciled for every applicable arm and both G diagnostics during the V6 full-size surrogate dress rehearsal (production CLI; the all-zero activity guard ran live and PASSED after failing the first attempt closed on the flat-funding-layout defect)",
+ "generated_utc": "2026-08-30T20:48:10Z",
+ "per_engine": {
+  "A": {
+   "by_side": {
+    "long_paid": -58.69529674816055,
+    "short_paid": 54.319175317435686
+   },
+   "by_sign": {
+    "paid_negative_count": 3043,
+    "paid_negative_sum": -475.1794839818842,
+    "paid_positive_count": 2807,
+    "paid_positive_sum": 470.8033625511585,
+    "paid_zero_count": 65
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": 4.376121430724795,
+   "guard": {
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 5915,
+   "n_missing": 1469,
+   "total_paid": -4.376121430724795
+  },
+  "B": {
+   "by_side": {
+    "long_paid": -0.39575056313324136,
+    "short_paid": 38.69138200501901
+   },
+   "by_sign": {
+    "paid_negative_count": 181,
+    "paid_negative_sum": -12.29373154844912,
+    "paid_positive_count": 81,
+    "paid_positive_sum": 50.5893629903349,
+    "paid_zero_count": 1
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -38.29563144188576,
+   "guard": {
+    "ok": true,
+    "reason": "window/trade count below the multi-month threshold"
+   },
+   "n_applied": 263,
+   "n_missing": 113,
+   "total_paid": 38.29563144188576
+  },
+  "C": {
+   "by_side": {
+    "long_paid": -53.06074939263101,
+    "short_paid": 89.18050747675416
+   },
+   "by_sign": {
+    "paid_negative_count": 2520,
+    "paid_negative_sum": -395.8575602476102,
+    "paid_positive_count": 2525,
+    "paid_positive_sum": 431.97731833173293,
+    "paid_zero_count": 58
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -36.11975808412328,
+   "guard": {
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 5103,
+   "n_missing": 1353,
+   "total_paid": 36.11975808412328
+  },
+  "D": {
+   "by_side": {
+    "long_paid": 152.93776302932946,
+    "short_paid": -3.696648368627807
+   },
+   "by_sign": {
+    "paid_negative_count": 2338,
+    "paid_negative_sum": -159.47791424472504,
+    "paid_positive_count": 3281,
+    "paid_positive_sum": 308.719028905427,
+    "paid_zero_count": 52
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -149.2411146607017,
+   "guard": {
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 5671,
+   "n_missing": 1559,
+   "total_paid": 149.2411146607017
+  },
+  "E": {
+   "by_side": {
+    "long_paid": 78.71516963862935,
+    "short_paid": 78.00634087554202
+   },
+   "by_sign": {
+    "paid_negative_count": 3578,
+    "paid_negative_sum": -267.2380620058221,
+    "paid_positive_count": 3864,
+    "paid_positive_sum": 423.95957251999323,
+    "paid_zero_count": 63
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -156.72151051417134,
+   "guard": {
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 7505,
+   "n_missing": 2404,
+   "total_paid": 156.72151051417134
+  },
+  "F": {
+   "by_side": {
+    "long_paid": 34.742891619583226,
+    "short_paid": 64.340069573413
+   },
+   "by_sign": {
+    "paid_negative_count": 780,
+    "paid_negative_sum": -125.99846184485735,
+    "paid_positive_count": 1297,
+    "paid_positive_sum": 225.0814230378538,
+    "paid_zero_count": 17
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -99.08296119299611,
+   "guard": {
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 2094,
+   "n_missing": 669,
+   "total_paid": 99.08296119299611
+  },
+  "G": {
+   "by_side": {
+    "long_paid": -0.32577595192794806,
+    "short_paid": 2.9363765716652233
+   },
+   "by_sign": {
+    "paid_negative_count": 9,
+    "paid_negative_sum": -0.611874646399104,
+    "paid_positive_count": 3,
+    "paid_positive_sum": 3.222475266136379,
+    "paid_zero_count": 0
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -2.610600619737275,
+   "guard": {
+    "ok": true,
+    "reason": "window/trade count below the multi-month threshold"
+   },
+   "n_applied": 12,
+   "n_missing": 8,
+   "total_paid": 2.610600619737275
+  },
+  "G_feasible": {
+   "by_side": {
+    "long_paid": -0.4070387621240904,
+    "short_paid": 2.355260206765748
+   },
+   "by_sign": {
+    "paid_negative_count": 81,
+    "paid_negative_sum": -3.5347290738902992,
+    "paid_positive_count": 35,
+    "paid_positive_sum": 5.4829505185319585,
+    "paid_zero_count": 0
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -1.9482214446416573,
+   "guard": null,
+   "n_applied": 116,
+   "n_missing": 36,
+   "total_paid": 1.9482214446416573
+  },
+  "G_matched": {
+   "by_side": {
+    "long_paid": -0.3901189641939062,
+    "short_paid": 2.2572827016624446
+   },
+   "by_sign": {
+    "paid_negative_count": 81,
+    "paid_negative_sum": -3.4632866463472674,
+    "paid_positive_count": 35,
+    "paid_positive_sum": 5.330450383815808,
+    "paid_zero_count": 0
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -1.8671637374685393,
+   "guard": null,
+   "n_applied": 116,
+   "n_missing": 36,
+   "total_paid": 1.8671637374685393
+  }
+ },
+ "rounds": {
+  "invalid": 0,
+  "total": 2463,
+  "valid": 2463
+ },
+ "window": {
+  "end_ms": 1752134400000,
+  "n_boundaries": 2463,
+  "n_valid_rounds": 2463,
+  "start_ms": 1716681600000
+ }
+}

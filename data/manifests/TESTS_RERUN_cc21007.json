@@ -1,0 +1,18 @@
+{
+ "commit": "cc21007",
+ "worktree": "/home/user/lake-work/wt-d76b (detached, clean)",
+ "result_full_suite": "210 passed in 30.32s",
+ "result_failclosed_batteries": "69 passed in 5.04s",
+ "batteries": [
+  "test_holdout_gate",
+  "test_authz_negative",
+  "test_checkpoint2_readiness",
+  "test_seal_access",
+  "test_pipelines_leaks",
+  "test_gate_fault_injection",
+  "test_funding_constitutional"
+ ],
+ "output_sha256": "1be8756213a68f4676bbfccdd248a39c36fe58976e7c11848bcf69e331e80c9c",
+ "utc": "2026-08-30T20:38:13Z",
+ "note": "D76 item 3 at the FINAL commit (incl. the flat-funding overlay defect fix + regression): all fail-closed, authorization-negative, cleanup, publication, funding, and one-opening tests from one clean immutable worktree"
+}

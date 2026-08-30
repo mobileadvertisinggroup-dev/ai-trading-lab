@@ -48,14 +48,26 @@ PASS-after-fix; arms A–G byte-identical.
 - Full suite 210/210; the fail-closed, authorization-negative,
   cleanup, publication, funding, and one-opening batteries 69/69
   (`TESTS_RERUN_d6aaeeb`).
-- FULL-SIZE surrogate dress rehearsal re-run through the exact
-  production CLI with the FINAL V6 evaluator and corrected models
-  (`DRESS_REHEARSAL_EVIDENCE_V6.json`): ephemeral in-process keypair,
-  isolated manifests dir + fresh ledger, real ledger verified
+- **The guard caught a real defect live.** The FIRST V6 rehearsal
+  FAILED CLOSED in its isolated environment: the funding activity
+  guard stopped the evaluation ("arm A: 7384 funding boundaries
+  crossed, ZERO rates applied"). Root cause: the seal preserves the
+  lake's FLAT funding layout (`funding/SYMBOL.parquet`) but the
+  overlay reader only globbed the nested layout — every overlay
+  funding file was silently invisible, and the synthetic fixture's
+  nested layout had masked it. The REAL opening would have hit this
+  AFTER spending the claim; the directed rehearsal + guard caught it
+  first (`DRESS_REHEARSAL_V6_GUARD_FAILCLOSED.json`; real ledger
+  verified unchanged). Fixed at `cc21007` (`_read_overlay` reads both
+  layouts) with a flat-layout regression test; the locked-file test
+  change is pre-recorded for the v7 reason-keyed lock.
+- FULL-SIZE surrogate dress rehearsal RE-RUN through the exact
+  production CLI with the FINAL (fixed) V6 evaluator and corrected
+  models (`DRESS_REHEARSAL_EVIDENCE_V6.json`): ephemeral in-process
+  keypair, isolated manifests dir + fresh ledger, real ledger verified
   unchanged, real authorization never created. Funding in the
   rehearsal is NONZERO and event-to-equity reconciled for every
-  applicable arm (`SURROGATE_FUNDING_RECONCILIATION_V6.json`) —
-  the guard that would fail closed on all-zero funding ran live.
+  applicable arm (`SURROGATE_FUNDING_RECONCILIATION_V6.json`).
 - `checkpoint2_resource_profile.json` re-measured under the V6
   evaluator (consumed by the pre-claim resource preflight).
 

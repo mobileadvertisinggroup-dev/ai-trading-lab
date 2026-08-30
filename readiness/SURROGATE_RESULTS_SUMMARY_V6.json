@@ -1,0 +1,199 @@
+{
+ "_description": "Statistics-only summary of the V6 surrogate dress rehearsal results (NON-holdout validation-span rows; adjudicates nothing)",
+ "funding_reconciliation_totals": {
+  "A": {
+   "applied": 5915,
+   "missing": 1469,
+   "net": 4.376121430724795
+  },
+  "B": {
+   "applied": 263,
+   "missing": 113,
+   "net": -38.29563144188576
+  },
+  "C": {
+   "applied": 5103,
+   "missing": 1353,
+   "net": -36.11975808412328
+  },
+  "D": {
+   "applied": 5671,
+   "missing": 1559,
+   "net": -149.2411146607017
+  },
+  "E": {
+   "applied": 7505,
+   "missing": 2404,
+   "net": -156.72151051417134
+  },
+  "F": {
+   "applied": 2094,
+   "missing": 669,
+   "net": -99.08296119299611
+  },
+  "G": {
+   "applied": 12,
+   "missing": 8,
+   "net": -2.610600619737275
+  },
+  "G_feasible": {
+   "applied": 116,
+   "missing": 36,
+   "net": -1.9482214446416573
+  },
+  "G_matched": {
+   "applied": 116,
+   "missing": 36,
+   "net": -1.8671637374685393
+  }
+ },
+ "honest_note": "Pre-registered prior expectation: no challenger meets the success criterion; negative results are preserved as-is.",
+ "il_assessment": {
+  "ci95": {
+   "auc": [
+    0.48182236326372063,
+    0.5961562182303458
+   ],
+   "rank_ic": [
+    -0.05412481755080928,
+    0.11805697207249057
+   ]
+  },
+  "conditions": {
+   "a_p": true,
+   "b_ci": true,
+   "c_power": false
+  },
+  "method": "fixed-score rotation permutation + circular moving-block bootstrap (Amendment A1; no refitting)",
+  "n": 753,
+  "observed": {
+   "auc": 0.5430474333983106,
+   "rank_ic": 0.0398199234216135
+  },
+  "p_upper": {
+   "auc": 0.15422885572139303,
+   "rank_ic": 0.43781094527363185
+  },
+  "power_at_mue": {
+   "auc": 0.33823519355811726,
+   "rank_ic": 0.19289187685336406
+  },
+  "seeds": {
+   "bootstrap": 20260904,
+   "permutation": 20260903
+  },
+  "unique_boundaries": 453,
+  "verdict": "UNDERPOWERED \u2014 NO EVIDENCE EITHER WAY"
+ },
+ "rounds": {
+  "invalid": 0,
+  "total": 2463,
+  "valid": 2463
+ },
+ "statistics": {
+  "arms": {
+   "A": {
+    "dd95_bootstrap_decimal": 0.6310084639979411,
+    "final_equity": 10482.938864798973,
+    "max_drawdown_observed_decimal": 0.35781402949702945,
+    "sortino_annualized_observed": 0.519207495038183
+   },
+   "B": {
+    "dd95_bootstrap_decimal": 0.17712488166535217,
+    "final_equity": 10246.917199635185,
+    "max_drawdown_observed_decimal": 0.10821415777052368,
+    "sortino_annualized_observed": 0.40343230957805365
+   },
+   "C": {
+    "dd95_bootstrap_decimal": 0.6738214059090328,
+    "final_equity": 8736.641437470187,
+    "max_drawdown_observed_decimal": 0.44912282719032515,
+    "sortino_annualized_observed": -0.08256459888826674
+   },
+   "D": {
+    "dd95_bootstrap_decimal": 0.6351997561261508,
+    "final_equity": 7389.728974214254,
+    "max_drawdown_observed_decimal": 0.3338362075903175,
+    "sortino_annualized_observed": -0.6994967120194311
+   },
+   "E": {
+    "dd95_bootstrap_decimal": 0.39766615562610996,
+    "final_equity": 12159.909966835407,
+    "max_drawdown_observed_decimal": 0.20551244475143216,
+    "sortino_annualized_observed": 0.9602101161513423
+   },
+   "F": {
+    "dd95_bootstrap_decimal": 0.6367375518659967,
+    "final_equity": 7441.501020049779,
+    "max_drawdown_observed_decimal": 0.3981811583142839,
+    "sortino_annualized_observed": -0.8557534589088716
+   },
+   "G": {
+    "dd95_bootstrap_decimal": 0.009953430879644865,
+    "final_equity": 10106.718705039864,
+    "max_drawdown_observed_decimal": 0.0060325896216555375,
+    "sortino_annualized_observed": 1.8569324950092538
+   }
+  },
+  "inference": {
+   "B": {
+    "drawdown_constraint_pass": true,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.45254745254745254
+   },
+   "C": {
+    "drawdown_constraint_pass": false,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.7852147852147852
+   },
+   "D": {
+    "drawdown_constraint_pass": false,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.8911088911088911
+   },
+   "E": {
+    "drawdown_constraint_pass": true,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.1938061938061938
+   },
+   "F": {
+    "drawdown_constraint_pass": false,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.8211788211788211
+   },
+   "G": {
+    "drawdown_constraint_pass": true,
+    "improves_over_A": false,
+    "p_holm": 1.0,
+    "p_upper_raw": 0.24475524475524477
+   },
+   "_procedure": {
+    "bootstrap": {
+     "block_len_4h": 168,
+     "n": 1000,
+     "paired": true,
+     "seed": 20260902
+    },
+    "correction": "Holm-Bonferroni, family alpha 0.05 (frozen)",
+    "drawdown_constraint": "DD95(X) <= DD95(A), paired (frozen)"
+   }
+  },
+  "primary_statistic": "annualized Sortino of 4h portfolio returns (frozen)"
+ },
+ "symbol_census": {
+  "combined": 500,
+  "overlay_only": 0,
+  "pre_only": 12
+ },
+ "window": {
+  "end_ms": 1752134400000,
+  "n_boundaries": 2463,
+  "n_valid_rounds": 2463,
+  "start_ms": 1716681600000
+ }
+}

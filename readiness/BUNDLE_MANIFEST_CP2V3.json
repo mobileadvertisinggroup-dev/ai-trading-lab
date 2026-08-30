@@ -1,0 +1,85 @@
+{
+ "approved_checkpoint1_root_v6": "484f538d8b5f9587f2e4ff1f06a061b7aab337b195d6038fdf123d444a886cf0",
+ "bundle": "CHECKPOINT2_READINESS_BUNDLE_V3",
+ "files": {
+  "BUILD_STATE.md": {
+   "bytes": 111375,
+   "sha256": "a35df3685ac78cf17ba67897bec4866ed6565a042a2f4e696832c7074dd62431"
+  },
+  "CHECKPOINT2_AUTHORIZATION_PROCEDURE.md": {
+   "bytes": 7629,
+   "sha256": "479d286550ffa977604a99f72ff305345bfbcd09c7639dc095b7e7338b9c4b75"
+  },
+  "build_state.json": {
+   "bytes": 14526,
+   "sha256": "6ddbdefb09a6d82bc94b64dde1da42b8ad204502b9690a8e79c45bd7c2d130f5"
+  },
+  "data/manifests/TESTS_RERUN_cc21007.json": {
+   "bytes": 745,
+   "sha256": "1be40504b792f96e6e05df261debb1d3109b0adba8ca2615a66c873319bea1c0"
+  },
+  "data/manifests/TESTS_RERUN_cc21007.txt": {
+   "bytes": 261,
+   "sha256": "1be8756213a68f4676bbfccdd248a39c36fe58976e7c11848bcf69e331e80c9c"
+  },
+  "data/manifests/checkpoint1_root_hash_v6.json": {
+   "bytes": 6611,
+   "sha256": "fb3796f13285dcc423704b263306fbffff321c50557f07f78c9f7126b7d4bd12"
+  },
+  "data/manifests/checkpoint2_frozen_inputs.json": {
+   "bytes": 2121,
+   "sha256": "a9a2aa6c5e9ab9a79839b1086c7f2cdf2f086ce8234f3ed6267e0c5a9a92b01e"
+  },
+  "data/manifests/checkpoint2_resource_profile.json": {
+   "bytes": 483,
+   "sha256": "b4f9d9e108816aceea97e6696d94a99077f54e8adbb165853671bde0659b8f2f"
+  },
+  "data/manifests/integrity_manifest_v6.json": {
+   "bytes": 18449,
+   "sha256": "0787e52d528d2d3ec8fbaf65c7ad37d88ef2ba57372851160f746be3052db87b"
+  },
+  "data/manifests/model_manifest_v5.json": {
+   "bytes": 3194,
+   "sha256": "5f010c7d83fef9306b97f6458fb2c4c6a1cdf25b454ad3fba4e96fbf5eaf1859"
+  },
+  "readiness/DRESS_REHEARSAL_EVIDENCE_V6.json": {
+   "bytes": 1700,
+   "sha256": "ae664edf118a61ed9fdeacb4b8f45aabfb267da3d6a238a3f7e302dcdc75c9ae"
+  },
+  "readiness/DRESS_REHEARSAL_V6_GUARD_FAILCLOSED.json": {
+   "bytes": 2645,
+   "sha256": "176867142dd6dfba33814f3f09dbd1827d57c094bb3d70421349d2d736e1fca3"
+  },
+  "readiness/FROZEN_INPUTS_RESOLUTION_CHECK.json": {
+   "bytes": 562,
+   "sha256": "1472dbb13023b5508e4ae87007a9d62a8ea58c87bc17405df0ca5903424423ad"
+  },
+  "readiness/MAC_HOST_CHECK_COMMAND.txt": {
+   "bytes": 2261,
+   "sha256": "8a544e869ad377531ba2bdd6c10e89153298553bff35ec4dcbdbd26423396799"
+  },
+  "readiness/MAC_LOCAL_EXECUTION_PLAN.md": {
+   "bytes": 4956,
+   "sha256": "e79eb230398391f4b4151a8bb69da792f31449b320205cc1efebe6156b0b4dd8"
+  },
+  "readiness/READINESS_V2_TO_V3_CHANGES.md": {
+   "bytes": 4922,
+   "sha256": "92f608e43285151f750f39edce7deb88b2b3c422a737250658d6eb767659a8a4"
+  },
+  "readiness/SURROGATE_FUNDING_RECONCILIATION_V6.json": {
+   "bytes": 5434,
+   "sha256": "0162e6b54f6e5266ca505c50a02405a5a3c2ac3fdf6cb5793d47aaac3d4d1d88"
+  },
+  "readiness/SURROGATE_RESULTS_SUMMARY_V6.json": {
+   "bytes": 4916,
+   "sha256": "6d9b9d5e2e1a9edf8989b1e92b0c7c85fd695474fdcfda033cedc24108487e19"
+  }
+ },
+ "generated_utc": "2026-08-30T20:48:17Z",
+ "n_files_listed": 18,
+ "note": "focused: final readiness evidence + V2->V3 changes only; self-excluding manifest \u2014 the zip holds these files plus this manifest itself",
+ "predecessor_bundles": {
+  "v1": "f4c05e96... (D68)",
+  "v2": "8f0c0b2a... (D69)"
+ }
+}

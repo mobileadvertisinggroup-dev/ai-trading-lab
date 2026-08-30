@@ -1,0 +1,46 @@
+{
+  "artifact": {
+    "artifact_bytes": 503828903,
+    "artifact_sha256": "17d241f8aae7f92698af0a919e37096dad9123b067bf20fa1ddecf0e96022e94",
+    "n_files": 6052,
+    "rows": 14883213,
+    "tar_bytes": 503705600
+  },
+  "ephemeral_key": "generated in-process, used once on the pty, discarded; the key holder's key was never requested",
+  "profile": {
+    "ciphertext_bytes": 503828903,
+    "decrypted_tar_bytes": 503705600,
+    "entry_point": "python -m lab.data.unseal (production CLI, pty)",
+    "measured_utc": "2026-08-30T20:47:40Z",
+    "peak_rss_bytes": 7841607680,
+    "purpose": "measured surrogate resource profile for the pre-claim resource preflight (D69 blocker 4)",
+    "results_bytes": 44392728,
+    "runtime_seconds": 502.5,
+    "surrogate_window_ms": [
+      1716681600000,
+      1752134400000
+    ],
+    "tmpfs_high_water_bytes": 934955764
+  },
+  "real_artifact": "never opened, never read",
+  "real_authorization_created": false,
+  "real_ledger_sha_after": "ABSENT",
+  "real_ledger_sha_before": "ABSENT",
+  "real_ledger_unchanged": true,
+  "results_bytes": 44392728,
+  "results_written": true,
+  "run": {
+    "exit_ok": true,
+    "exit_status": 0,
+    "identity_prompt_answered": true,
+    "peak_rss_bytes": 7841607680,
+    "runtime_seconds": 502.5,
+    "tmpfs_high_water_bytes": 934955764,
+    "transcript_tail": "Paste the AGE-SECRET-KEY line (input hidden, never stored): \r\nHoldout evaluation complete; the state ledger records CONSUMED. Results: /home/user/lake-work/rehearsal_v6b/rehearsal-vj5f6x3h/surrogate_results.json\r\n"
+  },
+  "surrogate_ledger_events": [
+    "OPENING_STARTED",
+    "CONSUMED"
+  ],
+  "workdir": "/home/user/lake-work/rehearsal_v6b/rehearsal-vj5f6x3h"
+}

@@ -1,15 +1,15 @@
 {
-  "ciphertext_bytes": 503828856,
+  "ciphertext_bytes": 503828903,
   "decrypted_tar_bytes": 503705600,
   "entry_point": "python -m lab.data.unseal (production CLI, pty)",
-  "measured_utc": "2026-08-29T18:32:13Z",
-  "peak_rss_bytes": 7777550336,
+  "measured_utc": "2026-08-30T20:47:40Z",
+  "peak_rss_bytes": 7841607680,
   "purpose": "measured surrogate resource profile for the pre-claim resource preflight (D69 blocker 4)",
-  "results_bytes": 43765536,
-  "runtime_seconds": 842.9,
+  "results_bytes": 44392728,
+  "runtime_seconds": 502.5,
   "surrogate_window_ms": [
     1716681600000,
     1752134400000
   ],
-  "tmpfs_high_water_bytes": 1002794052
+  "tmpfs_high_water_bytes": 934955764
 }
