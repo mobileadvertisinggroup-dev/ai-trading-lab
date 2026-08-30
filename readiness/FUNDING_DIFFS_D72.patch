@@ -1,0 +1,1052 @@
+diff --git a/lab/arms/rl_env.py b/lab/arms/rl_env.py
+index 646164d..24f7567 100644
+--- a/lab/arms/rl_env.py
++++ b/lab/arms/rl_env.py
+@@ -80,6 +80,14 @@ class TradeManagementEnv(gym.Env):
+         if "atr_entry" not in trade or not trade["atr_entry"] > 0:
+             raise ValueError("trade.atr_entry (entry-decision ATR) required")
+         self.portfolio_exposure = float(portfolio_exposure)
++        # D72: frozen per-episode funding rates {funding_time_ms: rate}
++        # for the episode symbol, sourced from the verified lake at
++        # episode build time. A funding boundary with no recorded rate
++        # stays absent — the engine's frozen missing-funding rule emits
++        # a loud funding_missing event; nothing is silently filled.
++        self._funding = {int(k): float(v) for k, v in
++                         (trade.get("funding_by_time") or {}).items()}
++        self._prev_close: dict[str, float] = {}
+         self._atr_t = np.asarray(trade.get("atr_t4_close_ms", []),
+                                  dtype=np.int64)
+         self._atr_v = np.asarray(trade.get("atr_values", []), dtype=float)
+@@ -94,6 +102,21 @@ class TradeManagementEnv(gym.Env):
+         self._steps_per_decision = P.BAR_4H_MS // P.BAR_15M_MS
+ 
+     # ------------------------------------------------------------ helpers
++    def _process_bar(self, b: Bar):
++        """One engine bar with the frozen funding map and previous-close
++        mark — identical semantics to the official ArmARunner (D72):
++        funding transfers hit cash and the position's funding_paid, so
++        the terminal reward reflects the policy's ACTUAL holding
++        duration and reductions."""
++        f = {}
++        if b.open_time % P.FUNDING_INTERVAL_MS == 0:
++            rate = self._funding.get(int(b.open_time))
++            if rate is not None:
++                f = {"X": rate}
++        self.engine.process_bar_time(b.open_time, {"X": b}, funding=f,
++                                     prev_close=dict(self._prev_close))
++        self._prev_close["X"] = b.close
++
+     def _exposure_at(self, t: int) -> float:
+         if not self.exposure_recorded:
+             return 0.0             # documented no-recorded-exposure rule
+@@ -159,8 +182,8 @@ class TradeManagementEnv(gym.Env):
+             costs=Costs(c["hs"], c["slip"], c["fee"]),
+             stop_offset=float(t["r_dist"]),
+             target_offset=P.TARGET_R_MULT * float(t["r_dist"]))
+-        self.engine.process_bar_time(self.bars[0].open_time,
+-                                     {"X": self.bars[0]})
++        self._prev_close = {}
++        self._process_bar(self.bars[0])
+         self._i = 0
+         # obs-v2 parity: decisions align with 4h BOUNDARIES exactly as in
+         # the orchestrator (state = bars processed through boundary-15m);
+@@ -169,8 +192,7 @@ class TradeManagementEnv(gym.Env):
+         while (self._i + 1 < n
+                and self.bars[self._i + 1].open_time % P.BAR_4H_MS != 0):
+             self._i += 1
+-            b = self.bars[self._i]
+-            self.engine.process_bar_time(b.open_time, {"X": b})
++            self._process_bar(self.bars[self._i])
+             if self.engine.positions[1].closed:
+                 break
+         self._executed_actions = 0
+@@ -201,7 +223,7 @@ class TradeManagementEnv(gym.Env):
+         while self._i + 1 < n:
+             self._i += 1
+             b = self.bars[self._i]
+-            self.engine.process_bar_time(b.open_time, {"X": b})
++            self._process_bar(b)
+             p = self.engine.positions[1]
+             if p.closed:
+                 break
+diff --git a/lab/orchestration/competition.py b/lab/orchestration/competition.py
+index 963aac6..56ad5a9 100644
+--- a/lab/orchestration/competition.py
++++ b/lab/orchestration/competition.py
+@@ -461,6 +461,30 @@ class Competition:
+         return ([self.shadow_matched, self.shadow_feasible]
+                 if self.diagnostics else [])
+ 
++    def _funding_at(self, t: int) -> dict[str, float]:
++        """D72 blocker A: the frozen per-bar funding map, constructed
++        IDENTICALLY to the official ArmARunner — at each funding
++        boundary, the rate recorded at exactly t for every symbol with
++        an open position in ANY engine (arms A–G and both G
++        diagnostics; each engine applies rates only to its own open
++        positions, so the shared superset map is per-engine identical
++        to ArmARunner's construction). Symbols without a recorded rate
++        stay ABSENT — the engine's frozen missing-funding rule then
++        emits a loud funding_missing event; nothing is silently
++        filled."""
++        if t % P.FUNDING_INTERVAL_MS:
++            return {}
++        states = list(self.arms.values()) + self._diagnostic_states()
++        out: dict[str, float] = {}
++        for st in states:
++            for p in st.engine.open_positions():
++                if p.symbol in out:
++                    continue
++                rate = self.provider.funding(p.symbol).get(t)
++                if rate is not None:
++                    out[p.symbol] = rate
++        return out
++
+     def _mirror_g_fills(self):
+         """G matched-entry diagnostic (D61 blocker A): mirror every NEW
+         actual G fill into the matched engine at the identical timestamp,
+@@ -543,14 +567,20 @@ class Competition:
+             # diagnostic engines process the SAME bar LAST, so a fresh
+             # clone receives the identical same-bar stop/target sweep,
+             # mark, and MFE/MAE updates under exact engine semantics.
++            # D72: the frozen funding map is computed ONCE per bar from
++            # positions open BEFORE the bar (engine order: funding →
++            # exits → entries) and passed to every engine — arms and
++            # both G diagnostics — with ArmARunner/engine semantics.
++            fmap = self._funding_at(t)
+             for st in self.arms.values():
+-                st.engine.process_bar_time(t, bars,
++                st.engine.process_bar_time(t, bars, funding=fmap,
+                                            prev_close=dict(self._last_close))
+             if self.diagnostics:
+                 self._mirror_g_fills()
+                 for st in self._diagnostic_states():
+                     st.engine.process_bar_time(
+-                        t, bars, prev_close=dict(self._last_close))
++                        t, bars, funding=fmap,
++                        prev_close=dict(self._last_close))
+             for sym, b in bars.items():
+                 self._last_close[sym] = b.close
+             if boundary:
+diff --git a/lab/tools/holdout_evaluator.py b/lab/tools/holdout_evaluator.py
+index b81b850..793dd17 100644
+--- a/lab/tools/holdout_evaluator.py
++++ b/lab/tools/holdout_evaluator.py
+@@ -257,8 +257,13 @@ def supporting_metrics(curve: np.ndarray, events: list[dict],
+     fills = [e for e in events if e["kind"] == "fill_close"]
+     fees = sum(e.get("fee", 0.0) for e in events
+                if e["kind"] in ("fill_open", "fill_close"))
+-    funding = sum(e.get("amount", 0.0) for e in events
+-                  if e["kind"] == "funding")
++    # D72 blocker A.4: the engine emits funding transfers under the
++    # field name `paid` (positive = the position PAYS; cash -= paid).
++    # funding_net is the net funding PnL (positive = received). The
++    # previous collector read a nonexistent `amount` field and
++    # reported 0 — that defect is D72's origin.
++    funding = -sum(e.get("paid", 0.0) for e in events
++                   if e["kind"] == "funding")
+     dd = max_drawdown_decimal(curve)
+     mean, sd = float(np.mean(r)), float(np.std(r))
+     half = len(r) // 2
+@@ -321,6 +326,86 @@ def supporting_metrics(curve: np.ndarray, events: list[dict],
+     return out
+ 
+ 
++# ------------------------------ funding reconciliation (D72 blocker A.5)
++def funding_reconciliation(events: list[dict],
++                           positions: dict | None = None) -> dict:
++    """Every applicable funding boundary, applied payment, and
++    missing-rate event — by symbol, side, sign, and period — plus the
++    engine-event-to-equity reconciliation: the sum of event `paid`
++    transfers must equal the sum of per-position funding_paid (the
++    cash/equity impact is exactly -sum(paid))."""
++    import time as _time
++    applied = [e for e in events if e["kind"] == "funding"]
++    missing = [e for e in events if e["kind"] == "funding_missing"]
++    side_of = {}
++    if positions is not None:
++        side_of = {pid: p.side for pid, p in positions.items()}
++    by_symbol: dict = {}
++    by_period: dict = {}
++    by_side = {"long_paid": 0.0, "short_paid": 0.0}
++    by_sign = {"paid_positive_count": 0, "paid_positive_sum": 0.0,
++               "paid_negative_count": 0, "paid_negative_sum": 0.0,
++               "paid_zero_count": 0}
++    for e in applied:
++        s = e["symbol"]
++        d = by_symbol.setdefault(s, {"applied": 0, "missing": 0,
++                                     "paid": 0.0})
++        d["applied"] += 1
++        d["paid"] += e["paid"]
++        period = _time.strftime("%Y-%m", _time.gmtime(e["t"] / 1000))
++        by_period[period] = by_period.get(period, 0.0) + e["paid"]
++        side = side_of.get(e.get("pos_id"))
++        if side is not None:
++            by_side["long_paid" if side > 0 else "short_paid"] += e["paid"]
++        if e["paid"] > 0:
++            by_sign["paid_positive_count"] += 1
++            by_sign["paid_positive_sum"] += e["paid"]
++        elif e["paid"] < 0:
++            by_sign["paid_negative_count"] += 1
++            by_sign["paid_negative_sum"] += e["paid"]
++        else:
++            by_sign["paid_zero_count"] += 1
++    for e in missing:
++        d = by_symbol.setdefault(e["symbol"], {"applied": 0, "missing": 0,
++                                               "paid": 0.0})
++        d["missing"] += 1
++    event_sum = float(sum(e["paid"] for e in applied))
++    out = {
++        "n_applied": len(applied), "n_missing": len(missing),
++        "n_boundary_crossings": len(applied) + len(missing),
++        "total_paid": event_sum, "funding_net": -event_sum,
++        "by_symbol": by_symbol, "by_side": by_side, "by_sign": by_sign,
++        "by_period": by_period,
++    }
++    if positions is not None:
++        pos_sum = float(sum(p.funding_paid for p in positions.values()))
++        out["position_funding_paid_sum"] = pos_sum
++        out["event_to_equity_reconciled"] = bool(
++            abs(event_sum - pos_sum) < 1e-9)
++    return out
++
++
++def funding_activity_guard(recon: dict, span_days: float,
++                           n_closed_trades: int) -> tuple[bool, str]:
++    """D72: any all-zero funding result over an active multi-month
++    window STOPS the procedure unless mechanically proven legitimate.
++    Returns (ok, reason)."""
++    if span_days < 60 or n_closed_trades < 50:
++        return True, "window/trade count below the multi-month threshold"
++    if recon["n_boundary_crossings"] == 0:
++        return False, ("no position ever crossed a funding boundary over "
++                       f"{span_days:.0f} days with {n_closed_trades} "
++                       "closed trades — mechanically implausible")
++    if recon["n_applied"] == 0:
++        return False, (f"{recon['n_missing']} funding boundaries crossed, "
++                       "ZERO rates applied — funding data missing or "
++                       "unwired")
++    if recon["total_paid"] == 0.0:
++        return False, (f"{recon['n_applied']} funding payments applied "
++                       "summing to exactly 0.0 — mechanically implausible")
++    return True, "funding active and reconciled"
++
++
+ # -------------------- frozen IL assessment (Amendment A1, pre-opening)
+ IL_PERM_SEED = 20260903
+ IL_BOOT_SEED = 20260904
+@@ -492,6 +577,33 @@ def run_evaluation(provider, part: dict, manifests_dir: str,
+               for a in ARMS7}
+     stats = evaluation_statistics(curves)
+ 
++    # D72: full funding reconciliation per arm + diagnostics; the
++    # activity guard STOPS the evaluation (fail closed) on any
++    # mechanically implausible all-zero funding over this window.
++    window_days = (end - start) / 86_400_000
++    frecon = {}
++    for a in ARMS7:
++        rec = funding_reconciliation(comp.arms[a].engine.events,
++                                     comp.arms[a].engine.positions)
++        n_closed = sum(1 for p in comp.arms[a].engine.positions.values()
++                       if p.closed)
++        ok, why = funding_activity_guard(rec, window_days, n_closed)
++        rec["guard"] = {"ok": bool(ok), "reason": why}
++        frecon[a] = rec
++        if not ok:
++            raise CombinedDataError(
++                f"funding activity guard failed for arm {a}: {why}")
++        if rec.get("event_to_equity_reconciled") is False:
++            raise CombinedDataError(
++                "funding event-to-equity reconciliation failed for arm "
++                f"{a}")
++    frecon["G_matched"] = funding_reconciliation(
++        comp.shadow_matched.engine.events,
++        comp.shadow_matched.engine.positions)
++    frecon["G_feasible"] = funding_reconciliation(
++        comp.shadow_feasible.engine.events,
++        comp.shadow_feasible.engine.positions)
++
+     # frozen IL assessment (Amendment A1): Arm A's closed holdout trades
+     # give labels; the FIXED frozen B probability and C score recorded
+     # in those arms' decision ledgers at the same (t, symbol) give the
+@@ -529,6 +641,7 @@ def run_evaluation(provider, part: dict, manifests_dir: str,
+                    "n_valid_rounds": int(sum(vmap.values()))},
+         "rounds": comp.coordinator.counts(),
+         "statistics": stats,
++        "funding_reconciliation": frecon,
+         "il_assessment": il,
+         "supporting_metrics": {
+             a: supporting_metrics(curves[a], comp.arms[a].engine.events,
+diff --git a/lab/tools/report_arm_f_v3.py b/lab/tools/report_arm_f_v3.py
+new file mode 100644
+index 0000000..cecc9a4
+--- /dev/null
++++ b/lab/tools/report_arm_f_v3.py
+@@ -0,0 +1,278 @@
++"""Arm F reporting v3 — the D72 funding-corrected comparison.
++
++Same frozen procedure as PREREGISTRATION_ARM_F_BASELINE.md /
++PREREGISTRATION_ARM_F_SB3.md (nothing about the baseline definition,
++episode construction order, evaluation determinism, or the seed
++selection rule changes) — but episodes now carry the frozen funding
++rates (D72), so the exact conventional baseline AND every retrained
++seed are evaluated net of funding. Produces fresh statistics for the
++RETRAINED 10-seed family plus an explicit old-vs-corrected section;
++the superseded v1/v2 reports and the superseded no-funding manifest
++are preserved unmodified as history.
++"""
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import os
++
++import numpy as np
++import pandas as pd
++
++from lab import protocol as P
++from lab.arms.indicators import SymbolSeries
++from lab.arms.rl_env import ACTIONS, TradeManagementEnv
++from lab.data.access import GuardedLake
++
++CLOSE = ACTIONS.index("close")
++HOLD = ACTIONS.index("hold")
++
++
++class ConventionalManager:
++    """The frozen Arm A conventional manager, replayed per episode
++    (identical to report_arm_f_v2 — parity proven in
++    tests/test_arm_f_baseline_parity.py)."""
++
++    def __init__(self, series: SymbolSeries):
++        self.series = series
++
++    def action(self, env) -> int:
++        p = env.engine.positions[1]
++        t_dec = env.bars[env._i].open_time + P.BAR_15M_MS
++        sig = self.series.at_boundary(t_dec)
++        if sig is not None and np.isfinite(sig["ll_exit"]) and \
++                np.isfinite(sig["hh_exit"]):
++            trail = (sig["close"] < sig["ll_exit"] if p.side > 0
++                     else sig["close"] > sig["hh_exit"])
++            if trail:
++                return CLOSE
++        if (t_dec - p.decision_ts) // P.BAR_4H_MS >= P.MAX_HOLD_BARS_4H:
++            return CLOSE
++        return HOLD
++
++
++def build_episodes_with_series(df, lake, end_ms, expo_frac):
++    """report_arm_f_v2 episode construction + D72 funding_by_time."""
++    episodes = []
++    kcache, scache, fcache = {}, {}, {}
++    expo_keys = np.array(sorted(expo_frac), dtype=np.int64)
++    df = df.sort_values(["t", "symbol"], kind="mergesort")
++    for r in df.itertuples():
++        sym = r.symbol
++        if sym not in kcache:
++            k = lake.read_klines(sym, 0, end_ms)
++            kcache[sym] = k
++            scache[sym] = SymbolSeries(
++                k.open_time.to_numpy(np.int64), k.open.to_numpy(float),
++                k.high.to_numpy(float), k.low.to_numpy(float),
++                k.close.to_numpy(float))
++            fdf = lake.read_funding(sym, 0, end_ms)
++            fcache[sym] = dict(zip(fdf["funding_time"].astype(np.int64),
++                                   fdf["funding_rate"].astype(float)))
++        k = kcache[sym]
++        s = scache[sym]
++        lo = int(r.t) + P.BAR_15M_MS
++        hi = min(int(r.exit_t) + P.BAR_4H_MS, end_ms)
++        w = k[(k.open_time >= lo) & (k.open_time <= hi)]
++        if w.empty:
++            continue
++        j0 = max(0, int(np.searchsorted(expo_keys, int(r.t),
++                                        side="right")) - 1)
++        j1 = int(np.searchsorted(expo_keys, hi, side="right"))
++        expo = {int(b): expo_frac[int(b)] for b in expo_keys[j0:j1]}
++        tier = 1 if int(r.rank) <= P.TIER1_TOP_N else 2
++        fb = {int(ft): fr for ft, fr in fcache[sym].items()
++              if lo <= ft <= hi}
++        trade = {"side": int(r.side), "qty": float(r.qty_filled),
++                 "entry_ref": float(r.close), "r_dist": float(r.r_dist),
++                 "decision_ts": int(r.t), "atr_entry": float(r.atr),
++                 "atr_t4_close_ms": s.t4 + P.BAR_4H_MS,
++                 "atr_values": s.atr, "exposure_by_boundary": expo,
++                 "funding_by_time": fb,
++                 "costs": {"hs": P.HALF_SPREAD[tier],
++                           "slip": P.SLIPPAGE[tier], "fee": P.TAKER_FEE}}
++        bars = list(zip(w.open_time.astype(int), w.open, w.high, w.low,
++                        w.close))
++        episodes.append((trade, bars, sym, s))
++    return episodes
++
++
++def run_episode(action_fn, trade, bars):
++    env = TradeManagementEnv(trade, bars)
++    obs, _ = env.reset(seed=0)
++    total = 0.0
++    acts: dict = {}
++    n_funding = 0
++    while True:
++        a = action_fn(env, obs)
++        acts[ACTIONS[a]] = acts.get(ACTIONS[a], 0) + 1
++        obs, reward, term, trunc, _ = env.step(a)
++        total += float(reward)
++        if term or trunc:
++            n_funding = sum(1 for e in env.engine.events
++                            if e["kind"] == "funding")
++            return total, acts, n_funding
++
++
++def main() -> None:  # pragma: no cover — official reporting run
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--lake", required=True)
++    ap.add_argument("--manifests-dir", default="data/manifests")
++    ap.add_argument("--ledgers-dir", required=True)
++    ap.add_argument("--equity-ledger", required=True)
++    ap.add_argument("--sb3-dir", required=True,
++                    help="dir with the RETRAINED (funding-corrected) "
++                         "manifest + seed zips")
++    ap.add_argument("--old-manifest", required=True,
++                    help="the superseded no-funding arm_f_sb3_manifest"
++                         ".json (history; read-only)")
++    ap.add_argument("--old-report", required=True,
++                    help="the superseded arm_f_statistics_report_v2.json")
++    ap.add_argument("--out", required=True)
++    args = ap.parse_args()
++
++    with open(os.path.join(args.sb3_dir, "arm_f_sb3_manifest.json")) as f:
++        man = json.load(f)
++    with open(args.old_manifest) as f:
++        old_man = json.load(f)
++    with open(args.old_report) as f:
++        old_rep = json.load(f)
++
++    lake = GuardedLake(args.lake, args.manifests_dir)
++    end_ms = int(lake.partition["quarantine_start_ms"]) - P.BAR_15M_MS
++    labels = pd.read_parquet(
++        os.path.join(args.ledgers_dir, "labels_arm_a.parquet"))
++    feats = pd.read_parquet(
++        os.path.join(args.ledgers_dir, "features_arm_a.parquet"))
++    df = feats[["t", "symbol", "split"]].merge(
++        labels[["t", "symbol", "side", "close", "r_dist", "rank", "atr",
++                "net_r", "exit_t", "qty_filled"]],
++        on=["t", "symbol"], validate="1:1")
++    eq = pd.read_parquet(args.equity_ledger)
++    expo = {int(r.t): (float(r.gross_exposure) / float(r.equity)
++                       if r.equity > 0 else 5.0) for r in eq.itertuples()}
++    eps = build_episodes_with_series(df[df.split == "validation"], lake,
++                                     end_ms, expo)
++    n_funding_eps = sum(1 for tr, _b, _s, _se in eps
++                        if tr["funding_by_time"])
++    print(f"validation episodes: {len(eps)} "
++          f"({n_funding_eps} with funding rates)", flush=True)
++
++    # exact conventional baseline, funding-corrected
++    base_rewards, base_acts = [], {}
++    base_funding_events = 0
++    for trade, bars, _sym, series in eps:
++        mgr = ConventionalManager(series)
++        r, acts, nf = run_episode(lambda env, _o: mgr.action(env),
++                                  trade, bars)
++        base_rewards.append(r)
++        base_funding_events += nf
++        for k, v in acts.items():
++            base_acts[k] = base_acts.get(k, 0) + v
++    baseline = float(np.mean(base_rewards))
++    print(f"EXACT conventional baseline (funding-corrected): "
++          f"{baseline:.5f} funding events {base_funding_events}",
++          flush=True)
++    if base_funding_events == 0:
++        raise SystemExit("STOP: zero funding events across all baseline "
++                         "episodes — funding is not flowing (D72 guard)")
++
++    from stable_baselines3 import PPO
++    per_seed = []
++    for rrec in man["seed_results"]:
++        model = PPO.load(os.path.join(
++            args.sb3_dir, f"arm_f_sb3_seed{rrec['seed']}.zip"),
++            device="cpu")
++        vals = []
++        for trade, bars, _sym, _s in eps:
++            r, _a, _nf = run_episode(
++                lambda env, obs: int(model.predict(
++                    obs, deterministic=True)[0]), trade, bars)
++            vals.append(r)
++        mean_v = float(np.mean(vals))
++        per_seed.append({
++            "seed": rrec["seed"],
++            "validation_mean_reward": rrec["validation_mean_reward"],
++            "recomputed": mean_v,
++            "recomputation_matches":
++                abs(mean_v - rrec["validation_mean_reward"]) < 1e-9,
++            "convergence": rrec["convergence"],
++            "beats_exact_conventional_baseline":
++                rrec["validation_mean_reward"] > baseline,
++            "margin_vs_baseline":
++                rrec["validation_mean_reward"] - baseline})
++        print(f"seed {rrec['seed']}: {rrec['validation_mean_reward']:.5f}"
++              f" vs baseline {baseline:.5f} -> "
++              f"{'WIN' if per_seed[-1]['beats_exact_conventional_baseline'] else 'LOSS'}",
++              flush=True)
++
++    vals = np.array([p["validation_mean_reward"] for p in per_seed])
++    n_beat = int(sum(1 for p in per_seed
++                     if p["beats_exact_conventional_baseline"]))
++    n_nonconv = sum(1 for p in per_seed
++                    if p["convergence"].get("non_converged"))
++    old_by_seed = {r["seed"]: r["validation_mean_reward"]
++                   for r in old_man["seed_results"]}
++    report = {
++        "preregistrations": ["PREREGISTRATION_ARM_F_SB3.md (+ D72 "
++                             "funding amendment)",
++                             "PREREGISTRATION_ARM_F_BASELINE.md"],
++        "correction": ("D72: episodes carry frozen funding rates; the "
++                       "policy family was RETRAINED (all 10 official "
++                       "seeds) and the exact conventional baseline "
++                       "re-evaluated, both net of funding"),
++        "baseline": {
++            "definition": ("EXACT frozen Arm A conventional manager "
++                           "(trailing-channel then time exit, ArmARunner "
++                           "order), episodes WITH funding"),
++            "parity_proof": "tests/test_arm_f_baseline_parity.py",
++            "mean_validation_reward": baseline,
++            "action_distribution": base_acts,
++            "n_funding_events": int(base_funding_events)},
++        "per_seed": per_seed,
++        "statistics": {
++            "mean_validation_reward": float(vals.mean()),
++            "median_validation_reward": float(np.median(vals)),
++            "iqr_validation_reward": float(np.percentile(vals, 75)
++                                           - np.percentile(vals, 25)),
++            "variance_validation_reward": float(vals.var(ddof=1)),
++            "best_seed": int(per_seed[int(np.argmax(vals))]["seed"]),
++            "worst_seed": int(per_seed[int(np.argmin(vals))]["seed"]),
++            "n_non_converged": int(n_nonconv)},
++        "wins_losses": {"wins": n_beat, "losses": len(per_seed) - n_beat,
++                        "pct_seeds_beating_exact_baseline":
++                            100.0 * n_beat / len(per_seed)},
++        "selection": {"selected_seed": man["selected_seed"],
++                      "rule": man["selection_rule"]},
++        "old_vs_corrected": {
++            "superseded_no_funding_selected_seed":
++                old_man["selected_seed"],
++            "superseded_no_funding_baseline":
++                old_rep["baseline"]["mean_validation_reward"],
++            "superseded_no_funding_wins_losses":
++                old_rep["wins_losses"],
++            "per_seed_delta": [
++                {"seed": p["seed"],
++                 "old_no_funding": old_by_seed.get(p["seed"]),
++                 "corrected": p["validation_mean_reward"],
++                 "delta": (p["validation_mean_reward"]
++                           - old_by_seed.get(p["seed"]))
++                 if old_by_seed.get(p["seed"]) is not None else None}
++                for p in per_seed],
++            "note": ("old values are from policies trained AND evaluated "
++                     "without funding — preserved as superseded history, "
++                     "not comparable like-for-like to the corrected "
++                     "family beyond direction and magnitude")},
++    }
++    with open(args.out, "w") as f:
++        json.dump(report, f, indent=2, sort_keys=True)
++    print(json.dumps({"baseline": baseline,
++                      "wins_losses": report["wins_losses"],
++                      "selected_seed": man["selected_seed"]}, indent=2))
++    print("report:", args.out, "sha256:",
++          hashlib.sha256(open(args.out, "rb").read()).hexdigest())
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/lab/tools/shakedown.py b/lab/tools/shakedown.py
+index 033f215..8bd5441 100644
+--- a/lab/tools/shakedown.py
++++ b/lab/tools/shakedown.py
+@@ -474,6 +474,33 @@ def main() -> None:  # pragma: no cover — the shakedown run
+                             "detail": f"{len(missing_obs)} non-backstop RL "
+                                       f"records missing the obs vector"})
+ 
++    # D72: full funding reconciliation per arm + diagnostics; the
++    # activity guard flags any mechanically implausible all-zero funding
++    # over this multi-month window as a BLOCKING defect.
++    from lab.tools.holdout_evaluator import (funding_activity_guard,
++                                             funding_reconciliation)
++    funding_recon = {}
++    span_days = (end - start) / 86_400_000
++    diag_states = {"G_matched": comp.shadow_matched,
++                   "G_feasible": comp.shadow_feasible}
++    for name, st in ({a: comp.arms[a] for a in ARMS} | diag_states).items():
++        rec = funding_reconciliation(st.engine.events,
++                                     st.engine.positions)
++        n_closed = sum(1 for p in st.engine.positions.values() if p.closed)
++        ok, why = funding_activity_guard(rec, span_days, n_closed)
++        rec["guard"] = {"ok": bool(ok), "reason": why,
++                        "n_closed_trades": n_closed}
++        funding_recon[name] = rec
++        if not ok:
++            defects.append({"id": f"SD-FUNDING-{name}",
++                            "severity": "blocking",
++                            "detail": f"funding activity guard: {why}"})
++        if rec.get("event_to_equity_reconciled") is False:
++            defects.append({"id": f"SD-FUNDINGRECON-{name}",
++                            "severity": "blocking",
++                            "detail": "funding events do not reconcile "
++                                      "to position funding_paid"})
++
+     marker = "SHAKEDOWN — INVALID FOR PERFORMANCE CONCLUSIONS"
+     paths = {}
+ 
+@@ -531,6 +558,7 @@ def main() -> None:  # pragma: no cover — the shakedown run
+                     "feasible_fills": len(feas_filled),
+                     "unexplained": len(unexplained)},
+                 "n_defects": len(defects),
++                "funding_reconciliation": funding_recon,
+                 "model_wiring": {
+                     "arm_b_threshold": b_threshold,
+                     "arm_c_top_k": c_top_k,
+diff --git a/lab/tools/stress_fixture.py b/lab/tools/stress_fixture.py
+index bacf648..1d32783 100644
+--- a/lab/tools/stress_fixture.py
++++ b/lab/tools/stress_fixture.py
+@@ -8,7 +8,12 @@ never real data. Mechanically exercises, in ONE run:
+       (explicit diagnostic_over_cap recording);
+   (c) a REAL G_feasible capacity divergence (feasible at its own
+       10-position cap rejecting entries G actual takes);
+-  (d) nontrivial RL management decisions (tighten / reduce / close).
++  (d) nontrivial RL management decisions (tighten / reduce / close);
++  (e) NONZERO mechanically reconciled funding (D72): positive rates on
++      even wave symbols, negative on odd, ONE symbol deliberately
++      without rates — sign semantics, event-to-equity reconciliation
++      across every engine (arms + both diagnostics), and loud
++      funding_missing are all verified.
+ Every property is verified mechanically and the ledgers + verdicts are
+ exported; any failed check is a recorded defect and a nonzero exit.
+ """
+@@ -84,8 +89,19 @@ def main() -> None:  # pragma: no cover — fixture run
+     data["SBTGTUSDT"] = build(sb[:n4],
+                               spikes={i_entry: (106.0, 121.0, 105.5,
+                                                 120.0)})
++    # (e) D72 funding scenario: +rate on even wave symbols, -rate on
++    # odd; W13 deliberately has NO rates (missing-funding loudness)
++    F_RATE = 0.0005
++    end_t = T0 + n4 * 16 * B15
++    f8_grid = list(range((T0 // P.FUNDING_INTERVAL_MS + 1)
++                         * P.FUNDING_INTERVAL_MS, end_t,
++                         P.FUNDING_INTERVAL_MS))
++    funding = {f"W{k:02d}USDT": {int(t): (F_RATE if k % 2 == 0
++                                          else -F_RATE)
++                                 for t in f8_grid}
++               for k in range(N_WAVE - 1)}       # W13 left missing
+     prov = ArrayProvider({s: {k2: v.copy() for k2, v in d.items()}
+-                          for s, d in data.items()})
++                          for s, d in data.items()}, funding=funding)
+     comp = Competition(prov, 100_000.0,
+                        universe_fn=lambda t: sorted(data),
+                        rl_policy=StressPolicy())
+@@ -193,6 +209,50 @@ def main() -> None:  # pragma: no cover — fixture run
+         if acts.get(need, 0) == 0:
+             defects.append(f"RL action {need} never executed")
+ 
++    # (e) nonzero mechanically reconciled funding across EVERY engine
++    from lab.tools.holdout_evaluator import funding_reconciliation
++    frecon = {}
++    total_applied = 0
++    total_paid_abs = 0.0
++    missing_seen = 0
++    sign_bad = []
++    states = {a: comp.arms[a] for a in ARMS}
++    states["G_matched"] = comp.shadow_matched
++    states["G_feasible"] = comp.shadow_feasible
++    for name, st in states.items():
++        rec = funding_reconciliation(st.engine.events,
++                                     st.engine.positions)
++        frecon[name] = rec
++        total_applied += rec["n_applied"]
++        total_paid_abs += abs(rec["total_paid"])
++        missing_seen += rec["n_missing"]
++        if rec.get("event_to_equity_reconciled") is False:
++            defects.append(f"funding event-to-equity reconciliation "
++                           f"failed for {name}")
++        for e in st.engine.events:
++            if e["kind"] != "funding":
++                continue
++            # all stress positions are LONG: +rate pays, -rate receives
++            if e["paid"] != 0 and (e["paid"] > 0) != (e["rate"] > 0):
++                sign_bad.append((name, e["symbol"], e["rate"], e["paid"]))
++    checks["funding"] = {
++        "n_applied_total": int(total_applied),
++        "abs_paid_total": total_paid_abs,
++        "n_missing_total": int(missing_seen),
++        "sign_violations": len(sign_bad),
++        "per_engine": {n: {"applied": r["n_applied"],
++                           "missing": r["n_missing"],
++                           "paid": r["total_paid"],
++                           "reconciled":
++                               r.get("event_to_equity_reconciled")}
++                       for n, r in frecon.items()}}
++    if total_applied == 0 or total_paid_abs == 0.0:
++        defects.append("funding scenario applied ZERO funding")
++    if missing_seen == 0:
++        defects.append("deliberately missing funding (W13) was silent")
++    if sign_bad:
++        defects.append(f"{len(sign_bad)} funding sign violations")
++
+     # exports
+     paths = {}
+ 
+diff --git a/lab/tools/train_arm_f_sb3.py b/lab/tools/train_arm_f_sb3.py
+index 125f8e5..dd61f84 100644
+--- a/lab/tools/train_arm_f_sb3.py
++++ b/lab/tools/train_arm_f_sb3.py
+@@ -63,6 +63,7 @@ def build_episodes_v2(df: pd.DataFrame, lake: GuardedLake, end_ms: int,
+     episodes = []
+     kcache: dict[str, pd.DataFrame] = {}
+     scache: dict[str, tuple[np.ndarray, np.ndarray]] = {}
++    fcache: dict[str, dict[int, float]] = {}
+     expo_keys = np.array(sorted(expo_frac), dtype=np.int64)
+     df = df.sort_values(["t", "symbol"], kind="mergesort")
+     for r in df.itertuples():
+@@ -74,6 +75,9 @@ def build_episodes_v2(df: pd.DataFrame, lake: GuardedLake, end_ms: int,
+                              k.open.to_numpy(float), k.high.to_numpy(float),
+                              k.low.to_numpy(float), k.close.to_numpy(float))
+             scache[sym] = (s.t4 + P.BAR_4H_MS, s.atr)
++            fdf = lake.read_funding(sym, 0, end_ms)
++            fcache[sym] = dict(zip(fdf["funding_time"].astype(np.int64),
++                                   fdf["funding_rate"].astype(float)))
+         k = kcache[sym]
+         atr_t, atr_v = scache[sym]
+         lo = int(r.t) + P.BAR_15M_MS
+@@ -88,11 +92,17 @@ def build_episodes_v2(df: pd.DataFrame, lake: GuardedLake, end_ms: int,
+         j1 = int(np.searchsorted(expo_keys, hi, side="right"))
+         expo = {int(b): expo_frac[int(b)] for b in expo_keys[j0:j1]}
+         tier = 1 if int(r.rank) <= P.TIER1_TOP_N else 2
++        # D72: frozen funding rates covering the episode window — the
++        # environment applies them with ArmARunner/engine semantics, so
++        # rewards are net of funding per the policy's actual holding
++        fb = {int(ft): fr for ft, fr in fcache[sym].items()
++              if lo <= ft <= hi}
+         trade = {"side": int(r.side), "qty": float(r.qty_filled),
+                  "entry_ref": float(r.close), "r_dist": float(r.r_dist),
+                  "decision_ts": int(r.t), "atr_entry": float(r.atr),
+                  "atr_t4_close_ms": atr_t, "atr_values": atr_v,
+                  "exposure_by_boundary": expo,
++                 "funding_by_time": fb,
+                  "costs": {"hs": P.HALF_SPREAD[tier],
+                            "slip": P.SLIPPAGE[tier], "fee": P.TAKER_FEE}}
+         bars = list(zip(w.open_time.astype(int), w.open, w.high, w.low,
+diff --git a/tests/test_funding_constitutional.py b/tests/test_funding_constitutional.py
+new file mode 100644
+index 0000000..f9df31e
+--- /dev/null
++++ b/tests/test_funding_constitutional.py
+@@ -0,0 +1,293 @@
++"""D72 blocker A.6 — constitutional funding tests.
++
++Funding is part of the frozen cost model ("after all costs"). These
++tests pin, mechanically: sign semantics for long/short with positive/
++negative rates; charging on the ACTUAL open quantity after reductions;
++close-before vs hold-through a funding boundary; exact equality between
++the orchestrator's funding stream and the official ArmARunner's on an
++identical scenario; synchronized rollback of funding mutations; both G
++diagnostics receiving correct independent funding; reporting-field
++reconciliation (events == positions == metric); and the missing-funding
++rule staying LOUD (funding_missing events + the activity guard that
++stops any implausible all-zero funding window).
++"""
++import numpy as np
++import pytest
++
++from lab import protocol as P
++from lab.arms.arm_a import ArmARunner, ArrayProvider
++from lab.arms.rl_env import ACTIONS, TradeManagementEnv
++from lab.orchestration.competition import Competition
++from lab.tools.holdout_evaluator import (funding_activity_guard,
++                                         funding_reconciliation,
++                                         supporting_metrics)
++
++B15 = P.BAR_15M_MS
++H4 = P.BAR_4H_MS
++F8 = P.FUNDING_INTERVAL_MS
++T0 = (1_700_000_000_000 // F8) * F8          # 8h- (and 4h-) aligned
++HIST = 96
++RATE = 0.001
++
++
++def build_symbol(levels_4h, wiggle=0.1):
++    n4 = len(levels_4h)
++    t = np.arange(T0, T0 + n4 * 16 * B15, B15, dtype=np.int64)
++    lv = np.repeat(np.asarray(levels_4h, float), 16)
++    return {"open_time": t, "open": lv.copy(), "high": lv + wiggle,
++            "low": lv - wiggle, "close": lv.copy()}
++
++
++def scenario(direction=+1, rate=RATE, with_funding=True):
++    """One clean breakout (long or short) held across >=2 funding
++    boundaries. Returns (provider, start, end)."""
++    # one breakout, then a flat plateau at the breakout level: every
++    # later boundary close equals the (wiggle-raised) channel extreme,
++    # so exactly ONE entry exists — no compounding, and equity deltas
++    # between funded and unfunded runs equal the funding transfers
++    if direction > 0:
++        levels = [100.0] * HIST + [105.0] * 6
++    else:
++        levels = [100.0] * HIST + [95.0] * 6
++    data = {"AAAUSDT": build_symbol(levels)}
++    end = T0 + (len(levels) * 16 - 1) * B15
++    funding = ({"AAAUSDT": {int(t): rate
++                            for t in range(T0, end + 1, F8)}}
++               if with_funding else None)
++    return ArrayProvider(data, funding=funding), T0, end
++
++
++def run_comp(direction=+1, rate=RATE, with_funding=True):
++    prov, start, end = scenario(direction, rate, with_funding)
++    comp = Competition(prov, 10_000, universe_fn=lambda t: ["AAAUSDT"])
++    comp.run(start, end)
++    return comp
++
++
++def funding_events(state):
++    return [e for e in state.engine.events if e["kind"] == "funding"]
++
++
++# ---------------------------------------------- 1-3: sign semantics
++def test_long_positive_funding_pays():
++    comp = run_comp(+1, RATE)
++    st = comp.arms["A"]
++    assert sum(1 for e in st.engine.events
++               if e["kind"] == "fill_open") == 1     # no compounding
++    ev = funding_events(st)
++    assert len(ev) >= 2
++    assert all(e["paid"] > 0 for e in ev)          # long pays +rate
++    # exact equity impact: with-funding equity is lower by exactly sum(paid)
++    base = run_comp(+1, RATE, with_funding=False)
++    paid = sum(e["paid"] for e in ev)
++    assert paid > 0
++    diff = (base.arms["A"].engine.equity({"AAAUSDT": 105.0})
++            - st.engine.equity({"AAAUSDT": 105.0}))
++    assert abs(diff - paid) < 1e-9
++
++
++def test_short_positive_funding_receives():
++    comp = run_comp(-1, RATE)
++    ev = funding_events(comp.arms["A"])
++    assert len(ev) >= 2
++    assert all(e["paid"] < 0 for e in ev)          # short receives +rate
++    assert sum(1 for e in comp.arms["A"].engine.events
++               if e["kind"] == "fill_open") == 1
++    base = run_comp(-1, RATE, with_funding=False)
++    paid = sum(e["paid"] for e in ev)
++    diff = (base.arms["A"].engine.equity({"AAAUSDT": 95.0})
++            - comp.arms["A"].engine.equity({"AAAUSDT": 95.0}))
++    assert abs(diff - paid) < 1e-9 and paid < 0
++
++
++def test_negative_funding_reverses_both_sides():
++    lng = run_comp(+1, -RATE)
++    assert all(e["paid"] < 0 for e in funding_events(lng.arms["A"]))
++    sht = run_comp(-1, -RATE)
++    assert all(e["paid"] > 0 for e in funding_events(sht.arms["A"]))
++
++
++def test_funding_transfer_arithmetic_exact():
++    comp = run_comp(+1, RATE)
++    for e in funding_events(comp.arms["A"]):
++        p = comp.arms["A"].engine.positions[e["pos_id"]]
++        assert e["rate"] == RATE
++        assert abs(e["paid"] - RATE * e["mark"]
++                   * (e["paid"] / (RATE * e["mark"]))) < 1e-12
++        # paid = rate * open_qty * mark * side; recover qty and check
++        qty = e["paid"] / (RATE * e["mark"] * p.side)
++        assert qty > 0
++
++
++# ------------------------------- 4-5: reductions and close timing (env)
++def env_episode(actions_at_decisions, rate=RATE, n4=6):
++    """Single-position env episode: entry at T0+15m, flat 100 bars,
++    funding boundaries at every 8h multiple; scripted actions."""
++    t = np.arange(T0 + B15, T0 + n4 * 16 * B15, B15, dtype=np.int64)
++    bars = [(int(x), 100.0, 100.1, 99.9, 100.0) for x in t]
++    fb = {int(b): rate for b in range(T0, int(t[-1]) + 1, F8)}
++    trade = {"side": +1, "qty": 4.0, "entry_ref": 100.0, "r_dist": 5.0,
++             "decision_ts": T0, "atr_entry": 2.5,
++             "funding_by_time": fb,
++             "costs": {"hs": 0.0, "slip": 0.0, "fee": 0.0}}
++    env = TradeManagementEnv(trade, bars)
++    obs, _ = env.reset(seed=0)
++    k = 0
++    while True:
++        a = (actions_at_decisions[k] if k < len(actions_at_decisions)
++             else ACTIONS.index("hold"))
++        k += 1
++        obs, reward, term, trunc, _ = env.step(a)
++        if term or trunc:
++            return env, reward
++
++
++def test_reduction_before_funding_boundary_charges_open_qty():
++    env, _ = env_episode([ACTIONS.index("reduce_50")])
++    ev = [e for e in env.engine.events if e["kind"] == "funding"]
++    assert ev, "no funding applied in episode"
++    # every funding transfer must equal rate x CURRENT open_qty x mark
++    for e in ev:
++        implied_qty = e["paid"] / (RATE * e["mark"])
++        assert abs(implied_qty - 2.0) < 1e-9, \
++            "funding charged on pre-reduction quantity"
++    full, _ = env_episode([])           # no reduction: charged on 4.0
++    ev_full = [e for e in full.engine.events if e["kind"] == "funding"]
++    assert abs(ev_full[0]["paid"] / (RATE * ev_full[0]["mark"]) - 4.0) \
++        < 1e-9
++
++
++def test_close_before_vs_after_funding_boundary():
++    closed, _ = env_episode([ACTIONS.index("close")])
++    held, _ = env_episode([])
++    ev_closed = [e for e in closed.engine.events if e["kind"] == "funding"]
++    ev_held = [e for e in held.engine.events if e["kind"] == "funding"]
++    assert not ev_closed, "closed-before-boundary position paid funding"
++    assert ev_held and held.engine.positions[1].funding_paid > 0
++    assert closed.engine.positions[1].funding_paid == 0.0
++
++
++def test_env_reward_reflects_funding():
++    _, r_no = env_episode([], rate=0.0)
++    _, r_pos = env_episode([], rate=RATE)
++    assert r_pos < r_no                 # long pays positive funding
++
++
++# ------------------------------------ 6: exact equality with ArmARunner
++def test_orchestrator_funding_equals_armarunner_exactly():
++    prov, start, end = scenario(+1, RATE)
++    runner = ArmARunner(prov, 10_000, universe_fn=lambda t: ["AAAUSDT"])
++    runner.run(start, end)
++    comp = Competition(prov, 10_000, universe_fn=lambda t: ["AAAUSDT"])
++    comp.run(start, end)
++    key = lambda e: (e["t"], e["symbol"], e["rate"], e["mark"], e["paid"])  # noqa: E731
++    r_ev = [key(e) for e in runner.engine.events if e["kind"] == "funding"]
++    c_ev = [key(e) for e in comp.arms["A"].engine.events
++            if e["kind"] == "funding"]
++    assert r_ev, "ArmARunner scenario produced no funding"
++    assert r_ev == c_ev
++
++
++# --------------------------- 7: synchronized rollback after funding
++def test_rollback_restores_funding_state_exactly():
++    comp = run_comp(+1, RATE)
++    st = comp.arms["A"]
++    pre_cash = st.engine.cash
++    pre_paid = {pid: p.funding_paid
++                for pid, p in st.engine.positions.items()}
++    pre_events = len(st.engine.events)
++    snap = st.snapshot()
++    # mutate: one more funding boundary applied directly
++    t_next = ((st.engine.events[-1]["t"] // F8) + 1) * F8
++    from lab.sim.engine import Bar
++    bar = Bar(t_next, 108.0, 108.1, 107.9, 108.0)
++    st.engine.process_bar_time(t_next, {"AAAUSDT": bar},
++                               funding={"AAAUSDT": RATE},
++                               prev_close={"AAAUSDT": 108.0})
++    assert st.engine.cash != pre_cash          # funding mutated state
++    st.rollback(snap)
++    assert st.engine.cash == pre_cash
++    assert len(st.engine.events) == pre_events
++    assert {pid: p.funding_paid
++            for pid, p in st.engine.positions.items()} == pre_paid
++
++
++# ------------------------- 8: G diagnostics independent correct funding
++def test_g_diagnostics_receive_correct_independent_funding():
++    comp = run_comp(+1, RATE)
++    key = lambda e: (e["t"], e["symbol"], e["rate"], e["mark"], e["paid"])  # noqa: E731
++    g_ev = [key(e) for e in comp.arms["G"].engine.events
++            if e["kind"] == "funding"]
++    m_ev = [key(e) for e in comp.shadow_matched.engine.events
++            if e["kind"] == "funding"]
++    f_ev = [key(e) for e in comp.shadow_feasible.engine.events
++            if e["kind"] == "funding"]
++    assert g_ev, "G held no position across a funding boundary"
++    # matched diagnostic: identical clone -> identical funding stream,
++    # recorded INDEPENDENTLY in its own engine
++    assert m_ev == g_ev
++    assert comp.shadow_matched.engine is not comp.arms["G"].engine
++    # feasible diagnostic: own account, same frozen rates
++    assert f_ev and all(e[2] == RATE for e in f_ev)
++    rec = funding_reconciliation(comp.shadow_feasible.engine.events,
++                                 comp.shadow_feasible.engine.positions)
++    assert rec["event_to_equity_reconciled"]
++
++
++# ------------------------------- 9: reporting-field reconciliation
++def test_reporting_field_reconciliation():
++    comp = run_comp(+1, RATE)
++    st = comp.arms["A"]
++    curve = np.array([r["equity"] for r in st.equity_curve])
++    m = supporting_metrics(curve, st.engine.events, st.engine.positions)
++    rec = funding_reconciliation(st.engine.events, st.engine.positions)
++    paid_events = sum(e["paid"] for e in funding_events(st))
++    paid_positions = sum(p.funding_paid
++                         for p in st.engine.positions.values())
++    assert abs(paid_events - paid_positions) < 1e-9
++    assert abs(m["funding_net"] - (-paid_events)) < 1e-12
++    assert abs(rec["funding_net"] - (-paid_events)) < 1e-12
++    assert rec["event_to_equity_reconciled"]
++    assert rec["n_applied"] == len(funding_events(st))
++    assert rec["by_symbol"]["AAAUSDT"]["applied"] == rec["n_applied"]
++    assert rec["by_side"]["long_paid"] > 0
++
++
++# ------------------------------------- 10: missing funding stays loud
++def test_missing_funding_stays_loud():
++    comp = run_comp(+1, RATE, with_funding=False)
++    st = comp.arms["A"]
++    missing = [e for e in st.engine.events
++               if e["kind"] == "funding_missing"]
++    assert missing, "missing funding was silent"
++    assert not funding_events(st)
++    rec = funding_reconciliation(st.engine.events, st.engine.positions)
++    assert rec["n_missing"] == len(missing) and rec["n_applied"] == 0
++    assert rec["by_symbol"]["AAAUSDT"]["missing"] == len(missing)
++
++
++def test_funding_activity_guard_stops_implausible_zeros():
++    # crossings but nothing applied over a multi-month active window
++    bad1 = {"n_applied": 0, "n_missing": 400, "n_boundary_crossings": 400,
++            "total_paid": 0.0}
++    ok, why = funding_activity_guard(bad1, span_days=120,
++                                     n_closed_trades=300)
++    assert not ok and "ZERO rates applied" in why
++    # applied payments summing to exactly zero
++    bad2 = {"n_applied": 500, "n_missing": 0, "n_boundary_crossings": 500,
++            "total_paid": 0.0}
++    ok, why = funding_activity_guard(bad2, 120, 300)
++    assert not ok and "exactly 0.0" in why
++    # no crossings at all despite months of trading
++    bad3 = {"n_applied": 0, "n_missing": 0, "n_boundary_crossings": 0,
++            "total_paid": 0.0}
++    ok, why = funding_activity_guard(bad3, 120, 300)
++    assert not ok and "implausible" in why
++    # legitimate active funding passes
++    good = {"n_applied": 500, "n_missing": 3, "n_boundary_crossings": 503,
++            "total_paid": 12.34}
++    ok, _ = funding_activity_guard(good, 120, 300)
++    assert ok
++    # small windows / few trades are exempt (honest small fixtures)
++    ok, _ = funding_activity_guard(bad1, span_days=3, n_closed_trades=2)
++    assert ok
+diff --git a/tests/test_holdout_evaluator_units.py b/tests/test_holdout_evaluator_units.py
+index f61951e..0f2eca7 100644
+--- a/tests/test_holdout_evaluator_units.py
++++ b/tests/test_holdout_evaluator_units.py
+@@ -300,8 +300,9 @@ def test_supporting_metrics_reports_every_preregistered_quantity():
+     """The pre-registration's supporting-metric list is complete."""
+     positions = {1: pos(3.0)}
+     ec = [{"t": 0, "equity": 100.0, "gross_exposure": 0.0}]
++    # D72: the engine emits funding as `paid` (positive = position pays)
+     m = supporting_metrics(np.array([100.0, 103.0]),
+-                           [{"kind": "funding", "amount": -0.5}],
++                           [{"kind": "funding", "paid": 0.5}],
+                            positions=positions, equity_curve=ec)
+     for key in ("net_return", "max_drawdown_observed", "sharpe_ann",
+                 "sortino_ann", "calmar", "profit_factor",

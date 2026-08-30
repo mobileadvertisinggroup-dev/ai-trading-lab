@@ -1,0 +1,281 @@
+{
+ "certified": true,
+ "command": {
+  "args": [
+   "--lake",
+   "/home/user/lake-work/lake",
+   "--manifests-dir",
+   "data/manifests",
+   "--ledgers-dir",
+   "/home/user/lake-work/ledgers",
+   "--equity-ledger",
+   "/home/user/lake-work/ledgers/equity_arm_a.parquet",
+   "--out-dir",
+   "/home/user/lake-work/official_v5/models_sb3"
+  ],
+  "module": "lab.tools.train_arm_f_sb3",
+  "wrapper_argv": [
+   "lab/tools/provenance_run.py",
+   "--module",
+   "lab.tools.train_arm_f_sb3",
+   "--out-dir",
+   "/home/user/lake-work/official_v5/models_sb3",
+   "--input-dir",
+   "/home/user/lake-work/ledgers",
+   "--lake-dir",
+   "/home/user/lake-work/lake",
+   "--",
+   "--lake",
+   "/home/user/lake-work/lake",
+   "--manifests-dir",
+   "data/manifests",
+   "--ledgers-dir",
+   "/home/user/lake-work/ledgers",
+   "--equity-ledger",
+   "/home/user/lake-work/ledgers/equity_arm_a.parquet",
+   "--out-dir",
+   "/home/user/lake-work/official_v5/models_sb3"
+  ]
+ },
+ "dependencies": {
+  "age": "not installed",
+  "gymnasium": "1.2.3",
+  "lightgbm": "4.7.0",
+  "numpy": "2.4.6",
+  "pandas": "3.0.5",
+  "pyarrow": "25.0.1",
+  "python": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]",
+  "sklearn": "1.9.0",
+  "stable_baselines3": "2.7.0",
+  "torch": "2.13.0+cu130"
+ },
+ "elapsed_seconds": 2539.1,
+ "ended_utc": "2026-08-30T08:26:28Z",
+ "environment": {
+  "LC_CTYPE": "C.UTF-8",
+  "PYTHONPATH": "/home/user/lake-work/wt-d72",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "error": null,
+ "gate": "provenance_run v1 (reviewer directive 2026-08-27)",
+ "git": {
+  "commit": "7334e0432444ad2cff74ce69843d9f5d2f4b1e9f",
+  "describe": "7334e0432444ad2cff74ce69843d9f5d2f4b1e9f 2026-08-30 07:01:17 +0000 D72 A: frozen per-bar funding wired into the orchestrator (arms + both G diagnostics) and the RL environment; loud reconciliation",
+  "root": "/home/user/lake-work/wt-d72",
+  "status_porcelain_post": "",
+  "status_porcelain_pre": ""
+ },
+ "host": {
+  "cpu_count": 4,
+  "hostname": "vm",
+  "platform": "Linux-6.18.44-fc-v22-x86_64-with-glibc2.39"
+ },
+ "inputs": {
+  "/home/user/lake-work/ledgers": {
+   "census_sha256": "3e214fc054831656cde6fab264bd3edf7c7b07fc42c25f163902a2deace1f0b8",
+   "files": {
+    "PROFILE_candidates_arm_a.parquet": "e975c6c1277ab648c5489e58309617dc48ef9743ed7835513fff3db6ecfc279e",
+    "PROFILE_equity_arm_a.parquet": "f3c34c7c8e39cf5a34ab334b06978f12162e8721b3e9c6c798a907461361623e",
+    "PROFILE_events_arm_a.jsonl.gz": "3a465aac6cebee42254745627c0f6ce423c1aacece6764987590f8546c311552",
+    "PROFILE_gap_exclusion_report.json": "885fa51ffccafff6e34afd90b7bd42a0da6ffac53b5898d9868131d9e04b7e92",
+    "PROFILE_labels_arm_a.parquet": "1c133586b124cf901175083a0527adcdd020bb49dcc89cd24f6a8023b7e73ad0",
+    "PROFILE_ledger_manifest_arm_a.json": "59880d3e7562de4bd1ff72921ea55364c828d16f790f84fdd87be554c7333bb0",
+    "candidates_arm_a.parquet": "2aeb7cbe488319b68e098e7abcee3661aef7139225d0ecf631e089a674978267",
+    "equity_arm_a.parquet": "fe8dea69ac12ef574e61da2ae5e4afadcc6b4191912c7265083d8b447b9cb1fc",
+    "equity_arm_a_v1_noexposure.parquet": "6d451e58198bea9b8de408ecc7394dc2ca6154d9b7df84cc72d3a2fa6d9e0a25",
+    "events_arm_a.jsonl.gz": "3806a7ab52193d5b6892892d8704a73690f4df4ae3a70c7d93fe7699d45686c7",
+    "features_arm_a.parquet": "b406c5023aeb0612944855ac90bbb127d54a25b61885ae489409e4b7eb9b22cb",
+    "features_manifest.json": "654eefe98086e5ae2254433c2b6be4ef17ea11753842e36cdc15c7f389f4e4a5",
+    "gap_exclusion_report.json": "cf20564e3902e8152e3936f9d5c860492a3b9fe12d0eb43461d2cf4b9963f26a",
+    "labels_arm_a.parquet": "0da69ab64dcf5ae26677bba4d30a44d769c82a2ea3f2fac6c657e749ac943fb5",
+    "learnability_report.json": "8847e5c259cc8ed45085e575e7777ce7fe301c3774f0da4e1467d56d26a54de6",
+    "learnability_report_v2.json": "c164593bcc745dad7249ab8ce68e81c2b5d3e2c1f82c56fb67f39367d26e2ecb",
+    "learnability_report_v3.json": "62abec0160eadc5450de902f6a2cf1ae3eb41a1a5e3887ea1da92e62807bbf65",
+    "ledger_manifest_arm_a.json": "47eb96668ecd0f54048165e21b77a13a0f9ff0c8ec47313aa141104a5954d0f2",
+    "v1policy_candidates_arm_a.parquet": "e2e4d90aae651f04de2f33b555a6279ac3b6d5eb07e80e8daa321bf544c54f83",
+    "v1policy_equity_arm_a.parquet": "b258ac25b640c4cea569f62370cfb64f7a4b0607846e4ab95972cee88c568d6b",
+    "v1policy_events_arm_a.jsonl.gz": "c7afef153698b91139b501c4b849d70a9945c89403feaf43797047d6bdb342bc",
+    "v1policy_gap_exclusion_report.json": "77024ccd39ccd07e9ab17ea727d4993f577a82056c809df45a812e2724afda9a",
+    "v1policy_labels_arm_a.parquet": "458f227e225db50b6b67f02c323d25d3873e45b7a19e673d2b734e94117c03ef",
+    "v1policy_ledger_manifest_arm_a.json": "f5a9fcc0abbb629666abe9e12cf70483973706b87601e08613d2604b04c059f2"
+   },
+   "n_files": 24
+  }
+ },
+ "lake_provenance": {
+  "census_check": {
+   "extra_vs_manifest": [],
+   "missing_vs_manifest": [],
+   "on_disk_files": 13241
+  },
+  "full_verification_record": {
+   "path": "/home/user/lake-work/wt-d72/data/manifests/lake_verification_raw-v1.json",
+   "sha256": "65bfc0020f709f0ce23b923b3345bff3dca9b60597d964676f60e5801186234a"
+  },
+  "holdout_statement": "zero readable holdout rows available: the lake contains only pre-quarantine data (content-addressed manifest + recorded full verification); holdout rows exist solely inside the encrypted artifact, untouched. This addendum grants NO holdout access.",
+  "lake_dir": "/home/user/lake-work/lake",
+  "lake_manifest": {
+   "n_files": 13241,
+   "path": "/home/user/lake-work/wt-d72/data/manifests/lake_manifest_raw-v1.json",
+   "sha256": "c1ef7262f62b9cbb1cc12b6405ecc21c1898233e8e699c89bd16d31e8e2211ac"
+  },
+  "partition_meta": {
+   "holdout_end_ms": 1787572800000,
+   "path": "/home/user/lake-work/wt-d72/data/manifests/partition_meta.json",
+   "quarantine_start_ms": 1752134400000,
+   "sha256": "735f0ecaef51c17deeebd95e543c7f272220f5d730f2780f7c7ecb1f7dd69305"
+  },
+  "sampled_hash_check": {
+   "mismatches": [],
+   "n_sampled": 24,
+   "seed": 20260829
+  },
+  "verified": true
+ },
+ "loaded_lab_modules": {
+  "lab": {
+   "file": "lab/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.arms": {
+   "file": "lab/arms/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.arms.indicators": {
+   "file": "lab/arms/indicators.py",
+   "sha256": "bf1446de8f723fd654643f70a8488fbcf640ad4fdc5bf3fb594ee442df1b6cb9"
+  },
+  "lab.arms.observation": {
+   "file": "lab/arms/observation.py",
+   "sha256": "8e8b719eaa93157d689cd29f89a90510de03fc4a93b7310ae97a9973da81a5da"
+  },
+  "lab.arms.rl_env": {
+   "file": "lab/arms/rl_env.py",
+   "sha256": "fd89047dbeb100e87fe6ef751a24cb9867c1480d5b2a239a33d4b3bda9cec53b"
+  },
+  "lab.data": {
+   "file": "lab/data/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.data.access": {
+   "file": "lab/data/access.py",
+   "sha256": "8feea30357346fe1e0171bca100d012d0f7eb5c1530a8672d27efd13cc248803"
+  },
+  "lab.data.lake": {
+   "file": "lab/data/lake.py",
+   "sha256": "d4f35da1d45912149454513ed52f69e2b79bf0b917eb807fb1c3db5549f7270e"
+  },
+  "lab.protocol": {
+   "file": "lab/protocol.py",
+   "sha256": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2"
+  },
+  "lab.sim": {
+   "file": "lab/sim/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lab.sim.engine": {
+   "file": "lab/sim/engine.py",
+   "sha256": "2e295ab6e4f81c59d65ea287888f6ceacda509ee05bf5e970a215dff75cc773a"
+  },
+  "lab.tools": {
+   "file": "lab/tools/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+ },
+ "outputs": {
+  "dir": "/home/user/lake-work/official_v5/models_sb3",
+  "files": {
+   "arm_f_sb3_manifest.json": "cd00c9f9b1caef3c5ffc116f273bff5708bb12d48f449d19197dbaa3c9afd38a",
+   "arm_f_sb3_seed1.zip": "becc8ebb32e40fbb603cf0a5d4d0442cfe2b609fe968392a3b024f124d3dacf9",
+   "arm_f_sb3_seed10.zip": "25863e639a42fdd1e4391a1ebed98a66f3b1d39b9a7ed4204f64560e4ce579d4",
+   "arm_f_sb3_seed2.zip": "f4faffb7083cf3f107468b05cda253f58184cf08755b90c09806d025b92909c9",
+   "arm_f_sb3_seed3.zip": "3be34270b067da17f945484b1be62f147f20f14ea5128bc58f86c3c2b1dc1bd0",
+   "arm_f_sb3_seed4.zip": "0af66473824a252f1e2ce404b3e34f3b224530afd2164d3eb7ddb9be5184566a",
+   "arm_f_sb3_seed5.zip": "5a291ccc66cfc7a31736ef5e806cc61512e3fa99c336da75fa8f579c368dc651",
+   "arm_f_sb3_seed6.zip": "79e9965d38b6e5122f5ac46a1ac1d83715332ea38a078f2218bba1fee82b93f8",
+   "arm_f_sb3_seed7.zip": "2f8fff2009b2e02174564730f511c8f1fca7319852cb43d36efd38663fb0efbb",
+   "arm_f_sb3_seed8.zip": "09c4b1f4291b794669daad86e9fa4689debb9e4c22736940fce68aa93731ea5c",
+   "arm_f_sb3_seed9.zip": "ea501644401527ae4ae40b538d8ff027602dcf37d7ab23af5df63971ffce2d30"
+  },
+  "n_files": 11
+ },
+ "problems": [],
+ "source_census": {
+  "census_sha256_post": "20e187c64f23965274eb6acdf20253e15ac811ef246e66d3c65b28c74d62777f",
+  "census_sha256_pre": "20e187c64f23965274eb6acdf20253e15ac811ef246e66d3c65b28c74d62777f",
+  "changed_during_run": [],
+  "files": {
+   "lab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/arms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/arms/arm_a.py": "8b7d26317b84c68f8a0997bafa7a4ec0a601914b97e51319d21e0de1fe384f99",
+   "lab/arms/indicators.py": "bf1446de8f723fd654643f70a8488fbcf640ad4fdc5bf3fb594ee442df1b6cb9",
+   "lab/arms/observation.py": "8e8b719eaa93157d689cd29f89a90510de03fc4a93b7310ae97a9973da81a5da",
+   "lab/arms/regime.py": "3d96fc8b13ac59d471487ba65a09912660c572f2772de5aa8032a4d5f43ce7fb",
+   "lab/arms/rl_env.py": "fd89047dbeb100e87fe6ef751a24cb9867c1480d5b2a239a33d4b3bda9cec53b",
+   "lab/arms/rl_sb3.py": "937c3ce1caf0603b26e57e38cddd92388a38efaa0cefbc6c7d3d09866365d793",
+   "lab/arms/rl_train.py": "90b22199f3a3378ba111544b1543f3f7e7e40c8f113d43e2b1d1e0e428f97b3e",
+   "lab/dashboard/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/dashboard/build.py": "d81086e18efc1b2b3200d51e0d50d4c4877cc2742524a2dca0e7ea3a5cd37f58",
+   "lab/data/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/data/access.py": "8feea30357346fe1e0171bca100d012d0f7eb5c1530a8672d27efd13cc248803",
+   "lab/data/audit.py": "ce59c682d2c3cfda66e4ee003454ab1e1d1b4646fea2e6272eb0e0f57e1c84fe",
+   "lab/data/authz.py": "54175ec88bb867a8005ff940b2de573b29c698a5ffe25878e8f4773d64c7de41",
+   "lab/data/frozen_inputs.py": "3f24f9a68f69a8729973c82b24e8bb10748fa1f4280b69f0e9185d6f44d11b21",
+   "lab/data/holdout_ledger.py": "1b4bc66d9cd1a3dcf757ddf45a458ff4e479cbf3ced4433bdbf0deaef6a5e2e3",
+   "lab/data/ingest.py": "ffb7f705df8dde63ea8a103fff734dfb229d36c121a685df9f8038ffaa205c1d",
+   "lab/data/lake.py": "d4f35da1d45912149454513ed52f69e2b79bf0b917eb807fb1c3db5549f7270e",
+   "lab/data/partition.py": "9cb704365ab729ec012ec6305c442ddf35f6cc2184293c69a27c3004b93203bd",
+   "lab/data/preflight.py": "f7f1c5fa359b694ec96d0219a9deaeead964f9ed73536163f2dfeeb164f16e34",
+   "lab/data/seal.py": "aab1732b9e0ffc1eba793dc5cf988996827a76ab60930a7b61196908abe670a5",
+   "lab/data/unseal.py": "09e5fb5bcdd3b62589d86384e3d74d73bc60dda4372b5617864ddd51d894ef37",
+   "lab/features/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/features/build.py": "bb7114bc139b2cef26def1decd035acf02848fa6cee36e13c72a7fc2c88e2f51",
+   "lab/labels/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/labels/labels.py": "4044ef8ab6347ae9dfcacafee62075b346798abffcc2226818b82d4c5511d3c9",
+   "lab/labels/purge.py": "3c0d392d800477853c8e7c65d8326adc2a249f6e9383ee3b07abe9888f3df247",
+   "lab/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/models/pipelines.py": "bfe918f43fa2151c454044311d3188f3afe26d7e410cd3f484a8216a82d9c790",
+   "lab/orchestration/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/orchestration/competition.py": "ba9eb5dfb8db7977287890d8b6381acf392a82c8df7cef639e3f186ad19344a3",
+   "lab/orchestration/rounds.py": "233674a96ea986b931d6892f6cd2c16dccb799e4c3a22216bf763b0c8409eabc",
+   "lab/protocol.py": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2",
+   "lab/refledger/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/refledger/ledger.py": "16415d6ea969fe8893fc14088ac8e427acc1597aface8a1e80951565610aa202",
+   "lab/risk/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/risk/governor.py": "3a6b368dc076570207186fb18377ae8a2bcb28cc232d0e88cc1e45414110a210",
+   "lab/sim/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/sim/engine.py": "2e295ab6e4f81c59d65ea287888f6ceacda509ee05bf5e970a215dff75cc773a",
+   "lab/tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/tools/arm_e_portfolio.py": "6d936121a8c1a7cf057ba3a004b3fb5d05856d15071e7aa2e8010b08af36bd09",
+   "lab/tools/build_features.py": "7201973cc0d34fd40a56463788bfe9904e3c711df64223ed11410ac040d9e9ca",
+   "lab/tools/finalize_bce.py": "34e5b2db90d8f10191a3e3b5d8d35c7d790afdabc105541d3cbee6b99a9962f4",
+   "lab/tools/finalize_bce_v2.py": "2b349edb483ea783cfeed9028168398027ed9b66f2af74e7c53ebf9c6796844f",
+   "lab/tools/holdout_evaluator.py": "8a1baf44b27489ebc098f10f790ab7c22dd9def07919c3003c3b0c809eb50757",
+   "lab/tools/immutable_evidence.py": "b55b02a1f4f81aaffefd180463f6a5a364848c1e6310e54daeb85349cff4b5f7",
+   "lab/tools/learnability.py": "fa99548326d5d535eee7c727d92512bd010b982e3df473d71516bbe884e71d81",
+   "lab/tools/learnability_v2.py": "d61527faad54abfc725adc8515c038d02ea15ee2bf0fdcda4ea811a9da5eeb51",
+   "lab/tools/learnability_v3.py": "220b3bfa15419b6b713f78354a574c7744abc038c586352490c53c920c79b4b6",
+   "lab/tools/lock_integrity.py": "432b486c2833b4a94f32c6df9a879ae1e4beb04787a44275239e8458e7af34c8",
+   "lab/tools/lock_integrity_v2.py": "bc38c7016d22c1e4c16d12b6ad6dd8cca735a6ce35b073a0910c8ac0f16bf9d8",
+   "lab/tools/lock_integrity_v3.py": "e7295cc3c3c8c7a6446f47218052d90540a20365102fe9cc6484a0a5371f9cd0",
+   "lab/tools/lock_integrity_v4.py": "b2c070344cfb2bf2a3572db469d2b5b002df5929f6730a4a353739930ff36e4c",
+   "lab/tools/make_frozen_inputs.py": "26dfd141d49e0877f39b3c5ec7719d49032a234e0efe099a2706f417d7cdd036",
+   "lab/tools/provenance_run.py": "2f9781bff3680809073c8ee7dbf28b8e53b7aa4152d01f6eb5a42bb1ecc0a5fc",
+   "lab/tools/report_arm_f.py": "f0346668b2f02a94f431135041af9d1ee918fe1d5c2fd4856f2a1e8f6f2302e5",
+   "lab/tools/report_arm_f_v2.py": "67affdde5278ee6bceefa7cb5e829d4ab3e039ed988de59f05ef902ae7a9855e",
+   "lab/tools/report_arm_f_v3.py": "b92f03b6d72cc1d3accc16ec7c69ac8da2570939a6ab319aa72a4aa207ad050c",
+   "lab/tools/run_arm_a.py": "6b5c069ccf0744a60f16c6621facd01c30d586c3adee70f6f305ce268be43c45",
+   "lab/tools/shakedown.py": "56d454c628321ff5455699281078b76d62988db564eb38ffa7975de79f0b6c53",
+   "lab/tools/stress_fixture.py": "8ab9f650dc36614da5ffb36b0fc33e37df828d57b7df71a9d91cb75b8d2272f2",
+   "lab/tools/surrogate_rehearsal.py": "8509705cab9df2027a5868511821ce09fdc702edff1da80274c91168df57f7b4",
+   "lab/tools/train_arm_f_sb3.py": "a9f49110821c764c9e881a5ece37bd3176e84d526e8eb46a6d27d14458fc1a41",
+   "lab/tools/train_arms.py": "af2b04240b7dcb17e3db0daffd089c00ce08815227588d2d778b50c066cb1404",
+   "lab/tools/verify_lake.py": "73089d4556d6c689b38ccba82ddfa25b6ac8cc95caa6e0de0a26604ed6a489d4",
+   "lab/verify/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "lab/verify/differential.py": "656b33937d50de29f5ac79a1845f784b577ac7bbafb691e141c9f1cbfa75dfef",
+   "requirements.txt": "4c750face755892d4bb37c1e0e2ce875fcef1b6a2034a3e33b503b2511e159e9"
+  },
+  "n_files": 69
+ },
+ "started_utc": "2026-08-30T07:44:09Z"
+}

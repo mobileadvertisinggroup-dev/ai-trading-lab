@@ -1,0 +1,487 @@
+{
+ "_description": "D72 funding acceptance evidence: totals by arm/side/symbol-count/period/sign from the funding-corrected shakedown v5 (INVALID-for-performance window, 180d), applied-vs-missing counts, event-to-equity reconciliation, old-vs-corrected selections, and the stress-fixture funding checks",
+ "generated_utc": "2026-08-30T08:34:53Z",
+ "note_on_missing": "missing counts = open positions at 8h boundaries whose symbol has NO recorded rate at exactly that timestamp in the raw funding data; the frozen rule keeps these LOUD (funding_missing events), never imputed",
+ "old_vs_corrected_arm_e": {
+  "arm_a_reference": {
+   "corrected": {
+    "dd95_decimal": 0.6147449066217644,
+    "final_equity": 10482.938864798973,
+    "identical_across_runs": true,
+    "max_drawdown_decimal": 0.35781402949702945,
+    "sortino_annualized": 0.5193129714222142
+   },
+   "old": {
+    "dd95_decimal": 0.6144558395937956,
+    "final_equity": 10462.958310962455,
+    "identical_across_runs": true,
+    "max_drawdown_decimal": 0.3593105016688485,
+    "sortino_annualized": 0.5147949479941559
+   }
+  },
+  "per_mapping_utility": {
+   "M1": {
+    "corrected": 0.9424763047795199,
+    "old": 0.9871647773550533
+   },
+   "M2": {
+    "corrected": 0.7846012824320386,
+    "old": 0.7706679667947098
+   },
+   "M3": {
+    "corrected": 0.8487993236699459,
+    "old": 0.893096373722038
+   },
+   "M4": {
+    "corrected": 0.5193129714222142,
+    "old": 0.5147949479941559
+   }
+  },
+  "selected": {
+   "corrected": "M1",
+   "old": "M1"
+  }
+ },
+ "old_vs_corrected_arm_f": {
+  "baseline_funding_events": 5253,
+  "baseline_mean_validation_reward": 0.05339647933877162,
+  "per_seed_delta": [
+   {
+    "corrected": -0.0042112526973425435,
+    "delta": 0.004656608341695472,
+    "old_no_funding": -0.008867861039038015,
+    "seed": 1
+   },
+   {
+    "corrected": -0.011627788883821821,
+    "delta": -0.0018490832790868956,
+    "old_no_funding": -0.009778705604734926,
+    "seed": 2
+   },
+   {
+    "corrected": -0.001786235359670677,
+    "delta": 0.014226286435308105,
+    "old_no_funding": -0.016012521794978783,
+    "seed": 3
+   },
+   {
+    "corrected": -0.0055408700869367744,
+    "delta": -0.010030566080959199,
+    "old_no_funding": 0.004489695994022424,
+    "seed": 4
+   },
+   {
+    "corrected": -0.007398145839134972,
+    "delta": 0.0038118605983618395,
+    "old_no_funding": -0.011210006437496811,
+    "seed": 5
+   },
+   {
+    "corrected": -0.006678692052753635,
+    "delta": -0.0019271637374492613,
+    "old_no_funding": -0.004751528315304373,
+    "seed": 6
+   },
+   {
+    "corrected": -0.007101632228374795,
+    "delta": -0.002406624250756776,
+    "old_no_funding": -0.004695007977618019,
+    "seed": 7
+   },
+   {
+    "corrected": -0.006425266691896847,
+    "delta": -0.005357461026795225,
+    "old_no_funding": -0.0010678056651016216,
+    "seed": 8
+   },
+   {
+    "corrected": -0.01118902596311261,
+    "delta": -0.012437152837366062,
+    "old_no_funding": 0.0012481268742534511,
+    "seed": 9
+   },
+   {
+    "corrected": -0.006384624922783184,
+    "delta": 0.0014140182275716884,
+    "old_no_funding": -0.007798643150354873,
+    "seed": 10
+   }
+  ],
+  "selected_seed": {
+   "corrected": 3,
+   "old_no_funding": 4
+  },
+  "statistics_corrected": {
+   "best_seed": 3,
+   "iqr_validation_reward": 0.0015722086405465501,
+   "mean_validation_reward": -0.006834353472582787,
+   "median_validation_reward": -0.006551979372325241,
+   "n_non_converged": 7,
+   "variance_validation_reward": 8.528954108395267e-06,
+   "worst_seed": 2
+  },
+  "wins_losses_corrected": {
+   "losses": 10,
+   "pct_seeds_beating_exact_baseline": 0.0,
+   "wins": 0
+  }
+ },
+ "retraining_provenance": {
+  "all_10_seeds": "official_v5/models_sb3/PROVENANCE_train_arm_f_sb3.json (certified; clean worktree 7334e04)",
+  "arm_e": "official_v5/arm_e/PROVENANCE_arm_e_portfolio.json",
+  "arm_f_report": "official_v5/arm_f/PROVENANCE_report_arm_f_v3.json",
+  "shakedown": "official_v5/shakedown/PROVENANCE_shakedown.json",
+  "stress": "official_v5/stress/PROVENANCE_stress_fixture.json"
+ },
+ "shakedown_v5_funding_by_arm": {
+  "A": {
+   "by_period": {
+    "2025-01": 18.09458485766187,
+    "2025-02": -24.537036317382885,
+    "2025-03": -20.88798405068089,
+    "2025-04": -17.038253223627983,
+    "2025-05": 46.853164187443646
+   },
+   "by_side": {
+    "long_paid": -100.70921405234134,
+    "short_paid": 103.19368950575517
+   },
+   "by_sign": {
+    "paid_negative_count": 1199,
+    "paid_negative_sum": -185.24392910906013,
+    "paid_positive_count": 1057,
+    "paid_positive_sum": 187.72840456247363,
+    "paid_zero_count": 14
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -2.4844754534137627,
+   "guard": {
+    "n_closed_trades": 359,
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 2270,
+   "n_missing": 806,
+   "n_symbols_with_funding_events": 100,
+   "total_paid": 2.4844754534137627
+  },
+  "B": {
+   "by_period": {
+    "2025-01": -0.046990510725898556,
+    "2025-02": 0.1618616781282219,
+    "2025-03": 0.043821299827926416,
+    "2025-04": 2.382043219854713,
+    "2025-05": 35.984836611336995,
+    "2025-06": -0.4514969804638224
+   },
+   "by_side": {
+    "long_paid": -0.3729728516879885,
+    "short_paid": 38.447048169646145
+   },
+   "by_sign": {
+    "paid_negative_count": 73,
+    "paid_negative_sum": -3.383073939053209,
+    "paid_positive_count": 71,
+    "paid_positive_sum": 41.457149257011366,
+    "paid_zero_count": 1
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -38.07407531795816,
+   "guard": {
+    "n_closed_trades": 26,
+    "ok": true,
+    "reason": "window/trade count below the multi-month threshold"
+   },
+   "n_applied": 145,
+   "n_missing": 95,
+   "n_symbols_with_funding_events": 16,
+   "total_paid": 38.07407531795816
+  },
+  "C": {
+   "by_period": {
+    "2025-01": -1.4169014924534906,
+    "2025-02": -35.409682107668715,
+    "2025-03": -15.093804431130922,
+    "2025-04": -25.4485480909683,
+    "2025-05": 48.62005698126523,
+    "2025-06": 1.2040606481898473
+   },
+   "by_side": {
+    "long_paid": -121.66514958764525,
+    "short_paid": 94.12033109487886
+   },
+   "by_sign": {
+    "paid_negative_count": 1121,
+    "paid_negative_sum": -204.8214094780701,
+    "paid_positive_count": 942,
+    "paid_positive_sum": 177.2765909853036,
+    "paid_zero_count": 15
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": 27.544818492766368,
+   "guard": {
+    "n_closed_trades": 310,
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 2078,
+   "n_missing": 782,
+   "n_symbols_with_funding_events": 110,
+   "total_paid": -27.544818492766368
+  },
+  "D": {
+   "by_period": {
+    "2025-01": 8.72529646756508,
+    "2025-02": -0.22956160097195402,
+    "2025-03": -0.28678637829120973,
+    "2025-04": -7.9413299480770325,
+    "2025-05": 5.638905029516736,
+    "2025-06": 0.15049330637301894
+   },
+   "by_side": {
+    "long_paid": -30.472018073884293,
+    "short_paid": 36.5290349499989
+   },
+   "by_sign": {
+    "paid_negative_count": 1080,
+    "paid_negative_sum": -86.300398257512,
+    "paid_positive_count": 1024,
+    "paid_positive_sum": 92.35741513362673,
+    "paid_zero_count": 9
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -6.05701687611465,
+   "guard": {
+    "n_closed_trades": 361,
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 2113,
+   "n_missing": 817,
+   "n_symbols_with_funding_events": 99,
+   "total_paid": 6.05701687611465
+  },
+  "E": {
+   "by_period": {
+    "2025-01": 16.38381297976049,
+    "2025-02": -17.0747828021995,
+    "2025-03": 12.177161734167667,
+    "2025-04": -1.7457870270130895,
+    "2025-05": 51.90151893374272,
+    "2025-06": 6.830966213040866,
+    "2025-07": 1.2275550500369603
+   },
+   "by_side": {
+    "long_paid": -38.286804691929746,
+    "short_paid": 107.98724977346583
+   },
+   "by_sign": {
+    "paid_negative_count": 1465,
+    "paid_negative_sum": -108.69387361602526,
+    "paid_positive_count": 1291,
+    "paid_positive_sum": 178.3943186975616,
+    "paid_zero_count": 13
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -69.70044508153609,
+   "guard": {
+    "n_closed_trades": 459,
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 2769,
+   "n_missing": 1485,
+   "n_symbols_with_funding_events": 122,
+   "total_paid": 69.70044508153609
+  },
+  "F": {
+   "by_period": {
+    "2025-01": 2.395495493113154,
+    "2025-02": -0.012691294936296223,
+    "2025-03": 0.8453173666090962,
+    "2025-04": 7.5266624508986295,
+    "2025-05": 15.822171900309671,
+    "2025-06": 6.967626175422949,
+    "2025-07": 0.8374780004445003
+   },
+   "by_side": {
+    "long_paid": -23.87635296389242,
+    "short_paid": 58.25841305575415
+   },
+   "by_sign": {
+    "paid_negative_count": 377,
+    "paid_negative_sum": -58.506152726485674,
+    "paid_positive_count": 517,
+    "paid_positive_sum": 92.8882128183475,
+    "paid_zero_count": 4
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -34.3820600918617,
+   "guard": {
+    "n_closed_trades": 1341,
+    "ok": true,
+    "reason": "funding active and reconciled"
+   },
+   "n_applied": 898,
+   "n_missing": 460,
+   "n_symbols_with_funding_events": 129,
+   "total_paid": 34.3820600918617
+  },
+  "G": {
+   "by_period": {
+    "2025-01": -0.023495255362949278,
+    "2025-02": -0.1526177258738439,
+    "2025-04": 0.22438450700474322,
+    "2025-05": -0.324993171999294
+   },
+   "by_side": {
+    "long_paid": -0.324993171999294,
+    "short_paid": 0.048271525767950046
+   },
+   "by_sign": {
+    "paid_negative_count": 7,
+    "paid_negative_sum": -0.5011061532360872,
+    "paid_positive_count": 1,
+    "paid_positive_sum": 0.22438450700474322,
+    "paid_zero_count": 0
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": 0.276721646231344,
+   "guard": {
+    "n_closed_trades": 7,
+    "ok": true,
+    "reason": "window/trade count below the multi-month threshold"
+   },
+   "n_applied": 8,
+   "n_missing": 7,
+   "n_symbols_with_funding_events": 8,
+   "total_paid": -0.276721646231344
+  },
+  "G_feasible": {
+   "by_period": {
+    "2025-01": -0.023495255362949278,
+    "2025-02": 0.18430127108769992,
+    "2025-03": -0.047364144880635506,
+    "2025-04": 1.2146979402410132,
+    "2025-05": -0.3956476418765556,
+    "2025-06": 0.14762347738211137
+   },
+   "by_side": {
+    "long_paid": -0.3956476418765556,
+    "short_paid": 1.4757632884672391
+   },
+   "by_sign": {
+    "paid_negative_count": 21,
+    "paid_negative_sum": -1.1791858209634118,
+    "paid_positive_count": 31,
+    "paid_positive_sum": 2.259301467554096,
+    "paid_zero_count": 0
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -1.0801156465906836,
+   "guard": {
+    "n_closed_trades": 7,
+    "ok": true,
+    "reason": "window/trade count below the multi-month threshold"
+   },
+   "n_applied": 52,
+   "n_missing": 24,
+   "n_symbols_with_funding_events": 8,
+   "total_paid": 1.0801156465906836
+  },
+  "G_matched": {
+   "by_period": {
+    "2025-01": -0.023495255362949278,
+    "2025-02": 0.14321032206499193,
+    "2025-03": -0.046432298412781396,
+    "2025-04": 1.1919277056332473,
+    "2025-05": -0.3891815797947475,
+    "2025-06": 0.1457972588273915
+   },
+   "by_side": {
+    "long_paid": -0.3891815797947475,
+    "short_paid": 1.4110077327498998
+   },
+   "by_sign": {
+    "paid_negative_count": 22,
+    "paid_negative_sum": -1.2061878590578137,
+    "paid_positive_count": 31,
+    "paid_positive_sum": 2.2280140120129657,
+    "paid_zero_count": 0
+   },
+   "event_to_equity_reconciled": true,
+   "funding_net": -1.021826152955152,
+   "guard": {
+    "n_closed_trades": 7,
+    "ok": true,
+    "reason": "window/trade count below the multi-month threshold"
+   },
+   "n_applied": 53,
+   "n_missing": 27,
+   "n_symbols_with_funding_events": 8,
+   "total_paid": 1.021826152955152
+  }
+ },
+ "stress_fixture_funding_checks": {
+  "abs_paid_total": 274.84865875560723,
+  "n_applied_total": 1382,
+  "n_missing_total": 27,
+  "per_engine": {
+   "A": {
+    "applied": 185,
+    "missing": 0,
+    "paid": -17.862539277275996,
+    "reconciled": true
+   },
+   "B": {
+    "applied": 185,
+    "missing": 0,
+    "paid": -17.862539277275996,
+    "reconciled": true
+   },
+   "C": {
+    "applied": 185,
+    "missing": 0,
+    "paid": -17.862539277275996,
+    "reconciled": true
+   },
+   "D": {
+    "applied": 185,
+    "missing": 0,
+    "paid": -17.862539277275996,
+    "reconciled": true
+   },
+   "E": {
+    "applied": 185,
+    "missing": 0,
+    "paid": -17.862539277275996,
+    "reconciled": true
+   },
+   "F": {
+    "applied": 19,
+    "missing": 2,
+    "paid": -51.59658230177187,
+    "reconciled": true
+   },
+   "G": {
+    "applied": 20,
+    "missing": 1,
+    "paid": -13.385660870897052,
+    "reconciled": true
+   },
+   "G_feasible": {
+    "applied": 185,
+    "missing": 0,
+    "paid": -17.862539277275996,
+    "reconciled": true
+   },
+   "G_matched": {
+    "applied": 233,
+    "missing": 24,
+    "paid": 102.69117991928235,
+    "reconciled": true
+   }
+  },
+  "sign_violations": 0
+ }
+}

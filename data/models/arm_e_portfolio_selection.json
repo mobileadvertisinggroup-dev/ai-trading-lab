@@ -4,11 +4,11 @@
     "periods_per_year": 2191.5
   },
   "arm_a_reference": {
-    "dd95_decimal": 0.6144558395937956,
-    "final_equity": 10462.958310962455,
+    "dd95_decimal": 0.6147449066217644,
+    "final_equity": 10482.938864798973,
     "identical_across_runs": true,
-    "max_drawdown_decimal": 0.3593105016688485,
-    "sortino_annualized": 0.5147949479941559
+    "max_drawdown_decimal": 0.35781402949702945,
+    "sortino_annualized": 0.5193129714222142
   },
   "bootstrap": {
     "block_len_4h": 168,
@@ -21,11 +21,11 @@
   "preregistration": "PREREGISTRATION_ARM_E_PORTFOLIO.md",
   "results": [
     {
-      "dd95_decimal": 0.3907637964661684,
-      "equity_curve_sha256": "0f753d95204694c487f481e9d030c0ef56f63c56cc8d9e3ab5ac07a6bc591473",
-      "final_equity": 12254.533089871484,
+      "dd95_decimal": 0.3966834832906714,
+      "equity_curve_sha256": "d272b2e76f6b706af3100c938e74ee659520eced3213283b1192dee237f54d3b",
+      "final_equity": 12095.952897620027,
       "mapping": "M1",
-      "max_drawdown_decimal": 0.20379563691893898,
+      "max_drawdown_decimal": 0.20551244475143216,
       "n_boundaries": 2462,
       "penalty": 0.0,
       "rounds": {
@@ -33,15 +33,15 @@
         "total": 2462,
         "valid": 2462
       },
-      "sortino_annualized": 0.9871647773550533,
-      "utility_UE": 0.9871647773550533
+      "sortino_annualized": 0.9424763047795199,
+      "utility_UE": 0.9424763047795199
     },
     {
-      "dd95_decimal": 0.38599029965981385,
-      "equity_curve_sha256": "57398a1ad1eb8050acd45d2a3f73913077e6aa81fe0f61defa596b750a0b356e",
-      "final_equity": 11438.49044511194,
+      "dd95_decimal": 0.3846489591280587,
+      "equity_curve_sha256": "8bbd1a4b74f5853dfc0d74dd8f917e8e6cb6861a442792114b0fe0a59ee66476",
+      "final_equity": 11480.590071626368,
       "mapping": "M2",
-      "max_drawdown_decimal": 0.2215483869174012,
+      "max_drawdown_decimal": 0.21247900526908137,
       "n_boundaries": 2462,
       "penalty": 0.0,
       "rounds": {
@@ -49,15 +49,15 @@
         "total": 2462,
         "valid": 2462
       },
-      "sortino_annualized": 0.7706679667947098,
-      "utility_UE": 0.7706679667947098
+      "sortino_annualized": 0.7846012824320386,
+      "utility_UE": 0.7846012824320386
     },
     {
-      "dd95_decimal": 0.3374867347317686,
-      "equity_curve_sha256": "989d8e45bf935422e2d6b36ab3d6ddfdd3c412dc73c5ab7f892d540f5129c34c",
-      "final_equity": 11663.836569931906,
+      "dd95_decimal": 0.34247582548472505,
+      "equity_curve_sha256": "97a4c132b8363cd1ddfbee88c9ffcbeb40510bf29b9c87a6f2b70631239c637e",
+      "final_equity": 11545.07147744608,
       "mapping": "M3",
-      "max_drawdown_decimal": 0.17978376891314507,
+      "max_drawdown_decimal": 0.18354227229110087,
       "n_boundaries": 2462,
       "penalty": 0.0,
       "rounds": {
@@ -65,15 +65,15 @@
         "total": 2462,
         "valid": 2462
       },
-      "sortino_annualized": 0.893096373722038,
-      "utility_UE": 0.893096373722038
+      "sortino_annualized": 0.8487993236699459,
+      "utility_UE": 0.8487993236699459
     },
     {
-      "dd95_decimal": 0.6144558395937956,
-      "equity_curve_sha256": "6ad1068748ef1c5c9931811ac264b180b27f672d6d03532cd86f8a4da424e0a4",
-      "final_equity": 10462.958310962455,
+      "dd95_decimal": 0.6147449066217644,
+      "equity_curve_sha256": "08f3a8a361ac7ad464f9ae850d26f0bc354556d89ba3eb427934212543fca03a",
+      "final_equity": 10482.938864798973,
       "mapping": "M4",
-      "max_drawdown_decimal": 0.3593105016688485,
+      "max_drawdown_decimal": 0.35781402949702945,
       "n_boundaries": 2462,
       "penalty": 0.0,
       "rounds": {
@@ -81,8 +81,8 @@
         "total": 2462,
         "valid": 2462
       },
-      "sortino_annualized": 0.5147949479941559,
-      "utility_UE": 0.5147949479941559
+      "sortino_annualized": 0.5193129714222142,
+      "utility_UE": 0.5193129714222142
     }
   ],
   "rule": "highest U_E; ties -> earliest of M1..M4",

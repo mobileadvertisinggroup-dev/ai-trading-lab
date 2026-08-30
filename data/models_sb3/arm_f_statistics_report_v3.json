@@ -1,0 +1,249 @@
+{
+  "baseline": {
+    "action_distribution": {
+      "close": 215,
+      "hold": 12964
+    },
+    "definition": "EXACT frozen Arm A conventional manager (trailing-channel then time exit, ArmARunner order), episodes WITH funding",
+    "mean_validation_reward": 0.05339647933877162,
+    "n_funding_events": 5253,
+    "parity_proof": "tests/test_arm_f_baseline_parity.py"
+  },
+  "correction": "D72: episodes carry frozen funding rates; the policy family was RETRAINED (all 10 official seeds) and the exact conventional baseline re-evaluated, both net of funding",
+  "old_vs_corrected": {
+    "note": "old values are from policies trained AND evaluated without funding \u2014 preserved as superseded history, not comparable like-for-like to the corrected family beyond direction and magnitude",
+    "per_seed_delta": [
+      {
+        "corrected": -0.0042112526973425435,
+        "delta": 0.004656608341695472,
+        "old_no_funding": -0.008867861039038015,
+        "seed": 1
+      },
+      {
+        "corrected": -0.011627788883821821,
+        "delta": -0.0018490832790868956,
+        "old_no_funding": -0.009778705604734926,
+        "seed": 2
+      },
+      {
+        "corrected": -0.001786235359670677,
+        "delta": 0.014226286435308105,
+        "old_no_funding": -0.016012521794978783,
+        "seed": 3
+      },
+      {
+        "corrected": -0.0055408700869367744,
+        "delta": -0.010030566080959199,
+        "old_no_funding": 0.004489695994022424,
+        "seed": 4
+      },
+      {
+        "corrected": -0.007398145839134972,
+        "delta": 0.0038118605983618395,
+        "old_no_funding": -0.011210006437496811,
+        "seed": 5
+      },
+      {
+        "corrected": -0.006678692052753635,
+        "delta": -0.0019271637374492613,
+        "old_no_funding": -0.004751528315304373,
+        "seed": 6
+      },
+      {
+        "corrected": -0.007101632228374795,
+        "delta": -0.002406624250756776,
+        "old_no_funding": -0.004695007977618019,
+        "seed": 7
+      },
+      {
+        "corrected": -0.006425266691896847,
+        "delta": -0.005357461026795225,
+        "old_no_funding": -0.0010678056651016216,
+        "seed": 8
+      },
+      {
+        "corrected": -0.01118902596311261,
+        "delta": -0.012437152837366062,
+        "old_no_funding": 0.0012481268742534511,
+        "seed": 9
+      },
+      {
+        "corrected": -0.006384624922783184,
+        "delta": 0.0014140182275716884,
+        "old_no_funding": -0.007798643150354873,
+        "seed": 10
+      }
+    ],
+    "superseded_no_funding_baseline": 0.053991844860182575,
+    "superseded_no_funding_selected_seed": 4,
+    "superseded_no_funding_wins_losses": {
+      "losses": 10,
+      "pct_seeds_beating_exact_baseline": 0.0,
+      "wins": 0
+    }
+  },
+  "per_seed": [
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": -0.21665417918734292,
+        "median_ma_last_25pct": -0.011955438272157653,
+        "n_episodes": 90558,
+        "non_converged": true
+      },
+      "margin_vs_baseline": -0.05760773203611416,
+      "recomputation_matches": true,
+      "recomputed": -0.0042112526973425435,
+      "seed": 1,
+      "validation_mean_reward": -0.0042112526973425435
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": -0.07913959860825107,
+        "median_ma_last_25pct": -0.005897528859169671,
+        "n_episodes": 89365,
+        "non_converged": true
+      },
+      "margin_vs_baseline": -0.06502426822259344,
+      "recomputation_matches": true,
+      "recomputed": -0.011627788883821821,
+      "seed": 2,
+      "validation_mean_reward": -0.011627788883821821
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": 0.04140011180986994,
+        "median_ma_last_25pct": -0.011072740774300824,
+        "n_episodes": 91477,
+        "non_converged": false
+      },
+      "margin_vs_baseline": -0.0551827146984423,
+      "recomputation_matches": true,
+      "recomputed": -0.001786235359670677,
+      "seed": 3,
+      "validation_mean_reward": -0.001786235359670677
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": -0.008937278429590837,
+        "median_ma_last_25pct": -0.012274349267692695,
+        "n_episodes": 96966,
+        "non_converged": false
+      },
+      "margin_vs_baseline": -0.05893734942570839,
+      "recomputation_matches": true,
+      "recomputed": -0.0055408700869367744,
+      "seed": 4,
+      "validation_mean_reward": -0.0055408700869367744
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": -0.08822466436974427,
+        "median_ma_last_25pct": -0.019967572613799098,
+        "n_episodes": 103237,
+        "non_converged": true
+      },
+      "margin_vs_baseline": -0.06079462517790659,
+      "recomputation_matches": true,
+      "recomputed": -0.007398145839134972,
+      "seed": 5,
+      "validation_mean_reward": -0.007398145839134972
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": -0.01783904974369737,
+        "median_ma_last_25pct": -0.006285685523409648,
+        "n_episodes": 89292,
+        "non_converged": true
+      },
+      "margin_vs_baseline": -0.06007517139152525,
+      "recomputation_matches": true,
+      "recomputed": -0.006678692052753635,
+      "seed": 6,
+      "validation_mean_reward": -0.006678692052753635
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": -0.1292480594866109,
+        "median_ma_last_25pct": -0.029764195229700422,
+        "n_episodes": 137593,
+        "non_converged": true
+      },
+      "margin_vs_baseline": -0.06049811156714641,
+      "recomputation_matches": true,
+      "recomputed": -0.007101632228374795,
+      "seed": 7,
+      "validation_mean_reward": -0.007101632228374795
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": -0.08097618356328937,
+        "median_ma_last_25pct": -0.016083603803390974,
+        "n_episodes": 89823,
+        "non_converged": true
+      },
+      "margin_vs_baseline": -0.05982174603066846,
+      "recomputation_matches": true,
+      "recomputed": -0.006425266691896847,
+      "seed": 8,
+      "validation_mean_reward": -0.006425266691896847
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": -0.09552099435906113,
+        "median_ma_last_25pct": -0.03103180785601803,
+        "n_episodes": 143859,
+        "non_converged": true
+      },
+      "margin_vs_baseline": -0.06458550530188423,
+      "recomputation_matches": true,
+      "recomputed": -0.01118902596311261,
+      "seed": 9,
+      "validation_mean_reward": -0.01118902596311261
+    },
+    {
+      "beats_exact_conventional_baseline": false,
+      "convergence": {
+        "final_ma": 0.19329150887272292,
+        "median_ma_last_25pct": -0.006944263122507013,
+        "n_episodes": 80299,
+        "non_converged": false
+      },
+      "margin_vs_baseline": -0.0597811042615548,
+      "recomputation_matches": true,
+      "recomputed": -0.006384624922783184,
+      "seed": 10,
+      "validation_mean_reward": -0.006384624922783184
+    }
+  ],
+  "preregistrations": [
+    "PREREGISTRATION_ARM_F_SB3.md (+ D72 funding amendment)",
+    "PREREGISTRATION_ARM_F_BASELINE.md"
+  ],
+  "selection": {
+    "rule": "highest mean validation reward; ties -> lower seed (pre-registered)",
+    "selected_seed": 3
+  },
+  "statistics": {
+    "best_seed": 3,
+    "iqr_validation_reward": 0.0015722086405465501,
+    "mean_validation_reward": -0.006834353472582787,
+    "median_validation_reward": -0.006551979372325241,
+    "n_non_converged": 7,
+    "variance_validation_reward": 8.528954108395267e-06,
+    "worst_seed": 2
+  },
+  "wins_losses": {
+    "losses": 10,
+    "pct_seeds_beating_exact_baseline": 0.0,
+    "wins": 0
+  }
+}

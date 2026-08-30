@@ -1,0 +1,97 @@
+{
+ "arm_e_portfolio_selection": {
+  "bytes": 2972,
+  "correction": "D72: re-selected with funding applied",
+  "selected_mapping": "M1",
+  "sha256": "3fdc0ba03fb78df0ba2118abb8ac07200522b619fd8172f97100292ddc22ae89"
+ },
+ "arm_f_sb3": {
+  "all_seed_zips": {
+   "arm_f_sb3_seed1.zip": {
+    "bytes": 149512,
+    "sha256": "becc8ebb32e40fbb603cf0a5d4d0442cfe2b609fe968392a3b024f124d3dacf9"
+   },
+   "arm_f_sb3_seed10.zip": {
+    "bytes": 149513,
+    "sha256": "25863e639a42fdd1e4391a1ebed98a66f3b1d39b9a7ed4204f64560e4ce579d4"
+   },
+   "arm_f_sb3_seed2.zip": {
+    "bytes": 149512,
+    "sha256": "f4faffb7083cf3f107468b05cda253f58184cf08755b90c09806d025b92909c9"
+   },
+   "arm_f_sb3_seed3.zip": {
+    "bytes": 149512,
+    "sha256": "3be34270b067da17f945484b1be62f147f20f14ea5128bc58f86c3c2b1dc1bd0"
+   },
+   "arm_f_sb3_seed4.zip": {
+    "bytes": 149512,
+    "sha256": "0af66473824a252f1e2ce404b3e34f3b224530afd2164d3eb7ddb9be5184566a"
+   },
+   "arm_f_sb3_seed5.zip": {
+    "bytes": 149512,
+    "sha256": "5a291ccc66cfc7a31736ef5e806cc61512e3fa99c336da75fa8f579c368dc651"
+   },
+   "arm_f_sb3_seed6.zip": {
+    "bytes": 149512,
+    "sha256": "79e9965d38b6e5122f5ac46a1ac1d83715332ea38a078f2218bba1fee82b93f8"
+   },
+   "arm_f_sb3_seed7.zip": {
+    "bytes": 149512,
+    "sha256": "2f8fff2009b2e02174564730f511c8f1fca7319852cb43d36efd38663fb0efbb"
+   },
+   "arm_f_sb3_seed8.zip": {
+    "bytes": 149512,
+    "sha256": "09c4b1f4291b794669daad86e9fa4689debb9e4c22736940fce68aa93731ea5c"
+   },
+   "arm_f_sb3_seed9.zip": {
+    "bytes": 149512,
+    "sha256": "ea501644401527ae4ae40b538d8ff027602dcf37d7ab23af5df63971ffce2d30"
+   }
+  },
+  "correction": "D72: all 10 official seeds RETRAINED with funding; selection rule unchanged",
+  "manifest": {
+   "bytes": 6691,
+   "sha256": "cd00c9f9b1caef3c5ffc116f273bff5708bb12d48f449d19197dbaa3c9afd38a"
+  },
+  "selected_seed": 3,
+  "selected_zip": {
+   "bytes": 149512,
+   "sha256": "3be34270b067da17f945484b1be62f147f20f14ea5128bc58f86c3c2b1dc1bd0"
+  }
+ },
+ "generated_utc": "2026-08-30T08:34:10Z",
+ "retained_supervised": {
+  "arm_b.txt": {
+   "bytes": 140763,
+   "sha256": "61baa40ddb5cfaa9c9e1716d1583f60c1ed81273ff4e708badfa77da1e235978"
+  },
+  "arm_c.txt": {
+   "bytes": 118305,
+   "sha256": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a"
+  },
+  "arm_e.txt": {
+   "bytes": 118305,
+   "sha256": "4dec09943d07d174454666ec27298bf3297d9598ad1850f847d151069b39385a"
+  },
+  "arm_e_cuts.npz": {
+   "bytes": 286,
+   "sha256": "6a6ba2cc8a559d0c19e74c71d33bb2de54370d2167e918f437742d30c8a79d98"
+  },
+  "bc_train_selection.json": {
+   "bytes": 5558,
+   "sha256": "0c51af3a0b48eb738ba8db06503aff2afe3dc9c4abf5ec57c7c29b5215d619c0"
+  }
+ },
+ "selections": {
+  "arm_b_threshold": 0.5,
+  "arm_c_top_k": 1,
+  "arm_e_mapping": "M1",
+  "arm_f_seed": 3
+ },
+ "superseded_history": {
+  "draft_model_manifest": "data/models/model_manifest.json (arm_f section = invalidated CEM)",
+  "no_funding_e_selection": "/home/user/lake-work/official_v4/arm_e (+ git history)",
+  "no_funding_sb3_family": "/home/user/lake-work/official_v2/models_sb3 (+ git history of data/models_sb3) \u2014 preserved unmodified"
+ },
+ "version": "model-manifest-v5 (D72 funding-corrected)"
+}

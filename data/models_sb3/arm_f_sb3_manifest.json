@@ -1,9 +1,9 @@
 {
  "compute_profile": {
   "formula": "min(150000, floor(0.9*(4h/10)*sps)) rounded down to a multiple of n_steps=512",
-  "probe_seconds": 2.3,
+  "probe_seconds": 3.4,
   "probe_timesteps": 2048,
-  "steps_per_second": 891.7,
+  "steps_per_second": 598.1,
   "total_timesteps_per_seed": 149504
  },
  "episode_order": "(t, symbol) ascending, cycled",
@@ -46,166 +46,166 @@
  "seed_results": [
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed1.zip",
-   "artifact_sha256": "989b3ba62bcd3b9cf8219412164a47739f24ebb90832af5033d6446514b7756b",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed1.zip",
+   "artifact_sha256": "becc8ebb32e40fbb603cf0a5d4d0442cfe2b609fe968392a3b024f124d3dacf9",
    "convergence": {
-    "final_ma": 0.027300198287771738,
-    "median_ma_last_25pct": -0.026635221196820602,
-    "n_episodes": 134894,
-    "non_converged": false
+    "final_ma": -0.21665417918734292,
+    "median_ma_last_25pct": -0.011955438272157653,
+    "n_episodes": 90558,
+    "non_converged": true
    },
    "seed": 1,
    "total_timesteps": 149504,
-   "train_mean_reward": -0.02312792057124085,
-   "train_seconds": 220.2,
-   "validation_mean_reward": -0.008867861039038015
+   "train_mean_reward": -0.0021847157860896186,
+   "train_seconds": 229.2,
+   "validation_mean_reward": -0.0042112526973425435
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed2.zip",
-   "artifact_sha256": "1e5fdc0e91b8b940c02e4cd5f6c0a1bb31fa644b2050d3c407ffac8af6be6e7e",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed2.zip",
+   "artifact_sha256": "f4faffb7083cf3f107468b05cda253f58184cf08755b90c09806d025b92909c9",
    "convergence": {
-    "final_ma": -0.07389704694833747,
-    "median_ma_last_25pct": -0.0070894514343460705,
-    "n_episodes": 90011,
+    "final_ma": -0.07913959860825107,
+    "median_ma_last_25pct": -0.005897528859169671,
+    "n_episodes": 89365,
     "non_converged": true
    },
    "seed": 2,
    "total_timesteps": 149504,
-   "train_mean_reward": -0.0031751407128286753,
-   "train_seconds": 201.7,
-   "validation_mean_reward": -0.009778705604734926
+   "train_mean_reward": -0.0004492447078212378,
+   "train_seconds": 233.7,
+   "validation_mean_reward": -0.011627788883821821
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed3.zip",
-   "artifact_sha256": "0836edfc708c3cd09e23684511ab90ba58ef78d3912d6899285f599496874d07",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed3.zip",
+   "artifact_sha256": "3be34270b067da17f945484b1be62f147f20f14ea5128bc58f86c3c2b1dc1bd0",
    "convergence": {
-    "final_ma": 0.08878476611118256,
-    "median_ma_last_25pct": -0.010805342234318683,
-    "n_episodes": 85862,
+    "final_ma": 0.04140011180986994,
+    "median_ma_last_25pct": -0.011072740774300824,
+    "n_episodes": 91477,
     "non_converged": false
    },
    "seed": 3,
    "total_timesteps": 149504,
-   "train_mean_reward": -0.003676919369295414,
-   "train_seconds": 190.8,
-   "validation_mean_reward": -0.016012521794978783
+   "train_mean_reward": -0.00574924931839632,
+   "train_seconds": 230.3,
+   "validation_mean_reward": -0.001786235359670677
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed4.zip",
-   "artifact_sha256": "5112d080dd276ef5ad781d04014421c632db49d754b1a5a92db10f06ca4f663c",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed4.zip",
+   "artifact_sha256": "0af66473824a252f1e2ce404b3e34f3b224530afd2164d3eb7ddb9be5184566a",
    "convergence": {
-    "final_ma": -0.022671094096306944,
-    "median_ma_last_25pct": -0.005074082758738587,
-    "n_episodes": 91860,
-    "non_converged": true
+    "final_ma": -0.008937278429590837,
+    "median_ma_last_25pct": -0.012274349267692695,
+    "n_episodes": 96966,
+    "non_converged": false
    },
    "seed": 4,
    "total_timesteps": 149504,
-   "train_mean_reward": 0.0006465024500196481,
-   "train_seconds": 201.2,
-   "validation_mean_reward": 0.004489695994022424
+   "train_mean_reward": -0.0006461334666206844,
+   "train_seconds": 232.2,
+   "validation_mean_reward": -0.0055408700869367744
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed5.zip",
-   "artifact_sha256": "8b73666507243826864dbd6d6058d16660bd500417121575329b0ab125517523",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed5.zip",
+   "artifact_sha256": "5a291ccc66cfc7a31736ef5e806cc61512e3fa99c336da75fa8f579c368dc651",
    "convergence": {
-    "final_ma": -0.04219112190845785,
-    "median_ma_last_25pct": -0.0054940545480560606,
-    "n_episodes": 90872,
+    "final_ma": -0.08822466436974427,
+    "median_ma_last_25pct": -0.019967572613799098,
+    "n_episodes": 103237,
     "non_converged": true
    },
    "seed": 5,
    "total_timesteps": 149504,
-   "train_mean_reward": -0.0010065049630041463,
-   "train_seconds": 200.7,
-   "validation_mean_reward": -0.011210006437496811
+   "train_mean_reward": -0.0032290888192165494,
+   "train_seconds": 243.3,
+   "validation_mean_reward": -0.007398145839134972
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed6.zip",
-   "artifact_sha256": "07b3a15fd48f231ee3942139b9b410aaed805d7d5233f21df2d16f3ddd2448af",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed6.zip",
+   "artifact_sha256": "79e9965d38b6e5122f5ac46a1ac1d83715332ea38a078f2218bba1fee82b93f8",
    "convergence": {
-    "final_ma": -0.04813518247130292,
-    "median_ma_last_25pct": -0.002414127008996995,
-    "n_episodes": 89486,
+    "final_ma": -0.01783904974369737,
+    "median_ma_last_25pct": -0.006285685523409648,
+    "n_episodes": 89292,
     "non_converged": true
    },
    "seed": 6,
    "total_timesteps": 149504,
-   "train_mean_reward": 0.001408999299161748,
-   "train_seconds": 191.0,
-   "validation_mean_reward": -0.004751528315304373
+   "train_mean_reward": -0.0008577451617683945,
+   "train_seconds": 232.8,
+   "validation_mean_reward": -0.006678692052753635
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed7.zip",
-   "artifact_sha256": "78ea0d8542c4953402fe72d3f40f2610284fff1aefc0bf46b260b775d1034f6a",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed7.zip",
+   "artifact_sha256": "2f8fff2009b2e02174564730f511c8f1fca7319852cb43d36efd38663fb0efbb",
    "convergence": {
-    "final_ma": -0.06402163932244154,
-    "median_ma_last_25pct": -0.008868979873169255,
-    "n_episodes": 97840,
+    "final_ma": -0.1292480594866109,
+    "median_ma_last_25pct": -0.029764195229700422,
+    "n_episodes": 137593,
     "non_converged": true
    },
    "seed": 7,
    "total_timesteps": 149504,
-   "train_mean_reward": -0.001662031568015809,
-   "train_seconds": 201.3,
-   "validation_mean_reward": -0.004695007977618019
+   "train_mean_reward": -0.025635898849611396,
+   "train_seconds": 263.3,
+   "validation_mean_reward": -0.007101632228374795
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed8.zip",
-   "artifact_sha256": "07298214544afe88e68c3d441553682884d7dce1dff4617fb3f11d66a8e908c0",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed8.zip",
+   "artifact_sha256": "09c4b1f4291b794669daad86e9fa4689debb9e4c22736940fce68aa93731ea5c",
    "convergence": {
-    "final_ma": -0.06385092962520265,
-    "median_ma_last_25pct": -0.007998249840289053,
-    "n_episodes": 87728,
+    "final_ma": -0.08097618356328937,
+    "median_ma_last_25pct": -0.016083603803390974,
+    "n_episodes": 89823,
     "non_converged": true
    },
    "seed": 8,
    "total_timesteps": 149504,
-   "train_mean_reward": -0.0008068389615681871,
-   "train_seconds": 198.4,
-   "validation_mean_reward": -0.0010678056651016216
+   "train_mean_reward": -0.006146514100142028,
+   "train_seconds": 235.2,
+   "validation_mean_reward": -0.006425266691896847
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed9.zip",
-   "artifact_sha256": "9e4c1a0ad08762e0a938eb24ef5faafda524c88fa1fe83543e2863e41cb45af8",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed9.zip",
+   "artifact_sha256": "ea501644401527ae4ae40b538d8ff027602dcf37d7ab23af5df63971ffce2d30",
    "convergence": {
-    "final_ma": -0.088895354323444,
-    "median_ma_last_25pct": -0.011388405554551761,
-    "n_episodes": 94297,
+    "final_ma": -0.09552099435906113,
+    "median_ma_last_25pct": -0.03103180785601803,
+    "n_episodes": 143859,
     "non_converged": true
    },
    "seed": 9,
    "total_timesteps": 149504,
-   "train_mean_reward": -4.676957232688913e-05,
-   "train_seconds": 196.7,
-   "validation_mean_reward": 0.0012481268742534511
+   "train_mean_reward": -0.02715251738422336,
+   "train_seconds": 263.5,
+   "validation_mean_reward": -0.01118902596311261
   },
   {
    "algorithm": "SB3-PPO-MlpPolicy",
-   "artifact": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed10.zip",
-   "artifact_sha256": "08911cdbe26465636683a19433024cdafeb6bfe4ed0f0e1baeed68a843068183",
+   "artifact": "/home/user/lake-work/official_v5/models_sb3/arm_f_sb3_seed10.zip",
+   "artifact_sha256": "25863e639a42fdd1e4391a1ebed98a66f3b1d39b9a7ed4204f64560e4ce579d4",
    "convergence": {
-    "final_ma": 0.023482483033612084,
-    "median_ma_last_25pct": -0.009243895968387842,
-    "n_episodes": 87865,
+    "final_ma": 0.19329150887272292,
+    "median_ma_last_25pct": -0.006944263122507013,
+    "n_episodes": 80299,
     "non_converged": false
    },
    "seed": 10,
    "total_timesteps": 149504,
-   "train_mean_reward": -0.004479739822519377,
-   "train_seconds": 198.2,
-   "validation_mean_reward": -0.007798643150354873
+   "train_mean_reward": -0.0030104695568943032,
+   "train_seconds": 223.0,
+   "validation_mean_reward": -0.006384624922783184
   }
  ],
- "selected_seed": 4,
+ "selected_seed": 3,
  "selection_rule": "highest mean validation reward; ties -> lower seed (pre-registered)",
  "validation_isolation": "training episodes = purged TRAIN split only (disjointness asserted at load); validation consumed ONLY by the pre-registered selection rule; all evaluation predictions deterministic=True"
 }

@@ -1,0 +1,153 @@
+{
+ "decision": "D72",
+ "generated_utc": "2026-08-30T08:34:10Z",
+ "retained_unaffected": [
+  {
+   "what": "raw dataset + partition",
+   "where": "lake raw-v1 + partition_meta.json"
+  },
+  {
+   "what": "official Arm A candidates + labels",
+   "where": "/home/user/lake-work/ledgers (ArmARunner applied funding correctly)"
+  },
+  {
+   "what": "frozen F01-F28 features + purge/embargo",
+   "where": "ledgers/features"
+  },
+  {
+   "what": "learnability results (v1/v2/v3)",
+   "where": "label-based; funding included"
+  },
+  {
+   "what": "Arm B threshold 0.50 + Arm C top-1 (TRAIN-only selections)",
+   "where": "label-based; funding included"
+  },
+  {
+   "what": "fitted B/C/E supervised boosters",
+   "where": "/home/user/lake-work/official_v3/models arm_b/c/e.txt + cuts"
+  }
+ ],
+ "rule": "every superseded artifact is preserved byte-unmodified at its recorded path; nothing is deleted or rewritten",
+ "superseded": [
+  {
+   "bytes": 2967,
+   "path": "/home/user/lake-work/official_v4/arm_e/arm_e_portfolio_selection.json",
+   "sha256": "94570d6e9c4deef75d198338b42f4c30aa16309d1a6bb8971681d92846d6e29c",
+   "why": "Arm E portfolio-utility selection computed WITHOUT funding"
+  },
+  {
+   "bytes": 2972,
+   "path": "/home/user/ai-trading-lab/data/models/arm_e_portfolio_selection.json",
+   "sha256": "3fdc0ba03fb78df0ba2118abb8ac07200522b619fd8172f97100292ddc22ae89",
+   "why": "repo copy of the no-funding E selection"
+  },
+  {
+   "bytes": 6689,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_manifest.json",
+   "sha256": "c7e650f8a68258d37fc34990546c025ad74acb4f2fb9c8aaa64431c96283f8a5",
+   "why": "10-seed SB3 family trained and evaluated WITHOUT funding"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed1.zip",
+   "sha256": "989b3ba62bcd3b9cf8219412164a47739f24ebb90832af5033d6446514b7756b",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed2.zip",
+   "sha256": "1e5fdc0e91b8b940c02e4cd5f6c0a1bb31fa644b2050d3c407ffac8af6be6e7e",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed3.zip",
+   "sha256": "0836edfc708c3cd09e23684511ab90ba58ef78d3912d6899285f599496874d07",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed4.zip",
+   "sha256": "5112d080dd276ef5ad781d04014421c632db49d754b1a5a92db10f06ca4f663c",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed5.zip",
+   "sha256": "8b73666507243826864dbd6d6058d16660bd500417121575329b0ab125517523",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed6.zip",
+   "sha256": "07b3a15fd48f231ee3942139b9b410aaed805d7d5233f21df2d16f3ddd2448af",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed7.zip",
+   "sha256": "78ea0d8542c4953402fe72d3f40f2610284fff1aefc0bf46b260b775d1034f6a",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed8.zip",
+   "sha256": "07298214544afe88e68c3d441553682884d7dce1dff4617fb3f11d66a8e908c0",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149512,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed9.zip",
+   "sha256": "9e4c1a0ad08762e0a938eb24ef5faafda524c88fa1fe83543e2863e41cb45af8",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 149513,
+   "path": "/home/user/lake-work/official_v2/models_sb3/arm_f_sb3_seed10.zip",
+   "sha256": "08911cdbe26465636683a19433024cdafeb6bfe4ed0f0e1baeed68a843068183",
+   "why": "no-funding policy artifact (superseded, preserved)"
+  },
+  {
+   "bytes": 6691,
+   "path": "/home/user/ai-trading-lab/data/models_sb3/arm_f_sb3_manifest.json",
+   "sha256": "cd00c9f9b1caef3c5ffc116f273bff5708bb12d48f449d19197dbaa3c9afd38a",
+   "why": "repo copy of the no-funding SB3 manifest"
+  },
+  {
+   "bytes": 5944,
+   "path": "/home/user/ai-trading-lab/data/models_sb3/arm_f_statistics_report.json",
+   "sha256": "6902d7cf28c8926692412e48b2fd504a6cb3f9f0ae1fac4287aa8ed8a40a1caa",
+   "why": "v1 HOLD-baseline comparison (doubly superseded: baseline definition D63, funding D72)"
+  },
+  {
+   "bytes": 4358,
+   "path": "/home/user/lake-work/official_v4/arm_f/arm_f_statistics_report_v2.json",
+   "sha256": "97f86dc4aa207d43aa75563fcf048573c17f7fd9d8a0aab614b5b709ab2966fd",
+   "why": "v2 exact-baseline comparison evaluated WITHOUT funding"
+  },
+  {
+   "bytes": 10639,
+   "path": "/home/user/lake-work/official_v4/shakedown/SHAKEDOWN_INVALID_manifest.json",
+   "sha256": "634bf00c60469469ae29ce5817fbc1f31929231b4cc7722050c40b5ef3b5abd8",
+   "why": "shakedown v4 ran WITHOUT funding (was already INVALID for performance; superseded as the operational reference)"
+  },
+  {
+   "bytes": 3096,
+   "path": "/home/user/lake-work/official_v4/stress/STRESS_INVALID_manifest.json",
+   "sha256": "bd8e1a07f378e71daa578a2c06ac8ca04057d8f959ba44ca16266021b47819f3",
+   "why": "stress fixture v4 had no funding scenario"
+  },
+  {
+   "bytes": 3421,
+   "path": "/home/user/ai-trading-lab/docs/dashboard_shakedown_v4.html",
+   "sha256": "ba5c4357fd8fac0354da8ed3969dc3ff589f57340578628bc50d22755bece057",
+   "why": "dashboard derived from no-funding shakedown v4 ledgers"
+  },
+  {
+   "bytes": 3742,
+   "path": "/home/user/ai-trading-lab/data/manifests/checkpoint1_root_hash_v4.json",
+   "sha256": "509f64fecca8ffbfb25107d4dc4bd98d9d8f329bcf62eb91634390c7990df697",
+   "why": "Checkpoint-1 V4 root record \u2014 APPROVED (D66), preserved historically, SUPERSEDED FOR CHECKPOINT-2 ELIGIBILITY (D72)"
+  }
+ ]
+}
