@@ -89,6 +89,29 @@ def main() -> None:  # pragma: no cover — fixture run
     data["SBTGTUSDT"] = build(sb[:n4],
                               spikes={i_entry: (106.0, 121.0, 105.5,
                                                 120.0)})
+    # (f) D74 staggered funding-entry scenario: STAGUSDT's first
+    # candidate (boundary HIST+2, a 4h boundary) is REJECTED for B/G by
+    # the filter, so arm A enters and holds; the second candidate lands
+    # on boundary HIST+3 — an 8h FUNDING boundary here (T0 is offset by
+    # 4h from the 8h grid, so ODD indices are funding boundaries) —
+    # where G first FILLS while the shared map already contains STAG.
+    stag_lv = up[:HIST] + [up[-1], 106.0, 112.0] + [112.0] * (n4 - HIST
+                                                              - 3)
+    data["STAGUSDT"] = build(stag_lv[:n4])
+    t_stag_reject = T0 + (HIST + 2) * H4
+    t_stag_entry = T0 + (HIST + 3) * H4
+    assert t_stag_entry % P.FUNDING_INTERVAL_MS == 0
+    assert t_stag_reject % P.FUNDING_INTERVAL_MS != 0
+
+    class StagFilter:
+        version = "stress-stagger-filter"
+
+        def accept(self, cand, features):
+            if cand["symbol"] == "STAGUSDT" and \
+                    int(cand["t"]) == t_stag_reject:
+                return False, 0.0
+            return True, 1.0
+
     # (e) D72 funding scenario: +rate on even wave symbols, -rate on
     # odd; W13 deliberately has NO rates (missing-funding loudness)
     F_RATE = 0.0005
@@ -100,10 +123,12 @@ def main() -> None:  # pragma: no cover — fixture run
                                           else -F_RATE)
                                  for t in f8_grid}
                for k in range(N_WAVE - 1)}       # W13 left missing
+    funding["STAGUSDT"] = {int(t): F_RATE for t in f8_grid}
     prov = ArrayProvider({s: {k2: v.copy() for k2, v in d.items()}
                           for s, d in data.items()}, funding=funding)
     comp = Competition(prov, 100_000.0,
                        universe_fn=lambda t: sorted(data),
+                       filter_model=StagFilter(),
                        rl_policy=StressPolicy())
     end = T0 + (n4 * 16 - 1) * B15
     comp.run(T0, end)
@@ -252,6 +277,46 @@ def main() -> None:  # pragma: no cover — fixture run
         defects.append("deliberately missing funding (W13) was silent")
     if sign_bad:
         defects.append(f"{len(sign_bad)} funding sign violations")
+
+    # (f) D74 staggered funding-entry: G first fills STAG exactly on an
+    # 8h boundary while another arm already holds it (shared map
+    # contains STAG); NEITHER G actual NOR the matched clone pays
+    # entry-bar funding; the matched clone (held conventionally) pays
+    # at later boundaries.
+    def stag_funding(st, at=None, after=None):
+        return [e for e in st.engine.events
+                if e["kind"] == "funding" and e["symbol"] == "STAGUSDT"
+                and (at is None or e["t"] == at)
+                and (after is None or e["t"] > after)]
+    g_stag_opens = [e["t"] for e in comp.arms["G"].engine.events
+                    if e["kind"] == "fill_open"
+                    and e["symbol"] == "STAGUSDT"]
+    a_at_entry = stag_funding(comp.arms["A"], at=t_stag_entry)
+    g_at_entry = stag_funding(comp.arms["G"], at=t_stag_entry)
+    m_at_entry = stag_funding(comp.shadow_matched, at=t_stag_entry)
+    m_later = stag_funding(comp.shadow_matched, after=t_stag_entry)
+    checks["staggered_funding_entry"] = {
+        "g_first_fill_at_8h_boundary":
+            bool(g_stag_opens) and g_stag_opens[0] == t_stag_entry,
+        "other_arm_held_and_paid_at_entry": len(a_at_entry) > 0,
+        "g_entry_bar_funding_events": len(g_at_entry),
+        "matched_entry_bar_funding_events": len(m_at_entry),
+        "matched_later_funding_events": len(m_later)}
+    if not (g_stag_opens and g_stag_opens[0] == t_stag_entry):
+        defects.append("staggered scenario: G did not first fill STAG "
+                       "at the 8h boundary")
+    if not a_at_entry:
+        defects.append("staggered scenario: no other arm held STAG "
+                       "across the entry funding boundary")
+    if g_at_entry:
+        defects.append("staggered scenario: G actual paid entry-bar "
+                       "funding")
+    if m_at_entry:
+        defects.append("staggered scenario: matched clone paid "
+                       "entry-bar funding (D74 defect)")
+    if not m_later:
+        defects.append("staggered scenario: matched clone never funded "
+                       "after its entry bar")
 
     # exports
     paths = {}

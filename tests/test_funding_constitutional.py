@@ -291,3 +291,214 @@ def test_funding_activity_guard_stops_implausible_zeros():
     # small windows / few trades are exempt (honest small fixtures)
     ok, _ = funding_activity_guard(bad1, span_days=3, n_closed_trades=2)
     assert ok
+
+
+# =====================================================================
+# D74 — G_matched ENTRY-BAR funding exemption (staggered-entry blocker)
+#
+# Failure case (V5): at funding boundary t another engine already holds
+# X, so the shared frozen map contains X; G actual has no X before t,
+# fills a NEW X entry ON t, and pays no entry-bar funding (engine order
+# funding -> exits -> entries). The mirrored clone, created before the
+# matched engine processes bar t, was ALREADY OPEN at its funding phase
+# and paid entry-bar funding G actual did not. The exemption is
+# POSITION-LEVEL: clone_open stamps the clone's entry bar, and
+# _process_funding skips exactly that bar for exactly that position —
+# no symbol-level workaround, no change to any actual arm's behavior.
+# =====================================================================
+class StaggerFilter:
+    """Rejects every candidate at the designated boundaries (delaying
+    B's and G's entries onto a later funding boundary); accepts all
+    other candidates."""
+    version = "stub-stagger"
+
+    def __init__(self, reject_at: set[int]):
+        self.reject_at = set(int(t) for t in reject_at)
+
+    def accept(self, cand, features):
+        if int(cand["t"]) in self.reject_at:
+            return False, 0.0
+        return True, 1.0
+
+
+def staggered_scenario(rate=RATE):
+    """AAAUSDT: breakout bar at 4h index 96 (candidate at boundary 97,
+    REJECTED for B/G — arm A enters and holds), second breakout bar at
+    index 97 (candidate at boundary 98 — an 8h FUNDING boundary since
+    T0 is 8h-aligned and 98 is even — ACCEPTED, so G first fills X on a
+    funding boundary while A already holds X and the shared map
+    contains X)."""
+    levels = [100.0] * HIST + [105.0, 110.0, 110.0, 110.0, 110.0, 110.0]
+    data = {"AAAUSDT": build_symbol(levels)}
+    end = T0 + (len(levels) * 16 - 1) * B15
+    t_reject = T0 + 97 * H4                  # first candidate boundary
+    t_entry = T0 + 98 * H4                   # G's entry: 8h boundary
+    assert t_entry % F8 == 0 and t_reject % F8 != 0
+    funding = {"AAAUSDT": {int(t): rate
+                           for t in range(T0, end + 1, F8)}}
+    prov = ArrayProvider(data, funding=funding)
+    comp = Competition(prov, 10_000, universe_fn=lambda t: ["AAAUSDT"],
+                       filter_model=StaggerFilter({t_reject}))
+    comp.run(T0, end)
+    return comp, t_entry
+
+
+def _sym_funding(state, sym="AAAUSDT"):
+    return [(e["t"], e["symbol"], e["rate"], e["mark"], e["paid"],
+             e["pos_id"])
+            for e in state.engine.events
+            if e["kind"] == "funding" and e["symbol"] == sym]
+
+
+def test_staggered_entry_bar_funding_exemption_matched_equals_g():
+    """THE D74 regression: proven to FAIL under the V5 ordering and to
+    PASS with the position-level entry-bar exemption."""
+    comp, t_entry = staggered_scenario()
+    g, m = comp.arms["G"], comp.shadow_matched
+    # G actual entered X exactly at the funding boundary t_entry, while
+    # arm A already held X (so the shared map contained X at t_entry)
+    g_opens = [e for e in g.engine.events if e["kind"] == "fill_open"]
+    assert [e["t"] for e in g_opens] == [t_entry]
+    a_funding_at_entry = [e for e in comp.arms["A"].engine.events
+                          if e["kind"] == "funding"
+                          and e["t"] == t_entry]
+    assert a_funding_at_entry, "arm A did not hold X across t_entry"
+    # BOTH G actual and the matched clone record ZERO funding at the
+    # entry bar for the new position...
+    assert [e for e in _sym_funding(g) if e[0] == t_entry] == []
+    assert [e for e in _sym_funding(m) if e[0] == t_entry] == []
+    # ...and NO funding_missing either (G actual's position did not
+    # exist at the funding phase; the clone must behave identically)
+    assert not [e for e in m.engine.events
+                if e["kind"] == "funding_missing" and e["t"] == t_entry]
+    # later funding boundaries reconcile normally and identically
+    g_later = [e[:5] for e in _sym_funding(g) if e[0] > t_entry]
+    m_later = [e[:5] for e in _sym_funding(m) if e[0] > t_entry]
+    assert g_later and g_later == m_later
+    # same-bar entry semantics remain identical (fill + protection +
+    # position state on the entry bar)
+    def fills(st):
+        return [(e["t"], e["symbol"], e["side"], e["qty"], e["price"],
+                 e["stop"], e["target"]) for e in st.engine.events
+                if e["kind"] == "fill_open"]
+    assert fills(g) == fills(m)
+    gp = [p for p in g.engine.positions.values()][-1]
+    mp = [p for p in m.engine.positions.values()][-1]
+    assert (gp.mae, gp.mfe, gp.stop, gp.target, gp.open_qty) == \
+        (mp.mae, mp.mfe, mp.stop, mp.target, mp.open_qty)
+    assert gp.funding_paid == mp.funding_paid
+    # full reconciliation still holds in the matched engine
+    rec = funding_reconciliation(m.engine.events, m.engine.positions)
+    assert rec["event_to_equity_reconciled"]
+
+
+def test_preexisting_matched_positions_still_funded_normally():
+    """A clone held from an EARLIER bar pays funding at later
+    boundaries exactly like G actual (exemption is entry-bar only)."""
+    comp = run_comp(+1, RATE)          # G and arms enter together
+    g_ev = [e[:5] for e in _sym_funding(comp.arms["G"])]
+    m_ev = [e[:5] for e in _sym_funding(comp.shadow_matched)]
+    assert g_ev and g_ev == m_ev       # every later boundary charged
+
+
+def test_exemption_is_entry_bar_only():
+    comp, t_entry = staggered_scenario()
+    m = comp.shadow_matched
+    later = [e for e in _sym_funding(m) if e[0] > t_entry]
+    assert later, "clone never funded after its entry bar"
+    p = m.engine.positions[later[0][5]]
+    assert p.funding_paid == sum(e[4] for e in later
+                                 if e[5] == later[0][5])
+    assert p.funding_paid > 0          # long, positive rate
+
+
+def test_mixed_preexisting_and_new_clones_multi_symbol():
+    """Two symbols: X staggered (G enters at the 8h boundary t_e while
+    A holds X), Y entered by everyone earlier. At t_e the matched book
+    holds a PRE-EXISTING Y clone (charged) and a NEW X clone (exempt)."""
+    x_levels = [100.0] * HIST + [105.0, 110.0, 110.0, 110.0, 110.0,
+                                 110.0]
+    y_levels = [100.0] * HIST + [105.0, 105.0, 105.0, 105.0, 105.0,
+                                 105.0]
+    data = {"XXXUSDT": build_symbol(x_levels),
+            "YYYUSDT": build_symbol(y_levels)}
+    end = T0 + (len(x_levels) * 16 - 1) * B15
+    t_reject = T0 + 97 * H4
+    t_e = T0 + 98 * H4
+    funding = {s: {int(t): RATE for t in range(T0, end + 1, F8)}
+               for s in data}
+
+    class RejectXAtFirst:
+        version = "stub-reject-x-first"
+
+        def accept(self, cand, features):
+            if cand["symbol"] == "XXXUSDT" and int(cand["t"]) == t_reject:
+                return False, 0.0
+            return True, 1.0
+
+    comp = Competition(ArrayProvider(data, funding=funding), 10_000,
+                       universe_fn=lambda t: sorted(data),
+                       filter_model=RejectXAtFirst())
+    comp.run(T0, end)
+    m = comp.shadow_matched
+    x_at_te = [e for e in _sym_funding(m, "XXXUSDT") if e[0] == t_e]
+    y_at_te = [e for e in _sym_funding(m, "YYYUSDT") if e[0] == t_e]
+    assert x_at_te == [], "NEW X clone paid entry-bar funding"
+    assert y_at_te, "pre-existing Y clone was not charged at t_e"
+    # and G actual agrees on both
+    assert [e for e in _sym_funding(comp.arms["G"], "XXXUSDT")
+            if e[0] == t_e] == []
+    assert [e[:5] for e in _sym_funding(comp.arms["G"], "YYYUSDT")
+            if e[0] == t_e] == [e[:5] for e in y_at_te]
+
+
+def test_rollback_restores_exemption_state_exactly():
+    comp, t_entry = staggered_scenario()
+    m = comp.shadow_matched
+    clone = [p for p in m.engine.positions.values()][-1]
+    stamp = clone.clone_entry_bar_ms
+    assert stamp == t_entry            # the exemption stamp exists
+    pre_paid = {pid: p.funding_paid
+                for pid, p in m.engine.positions.items()}
+    snap = m.snapshot()
+    from lab.sim.engine import Bar
+    t_next = ((max(e["t"] for e in m.engine.events) // F8) + 1) * F8
+    m.engine.process_bar_time(t_next,
+                              {"AAAUSDT": Bar(t_next, 110.0, 110.1,
+                                              109.9, 110.0)},
+                              funding={"AAAUSDT": RATE},
+                              prev_close={"AAAUSDT": 110.0})
+    assert {pid: p.funding_paid
+            for pid, p in m.engine.positions.items()} != pre_paid
+    m.rollback(snap)
+    assert {pid: p.funding_paid
+            for pid, p in m.engine.positions.items()} == pre_paid
+    restored = m.engine.positions[clone.pos_id]
+    assert restored.clone_entry_bar_ms == stamp   # stamp survives
+
+
+def test_diagnostics_on_off_g_actual_byte_identical_staggered():
+    """The exemption lives ONLY in diagnostic clones: with diagnostics
+    disabled, G actual's ledgers are byte-identical on the exact
+    staggered funding scenario."""
+    import json as _json
+
+    def run(diag):
+        levels = [100.0] * HIST + [105.0, 110.0, 110.0, 110.0, 110.0,
+                                   110.0]
+        data = {"AAAUSDT": build_symbol(levels)}
+        end = T0 + (len(levels) * 16 - 1) * B15
+        funding = {"AAAUSDT": {int(t): RATE
+                               for t in range(T0, end + 1, F8)}}
+        comp = Competition(ArrayProvider(data, funding=funding), 10_000,
+                           universe_fn=lambda t: ["AAAUSDT"],
+                           filter_model=StaggerFilter({T0 + 97 * H4}),
+                           diagnostics=diag)
+        comp.run(T0, end)
+        return {a: _json.dumps({"events": st.engine.events,
+                                "decisions": st.decisions,
+                                "equity": st.equity_curve},
+                               sort_keys=True, default=float)
+                for a, st in comp.arms.items()}
+
+    assert run(True) == run(False)

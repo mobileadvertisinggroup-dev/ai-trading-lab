@@ -55,6 +55,16 @@ class Position:
     open_qty: float = 0.0
     closed: bool = False
     close_reason: str | None = None
+    # D74: set ONLY by the diagnostic clone_open, never by any actual
+    # arm's entry path. A mirrored clone is created BEFORE its engine
+    # processes the entry bar (so it is already open at the funding
+    # phase), whereas the actual position it mirrors fills AFTER that
+    # bar's funding phase and pays nothing. This position-level stamp
+    # exempts the clone from funding (and funding_missing) on exactly
+    # its entry bar — identical entry-bar semantics to the mirrored
+    # actual — and has no effect on later boundaries or on any
+    # non-clone position (default None).
+    clone_entry_bar_ms: int | None = None
 
     def __post_init__(self):
         self.open_qty = self.qty
@@ -136,7 +146,7 @@ class Engine:
         self.cash -= fee
         p = Position(self._next_id, symbol, side, qty, fill, t,
                      decision_ts, stop, target, r_dist, costs,
-                     fees_paid=fee)
+                     fees_paid=fee, clone_entry_bar_ms=t)
         self.positions[p.pos_id] = p
         self._next_id += 1
         self._emit(t, "fill_open", pos_id=p.pos_id, symbol=symbol,
@@ -256,6 +266,11 @@ class Engine:
         if t % P.FUNDING_INTERVAL_MS:
             return
         for p in self.open_positions():
+            if p.clone_entry_bar_ms == t:
+                # D74: a diagnostic clone on its entry bar — the actual
+                # position it mirrors filled AFTER this bar's funding
+                # phase, so it pays nothing and emits nothing here
+                continue
             if p.symbol not in funding:
                 self._emit(t, "funding_missing", pos_id=p.pos_id,
                            symbol=p.symbol)

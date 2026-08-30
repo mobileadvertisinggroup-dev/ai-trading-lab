@@ -1,0 +1,100 @@
+.............F.FFF.                                                      [100%]
+=================================== FAILURES ===================================
+_________ test_staggered_entry_bar_funding_exemption_matched_equals_g __________
+
+    def test_staggered_entry_bar_funding_exemption_matched_equals_g():
+        """THE D74 regression: proven to FAIL under the V5 ordering and to
+        PASS with the position-level entry-bar exemption."""
+        comp, t_entry = staggered_scenario()
+        g, m = comp.arms["G"], comp.shadow_matched
+        # G actual entered X exactly at the funding boundary t_entry, while
+        # arm A already held X (so the shared map contained X at t_entry)
+        g_opens = [e for e in g.engine.events if e["kind"] == "fill_open"]
+        assert [e["t"] for e in g_opens] == [t_entry]
+        a_funding_at_entry = [e for e in comp.arms["A"].engine.events
+                              if e["kind"] == "funding"
+                              and e["t"] == t_entry]
+        assert a_funding_at_entry, "arm A did not hold X across t_entry"
+        # BOTH G actual and the matched clone record ZERO funding at the
+        # entry bar for the new position...
+        assert [e for e in _sym_funding(g) if e[0] == t_entry] == []
+>       assert [e for e in _sym_funding(m) if e[0] == t_entry] == []
+E       AssertionError: assert [(17013888000...937265685, 1)] == []
+E         
+E         Left contains one more item: (1701388800000, 'AAAUSDT', 0.001, 110.0, 1.4996250937265685, 1)
+E         Use -v to get more diff
+
+tests/test_funding_constitutional.py:369: AssertionError
+_______________________ test_exemption_is_entry_bar_only _______________________
+
+    def test_exemption_is_entry_bar_only():
+        comp, t_entry = staggered_scenario()
+        m = comp.shadow_matched
+        later = [e for e in _sym_funding(m) if e[0] > t_entry]
+        assert later, "clone never funded after its entry bar"
+        p = m.engine.positions[later[0][5]]
+>       assert p.funding_paid == sum(e[4] for e in later
+                                     if e[5] == later[0][5])
+E       AssertionError: assert 2.999250187453137 == 1.4996250937265685
+E        +  where 2.999250187453137 = Position(pos_id=1, symbol='AAAUSDT', side=1, qty=13.632955397514257, entry_fill=110.0275, entry_time=1701388800000, de...=110.0, mae=-0.12749999999999773, mfe=0.0724999999999909, open_qty=13.632955397514257, closed=False, close_reason=None).funding_paid
+E        +  and   1.4996250937265685 = sum(<generator object test_exemption_is_entry_bar_only.<locals>.<genexpr> at 0x7f6a5410e6c0>)
+
+tests/test_funding_constitutional.py:410: AssertionError
+______________ test_mixed_preexisting_and_new_clones_multi_symbol ______________
+
+    def test_mixed_preexisting_and_new_clones_multi_symbol():
+        """Two symbols: X staggered (G enters at the 8h boundary t_e while
+        A holds X), Y entered by everyone earlier. At t_e the matched book
+        holds a PRE-EXISTING Y clone (charged) and a NEW X clone (exempt)."""
+        x_levels = [100.0] * HIST + [105.0, 110.0, 110.0, 110.0, 110.0,
+                                     110.0]
+        y_levels = [100.0] * HIST + [105.0, 105.0, 105.0, 105.0, 105.0,
+                                     105.0]
+        data = {"XXXUSDT": build_symbol(x_levels),
+                "YYYUSDT": build_symbol(y_levels)}
+        end = T0 + (len(x_levels) * 16 - 1) * B15
+        t_reject = T0 + 97 * H4
+        t_e = T0 + 98 * H4
+        funding = {s: {int(t): RATE for t in range(T0, end + 1, F8)}
+                   for s in data}
+    
+        class RejectXAtFirst:
+            version = "stub-reject-x-first"
+    
+            def accept(self, cand, features):
+                if cand["symbol"] == "XXXUSDT" and int(cand["t"]) == t_reject:
+                    return False, 0.0
+                return True, 1.0
+    
+        comp = Competition(ArrayProvider(data, funding=funding), 10_000,
+                           universe_fn=lambda t: sorted(data),
+                           filter_model=RejectXAtFirst())
+        comp.run(T0, end)
+        m = comp.shadow_matched
+        x_at_te = [e for e in _sym_funding(m, "XXXUSDT") if e[0] == t_e]
+        y_at_te = [e for e in _sym_funding(m, "YYYUSDT") if e[0] == t_e]
+>       assert x_at_te == [], "NEW X clone paid entry-bar funding"
+E       AssertionError: NEW X clone paid entry-bar funding
+E       assert [(17013888000...999589954, 2)] == []
+E         
+E         Left contains one more item: (1701388800000, 'XXXUSDT', 0.001, 110.0, 1.4994563999589954, 2)
+E         Use -v to get more diff
+
+tests/test_funding_constitutional.py:446: AssertionError
+________________ test_rollback_restores_exemption_state_exactly ________________
+
+    def test_rollback_restores_exemption_state_exactly():
+        comp, t_entry = staggered_scenario()
+        m = comp.shadow_matched
+        clone = [p for p in m.engine.positions.values()][-1]
+>       stamp = clone.clone_entry_bar_ms
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Position' object has no attribute 'clone_entry_bar_ms'
+
+tests/test_funding_constitutional.py:459: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_funding_constitutional.py::test_staggered_entry_bar_funding_exemption_matched_equals_g
+FAILED tests/test_funding_constitutional.py::test_exemption_is_entry_bar_only
+FAILED tests/test_funding_constitutional.py::test_mixed_preexisting_and_new_clones_multi_symbol
+FAILED tests/test_funding_constitutional.py::test_rollback_restores_exemption_state_exactly
+4 failed, 15 passed in 1.96s
