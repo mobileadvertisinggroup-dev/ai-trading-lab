@@ -31,7 +31,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "STOPPED AT CHECKPOINT 2 (D70): D69 five-blocker corrections executed and dress-rehearsed at full size on a non-holdout surrogate; readiness bundle v2 produced; awaiting the reviewer's independent review / separate explicit Checkpoint-2 authorization; opening count zero",
+ "current_phase": "STOPPED AT CHECKPOINT 2 (D71): readiness v2 technically accepted; operational preflight run \u2014 NOT READY (funding-application scientific blocker verdict C; RAM-margin REFUSE on this host; model-manifest staging gap); awaiting reviewer adjudication; opening count zero",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -110,7 +110,8 @@
   "D67",
   "D68",
   "D69",
-  "D70"
+  "D70",
+  "D71"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -268,8 +269,9 @@
   }
  },
  "pending_actions": [
-  "await independent review of CHECKPOINT2_READINESS_BUNDLE_V2.zip",
-  "Checkpoint-2 opening only after the reviewer's separate explicit authorization (CHECKPOINT2_AUTHORIZATION_PROCEDURE.md)"
+  "await reviewer adjudication of the funding blocker (verdict C) and the proposed correction path in CHECKPOINT2_AUTHORIZATION_CARD.md",
+  "model_manifest.json staging into data/manifests (flagged, not done)",
+  "RAM-margin remediation: >=32 GiB host or adjudicated change"
  ],
  "pending_user_inputs": [
   "age PUBLIC key (age1...) for the holdout seal recipient"
@@ -351,6 +353,14 @@
   "verbatim": "reviews/REVIEW_VERDICT_PHASE6.md"
  },
  "safe_resume": "Clone repo; read SPEC_FINAL-1.2.1.md (authoritative, sha256 84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8), BUILD_STATE.md, build_state.json; verify that sha256; continue from pending_actions. Do not re-decide frozen choices.",
+ "scientific_blockers": [
+  {
+   "id": "SB-FUNDING-1",
+   "opened": "2026-08-30",
+   "summary": "ShakedownCompetition and rl_env never pass funding to process_bar_time; all orchestrator equity funding-free (incl. approved Arm E M1 selection and the CP2 evaluator); collector also reads 'amount' vs engine's 'paid'. Labels/B/C selections unaffected. No code changed; awaiting adjudication.",
+   "verdict": "C+B"
+  }
+ ],
  "spec": {
   "file": "SPEC_FINAL-1.2.1.md",
   "pc1": "adopted 2026-08-25 with explicit user approval after independent review",
@@ -372,7 +382,7 @@
  "tests": {
   "dev_suite": "191/191 (clean worktree 18cbad9)"
  },
- "updated": "2026-08-29",
+ "updated": "2026-08-30",
  "user_constraints_2026_08_25": [
   "engine_v7_location_must_be_established_not_assumed; requirements report before Phase 5",
   "actions: no holdout rows in logs; no raw data/secrets/decrypted holdout in git; no decrypted holdout artifacts; least-privilege secrets; paper-only",
