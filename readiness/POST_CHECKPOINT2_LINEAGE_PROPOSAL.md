@@ -37,3 +37,14 @@ Reason-keyed changes it will carry:
 No other locked-set changes are planned. Any additional change before
 v5 requires its own documented reason before generation, and the v5
 tool refuses undocumented changes exactly as v2/v3/v4 did.
+
+## Pre-recorded reason for the NEXT lock (v7)
+7. `tests/test_holdout_evaluator_units.py` — MODIFIED (D76 defect fix,
+   post-v6-lock): the fixture's synthetic funding layout corrected to
+   the REAL flat seal layout (funding/SYMBOL.parquet) and a regression
+   added proving the overlay reader finds flat funding files. The
+   nested-only fixture had masked a frozen-evaluator defect that the
+   V6 dress rehearsal's funding activity guard caught by FAILING
+   CLOSED in its isolated environment
+   (readiness/DRESS_REHEARSAL_V6_GUARD_FAILCLOSED.json) — openly
+   recorded here at change time for the v7 reason-keyed lock.

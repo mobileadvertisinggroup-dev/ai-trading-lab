@@ -66,11 +66,12 @@ def env(tmp_path_factory):
     for sym in ("BTCUSDT", "OLDUSDT"):
         L.write_parquet(bars_df(T0, Q),
                         str(lake / "klines15m" / sym / "m.parquet"))
+    # REAL lake layout (D76): funding is FLAT — funding/SYMBOL.parquet
     L.write_parquet(pd.DataFrame({"funding_time":
                                   np.arange(T0, Q, 8 * H4 // 4,
                                             dtype=np.int64),
                                   "funding_rate": 0.0001}),
-                    str(lake / "funding" / "BTCUSDT" / "f.parquet"))
+                    str(lake / "funding" / "BTCUSDT.parquet"))
 
     # overlay: BTCUSDT continues; NEWUSDT lists AT quarantine with an
     # engineered breakout late in the window (flat 100 -> 110)
@@ -82,11 +83,21 @@ def env(tmp_path_factory):
         new.loc[brk, c] = new.loc[brk, c] + 10.0
     L.write_parquet(new,
                     str(plain / "klines15m" / "NEWUSDT" / "m.parquet"))
+    # D76 regression: the SEAL preserves the lake-relative FLAT funding
+    # layout (funding/SYMBOL.parquet) — the overlay reader must find it
+    # (the nested-only glob silently lost every overlay funding file,
+    # caught by the activity guard failing the V6 dress rehearsal
+    # closed). Also give the combined symbol overlay funding, flat.
     L.write_parquet(pd.DataFrame({"funding_time":
                                   np.arange(Q, END, 2 * H4,
                                             dtype=np.int64),
                                   "funding_rate": 0.0001}),
-                    str(plain / "funding" / "NEWUSDT" / "f.parquet"))
+                    str(plain / "funding" / "NEWUSDT.parquet"))
+    L.write_parquet(pd.DataFrame({"funding_time":
+                                  np.arange(Q, END, 2 * H4,
+                                            dtype=np.int64),
+                                  "funding_rate": 0.0002}),
+                    str(plain / "funding" / "BTCUSDT.parquet"))
     return {"lake": str(lake), "plain": str(plain),
             "manifests": str(manifests)}
 
@@ -111,8 +122,16 @@ def test_load_combined_census_and_merge(env):
     assert bars["NEWUSDT"]["open_time"].min() == Q
     # pre-only symbol present, rows only < Q
     assert bars["OLDUSDT"]["open_time"].max() < Q
-    # funding merged for the overlay-only symbol
+    # funding merged for the overlay-only symbol — from the FLAT
+    # overlay layout the seal actually produces (D76 regression)
     assert funding["NEWUSDT"] and min(funding["NEWUSDT"]) >= Q
+    # combined symbol: pre (lake, flat) + overlay (flat) funding merged
+    # across the quarantine boundary — overlay rows present and usable
+    post_keys = [t for t in funding["BTCUSDT"] if t >= Q]
+    pre_keys = [t for t in funding["BTCUSDT"] if t < Q]
+    assert post_keys and pre_keys, \
+        "overlay funding rows missing — flat-layout reader regressed"
+    assert funding["BTCUSDT"][post_keys[0]] == 0.0002
 
 
 def test_validation_missing_column_refuses():

@@ -1,0 +1,46 @@
+{
+  "artifact": {
+    "artifact_bytes": 503828809,
+    "artifact_sha256": "a5ff1bd0930b73bf8df437df9dc620ce57c477afc28ec74e75b4b72b3ffa2724",
+    "n_files": 6052,
+    "rows": 14883213,
+    "tar_bytes": 503705600
+  },
+  "ephemeral_key": "generated in-process, used once on the pty, discarded; the key holder's key was never requested",
+  "profile": {
+    "ciphertext_bytes": 503828809,
+    "decrypted_tar_bytes": 503705600,
+    "entry_point": "python -m lab.data.unseal (production CLI, pty)",
+    "measured_utc": "2026-08-30T20:33:54Z",
+    "peak_rss_bytes": 7768436736,
+    "purpose": "measured surrogate resource profile for the pre-claim resource preflight (D69 blocker 4)",
+    "results_bytes": 0,
+    "runtime_seconds": 504.8,
+    "surrogate_window_ms": [
+      1716681600000,
+      1752134400000
+    ],
+    "tmpfs_high_water_bytes": 966436578
+  },
+  "real_artifact": "never opened, never read",
+  "real_authorization_created": false,
+  "real_ledger_sha_after": "ABSENT",
+  "real_ledger_sha_before": "ABSENT",
+  "real_ledger_unchanged": true,
+  "results_bytes": 0,
+  "results_written": false,
+  "run": {
+    "exit_ok": false,
+    "exit_status": 256,
+    "identity_prompt_answered": true,
+    "peak_rss_bytes": 7768436736,
+    "runtime_seconds": 504.8,
+    "tmpfs_high_water_bytes": 966436578,
+    "transcript_tail": "Paste the AGE-SECRET-KEY line (input hidden, never stored): \r\nTraceback (most recent call last):\r\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\r\n  File \"<frozen runpy>\", line 88, in _run_code\r\n  File \"/home/user/lake-work/wt-d76/lab/data/unseal.py\", line 471, in <module>\r\n    main()\r\n  File \"/home/user/lake-work/wt-d76/lab/data/unseal.py\", line 463, in main\r\n    evaluate_holdout(args.artifact, args.manifests_dir, evaluator,\r\n  File \"/home/user/lake-work/wt-d76/lab/data/unseal.py\", line 357, in evaluate_holdout\r\n    results = evaluator(out_dir)\r\n              ^^^^^^^^^^^^^^^^^^\r\n  File \"/home/user/lake-work/wt-d76/lab/tools/holdout_evaluator.py\", line 681, in evaluator\r\n    results = run_evaluation(provider, part, manifests_dir,\r\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/home/user/lake-work/wt-d76/lab/tools/holdout_evaluator.py\", line 594, in run_evaluation\r\n    raise CombinedDataError(\r\nlab.tools.holdout_evaluator.CombinedDataError: funding activity guard failed for arm A: 7384 funding boundaries crossed, ZERO rates applied \u2014 funding data missing or unwired\r\n"
+  },
+  "surrogate_ledger_events": [
+    "OPENING_STARTED",
+    "FAILED_CLOSED"
+  ],
+  "workdir": "/home/user/lake-work/rehearsal_v6/rehearsal-t23_88on"
+}

@@ -1,0 +1,18 @@
+{
+ "commit": "d6aaeeb",
+ "worktree": "/home/user/lake-work/wt-d76 (detached, clean)",
+ "result_full_suite": "210 passed in 25.88s",
+ "result_failclosed_batteries": "69 passed in 5.18s",
+ "batteries": [
+  "test_holdout_gate",
+  "test_authz_negative",
+  "test_checkpoint2_readiness",
+  "test_seal_access",
+  "test_pipelines_leaks",
+  "test_gate_fault_injection",
+  "test_funding_constitutional"
+ ],
+ "output_sha256": "e88ec3e57ecdc885b557a91debe3201a2e275895a527d2436f1766cb2d81ed12",
+ "utc": "2026-08-30T20:24:12Z",
+ "note": "D76 item 3: all fail-closed, authorization-negative, cleanup, publication, funding, and one-opening tests from one clean immutable worktree"
+}
