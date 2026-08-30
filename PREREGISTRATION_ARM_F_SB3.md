@@ -73,3 +73,27 @@ Everything below is fixed now; deviations require a documented amendment.
   (source-hash census pre/post, import-path confinement, dependency
   versions, command line, times, output hashes). Any earlier training
   output produced outside this gate is PROFILE, not official.
+
+## Amendment D72 (2026-08-30, adjudicated funding correction — BEFORE the corrected training run)
+The reviewer adjudicated the missing-funding defect as material
+(D72): the previous 10-seed family was trained and evaluated on
+episodes WITHOUT funding and cannot remain official (funding varies
+with the policy's actions and holding duration). Committed before any
+corrected training output exists:
+1. Training/evaluation episodes now carry the frozen per-symbol
+   funding rates (`funding_by_time`, sourced from the verified lake);
+   the environment applies them with the exact ArmARunner/engine
+   semantics (transfer = rate x open_qty x mark x side at each 8h
+   boundary; missing rate => loud funding_missing, never imputed), so
+   terminal rewards are net of funding per the policy's ACTUAL holding
+   duration and reductions (tests/test_funding_constitutional.py).
+2. ALL 10 official seeds (1..10) are retrained under the ORIGINAL
+   frozen recipe — algorithm, hyperparameters, budget formula,
+   convergence diagnostic, deterministic evaluation, and the selection
+   rule (highest mean validation reward, ties -> lower seed) are
+   UNCHANGED.
+3. The exact conventional baseline is re-evaluated on the SAME
+   funding-corrected episodes (report_arm_f_v3).
+4. The superseded no-funding artifacts (10 zips + manifest + v1/v2
+   reports) are preserved unmodified as invalidated-for-eligibility
+   history.

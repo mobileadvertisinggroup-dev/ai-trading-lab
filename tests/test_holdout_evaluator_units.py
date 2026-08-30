@@ -300,8 +300,9 @@ def test_supporting_metrics_reports_every_preregistered_quantity():
     """The pre-registration's supporting-metric list is complete."""
     positions = {1: pos(3.0)}
     ec = [{"t": 0, "equity": 100.0, "gross_exposure": 0.0}]
+    # D72: the engine emits funding as `paid` (positive = position pays)
     m = supporting_metrics(np.array([100.0, 103.0]),
-                           [{"kind": "funding", "amount": -0.5}],
+                           [{"kind": "funding", "paid": 0.5}],
                            positions=positions, equity_curve=ec)
     for key in ("net_return", "max_drawdown_observed", "sharpe_ann",
                 "sortino_ann", "calmar", "profit_factor",

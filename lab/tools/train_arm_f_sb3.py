@@ -63,6 +63,7 @@ def build_episodes_v2(df: pd.DataFrame, lake: GuardedLake, end_ms: int,
     episodes = []
     kcache: dict[str, pd.DataFrame] = {}
     scache: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+    fcache: dict[str, dict[int, float]] = {}
     expo_keys = np.array(sorted(expo_frac), dtype=np.int64)
     df = df.sort_values(["t", "symbol"], kind="mergesort")
     for r in df.itertuples():
@@ -74,6 +75,9 @@ def build_episodes_v2(df: pd.DataFrame, lake: GuardedLake, end_ms: int,
                              k.open.to_numpy(float), k.high.to_numpy(float),
                              k.low.to_numpy(float), k.close.to_numpy(float))
             scache[sym] = (s.t4 + P.BAR_4H_MS, s.atr)
+            fdf = lake.read_funding(sym, 0, end_ms)
+            fcache[sym] = dict(zip(fdf["funding_time"].astype(np.int64),
+                                   fdf["funding_rate"].astype(float)))
         k = kcache[sym]
         atr_t, atr_v = scache[sym]
         lo = int(r.t) + P.BAR_15M_MS
@@ -88,11 +92,17 @@ def build_episodes_v2(df: pd.DataFrame, lake: GuardedLake, end_ms: int,
         j1 = int(np.searchsorted(expo_keys, hi, side="right"))
         expo = {int(b): expo_frac[int(b)] for b in expo_keys[j0:j1]}
         tier = 1 if int(r.rank) <= P.TIER1_TOP_N else 2
+        # D72: frozen funding rates covering the episode window — the
+        # environment applies them with ArmARunner/engine semantics, so
+        # rewards are net of funding per the policy's actual holding
+        fb = {int(ft): fr for ft, fr in fcache[sym].items()
+              if lo <= ft <= hi}
         trade = {"side": int(r.side), "qty": float(r.qty_filled),
                  "entry_ref": float(r.close), "r_dist": float(r.r_dist),
                  "decision_ts": int(r.t), "atr_entry": float(r.atr),
                  "atr_t4_close_ms": atr_t, "atr_values": atr_v,
                  "exposure_by_boundary": expo,
+                 "funding_by_time": fb,
                  "costs": {"hs": P.HALF_SPREAD[tier],
                            "slip": P.SLIPPAGE[tier], "fee": P.TAKER_FEE}}
         bars = list(zip(w.open_time.astype(int), w.open, w.high, w.low,

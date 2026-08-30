@@ -80,6 +80,14 @@ class TradeManagementEnv(gym.Env):
         if "atr_entry" not in trade or not trade["atr_entry"] > 0:
             raise ValueError("trade.atr_entry (entry-decision ATR) required")
         self.portfolio_exposure = float(portfolio_exposure)
+        # D72: frozen per-episode funding rates {funding_time_ms: rate}
+        # for the episode symbol, sourced from the verified lake at
+        # episode build time. A funding boundary with no recorded rate
+        # stays absent — the engine's frozen missing-funding rule emits
+        # a loud funding_missing event; nothing is silently filled.
+        self._funding = {int(k): float(v) for k, v in
+                         (trade.get("funding_by_time") or {}).items()}
+        self._prev_close: dict[str, float] = {}
         self._atr_t = np.asarray(trade.get("atr_t4_close_ms", []),
                                  dtype=np.int64)
         self._atr_v = np.asarray(trade.get("atr_values", []), dtype=float)
@@ -94,6 +102,21 @@ class TradeManagementEnv(gym.Env):
         self._steps_per_decision = P.BAR_4H_MS // P.BAR_15M_MS
 
     # ------------------------------------------------------------ helpers
+    def _process_bar(self, b: Bar):
+        """One engine bar with the frozen funding map and previous-close
+        mark — identical semantics to the official ArmARunner (D72):
+        funding transfers hit cash and the position's funding_paid, so
+        the terminal reward reflects the policy's ACTUAL holding
+        duration and reductions."""
+        f = {}
+        if b.open_time % P.FUNDING_INTERVAL_MS == 0:
+            rate = self._funding.get(int(b.open_time))
+            if rate is not None:
+                f = {"X": rate}
+        self.engine.process_bar_time(b.open_time, {"X": b}, funding=f,
+                                     prev_close=dict(self._prev_close))
+        self._prev_close["X"] = b.close
+
     def _exposure_at(self, t: int) -> float:
         if not self.exposure_recorded:
             return 0.0             # documented no-recorded-exposure rule
@@ -159,8 +182,8 @@ class TradeManagementEnv(gym.Env):
             costs=Costs(c["hs"], c["slip"], c["fee"]),
             stop_offset=float(t["r_dist"]),
             target_offset=P.TARGET_R_MULT * float(t["r_dist"]))
-        self.engine.process_bar_time(self.bars[0].open_time,
-                                     {"X": self.bars[0]})
+        self._prev_close = {}
+        self._process_bar(self.bars[0])
         self._i = 0
         # obs-v2 parity: decisions align with 4h BOUNDARIES exactly as in
         # the orchestrator (state = bars processed through boundary-15m);
@@ -169,8 +192,7 @@ class TradeManagementEnv(gym.Env):
         while (self._i + 1 < n
                and self.bars[self._i + 1].open_time % P.BAR_4H_MS != 0):
             self._i += 1
-            b = self.bars[self._i]
-            self.engine.process_bar_time(b.open_time, {"X": b})
+            self._process_bar(self.bars[self._i])
             if self.engine.positions[1].closed:
                 break
         self._executed_actions = 0
@@ -201,7 +223,7 @@ class TradeManagementEnv(gym.Env):
         while self._i + 1 < n:
             self._i += 1
             b = self.bars[self._i]
-            self.engine.process_bar_time(b.open_time, {"X": b})
+            self._process_bar(b)
             p = self.engine.positions[1]
             if p.closed:
                 break

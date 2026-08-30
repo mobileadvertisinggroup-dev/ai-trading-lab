@@ -8,7 +8,12 @@ never real data. Mechanically exercises, in ONE run:
       (explicit diagnostic_over_cap recording);
   (c) a REAL G_feasible capacity divergence (feasible at its own
       10-position cap rejecting entries G actual takes);
-  (d) nontrivial RL management decisions (tighten / reduce / close).
+  (d) nontrivial RL management decisions (tighten / reduce / close);
+  (e) NONZERO mechanically reconciled funding (D72): positive rates on
+      even wave symbols, negative on odd, ONE symbol deliberately
+      without rates — sign semantics, event-to-equity reconciliation
+      across every engine (arms + both diagnostics), and loud
+      funding_missing are all verified.
 Every property is verified mechanically and the ledgers + verdicts are
 exported; any failed check is a recorded defect and a nonzero exit.
 """
@@ -84,8 +89,19 @@ def main() -> None:  # pragma: no cover — fixture run
     data["SBTGTUSDT"] = build(sb[:n4],
                               spikes={i_entry: (106.0, 121.0, 105.5,
                                                 120.0)})
+    # (e) D72 funding scenario: +rate on even wave symbols, -rate on
+    # odd; W13 deliberately has NO rates (missing-funding loudness)
+    F_RATE = 0.0005
+    end_t = T0 + n4 * 16 * B15
+    f8_grid = list(range((T0 // P.FUNDING_INTERVAL_MS + 1)
+                         * P.FUNDING_INTERVAL_MS, end_t,
+                         P.FUNDING_INTERVAL_MS))
+    funding = {f"W{k:02d}USDT": {int(t): (F_RATE if k % 2 == 0
+                                          else -F_RATE)
+                                 for t in f8_grid}
+               for k in range(N_WAVE - 1)}       # W13 left missing
     prov = ArrayProvider({s: {k2: v.copy() for k2, v in d.items()}
-                          for s, d in data.items()})
+                          for s, d in data.items()}, funding=funding)
     comp = Competition(prov, 100_000.0,
                        universe_fn=lambda t: sorted(data),
                        rl_policy=StressPolicy())
@@ -192,6 +208,50 @@ def main() -> None:  # pragma: no cover — fixture run
     for need in ("tighten_stop", "reduce_25", "close"):
         if acts.get(need, 0) == 0:
             defects.append(f"RL action {need} never executed")
+
+    # (e) nonzero mechanically reconciled funding across EVERY engine
+    from lab.tools.holdout_evaluator import funding_reconciliation
+    frecon = {}
+    total_applied = 0
+    total_paid_abs = 0.0
+    missing_seen = 0
+    sign_bad = []
+    states = {a: comp.arms[a] for a in ARMS}
+    states["G_matched"] = comp.shadow_matched
+    states["G_feasible"] = comp.shadow_feasible
+    for name, st in states.items():
+        rec = funding_reconciliation(st.engine.events,
+                                     st.engine.positions)
+        frecon[name] = rec
+        total_applied += rec["n_applied"]
+        total_paid_abs += abs(rec["total_paid"])
+        missing_seen += rec["n_missing"]
+        if rec.get("event_to_equity_reconciled") is False:
+            defects.append(f"funding event-to-equity reconciliation "
+                           f"failed for {name}")
+        for e in st.engine.events:
+            if e["kind"] != "funding":
+                continue
+            # all stress positions are LONG: +rate pays, -rate receives
+            if e["paid"] != 0 and (e["paid"] > 0) != (e["rate"] > 0):
+                sign_bad.append((name, e["symbol"], e["rate"], e["paid"]))
+    checks["funding"] = {
+        "n_applied_total": int(total_applied),
+        "abs_paid_total": total_paid_abs,
+        "n_missing_total": int(missing_seen),
+        "sign_violations": len(sign_bad),
+        "per_engine": {n: {"applied": r["n_applied"],
+                           "missing": r["n_missing"],
+                           "paid": r["total_paid"],
+                           "reconciled":
+                               r.get("event_to_equity_reconciled")}
+                       for n, r in frecon.items()}}
+    if total_applied == 0 or total_paid_abs == 0.0:
+        defects.append("funding scenario applied ZERO funding")
+    if missing_seen == 0:
+        defects.append("deliberately missing funding (W13) was silent")
+    if sign_bad:
+        defects.append(f"{len(sign_bad)} funding sign violations")
 
     # exports
     paths = {}

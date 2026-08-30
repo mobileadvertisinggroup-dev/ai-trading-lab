@@ -257,8 +257,13 @@ def supporting_metrics(curve: np.ndarray, events: list[dict],
     fills = [e for e in events if e["kind"] == "fill_close"]
     fees = sum(e.get("fee", 0.0) for e in events
                if e["kind"] in ("fill_open", "fill_close"))
-    funding = sum(e.get("amount", 0.0) for e in events
-                  if e["kind"] == "funding")
+    # D72 blocker A.4: the engine emits funding transfers under the
+    # field name `paid` (positive = the position PAYS; cash -= paid).
+    # funding_net is the net funding PnL (positive = received). The
+    # previous collector read a nonexistent `amount` field and
+    # reported 0 — that defect is D72's origin.
+    funding = -sum(e.get("paid", 0.0) for e in events
+                   if e["kind"] == "funding")
     dd = max_drawdown_decimal(curve)
     mean, sd = float(np.mean(r)), float(np.std(r))
     half = len(r) // 2
@@ -319,6 +324,86 @@ def supporting_metrics(curve: np.ndarray, events: list[dict],
             out["mean_exposure_frac"] = float(frac.mean())
             out["time_in_cash_frac"] = float((ge == 0.0).mean())
     return out
+
+
+# ------------------------------ funding reconciliation (D72 blocker A.5)
+def funding_reconciliation(events: list[dict],
+                           positions: dict | None = None) -> dict:
+    """Every applicable funding boundary, applied payment, and
+    missing-rate event — by symbol, side, sign, and period — plus the
+    engine-event-to-equity reconciliation: the sum of event `paid`
+    transfers must equal the sum of per-position funding_paid (the
+    cash/equity impact is exactly -sum(paid))."""
+    import time as _time
+    applied = [e for e in events if e["kind"] == "funding"]
+    missing = [e for e in events if e["kind"] == "funding_missing"]
+    side_of = {}
+    if positions is not None:
+        side_of = {pid: p.side for pid, p in positions.items()}
+    by_symbol: dict = {}
+    by_period: dict = {}
+    by_side = {"long_paid": 0.0, "short_paid": 0.0}
+    by_sign = {"paid_positive_count": 0, "paid_positive_sum": 0.0,
+               "paid_negative_count": 0, "paid_negative_sum": 0.0,
+               "paid_zero_count": 0}
+    for e in applied:
+        s = e["symbol"]
+        d = by_symbol.setdefault(s, {"applied": 0, "missing": 0,
+                                     "paid": 0.0})
+        d["applied"] += 1
+        d["paid"] += e["paid"]
+        period = _time.strftime("%Y-%m", _time.gmtime(e["t"] / 1000))
+        by_period[period] = by_period.get(period, 0.0) + e["paid"]
+        side = side_of.get(e.get("pos_id"))
+        if side is not None:
+            by_side["long_paid" if side > 0 else "short_paid"] += e["paid"]
+        if e["paid"] > 0:
+            by_sign["paid_positive_count"] += 1
+            by_sign["paid_positive_sum"] += e["paid"]
+        elif e["paid"] < 0:
+            by_sign["paid_negative_count"] += 1
+            by_sign["paid_negative_sum"] += e["paid"]
+        else:
+            by_sign["paid_zero_count"] += 1
+    for e in missing:
+        d = by_symbol.setdefault(e["symbol"], {"applied": 0, "missing": 0,
+                                               "paid": 0.0})
+        d["missing"] += 1
+    event_sum = float(sum(e["paid"] for e in applied))
+    out = {
+        "n_applied": len(applied), "n_missing": len(missing),
+        "n_boundary_crossings": len(applied) + len(missing),
+        "total_paid": event_sum, "funding_net": -event_sum,
+        "by_symbol": by_symbol, "by_side": by_side, "by_sign": by_sign,
+        "by_period": by_period,
+    }
+    if positions is not None:
+        pos_sum = float(sum(p.funding_paid for p in positions.values()))
+        out["position_funding_paid_sum"] = pos_sum
+        out["event_to_equity_reconciled"] = bool(
+            abs(event_sum - pos_sum) < 1e-9)
+    return out
+
+
+def funding_activity_guard(recon: dict, span_days: float,
+                           n_closed_trades: int) -> tuple[bool, str]:
+    """D72: any all-zero funding result over an active multi-month
+    window STOPS the procedure unless mechanically proven legitimate.
+    Returns (ok, reason)."""
+    if span_days < 60 or n_closed_trades < 50:
+        return True, "window/trade count below the multi-month threshold"
+    if recon["n_boundary_crossings"] == 0:
+        return False, ("no position ever crossed a funding boundary over "
+                       f"{span_days:.0f} days with {n_closed_trades} "
+                       "closed trades — mechanically implausible")
+    if recon["n_applied"] == 0:
+        return False, (f"{recon['n_missing']} funding boundaries crossed, "
+                       "ZERO rates applied — funding data missing or "
+                       "unwired")
+    if recon["total_paid"] == 0.0:
+        return False, (f"{recon['n_applied']} funding payments applied "
+                       "summing to exactly 0.0 — mechanically implausible")
+    return True, "funding active and reconciled"
 
 
 # -------------------- frozen IL assessment (Amendment A1, pre-opening)
@@ -492,6 +577,33 @@ def run_evaluation(provider, part: dict, manifests_dir: str,
               for a in ARMS7}
     stats = evaluation_statistics(curves)
 
+    # D72: full funding reconciliation per arm + diagnostics; the
+    # activity guard STOPS the evaluation (fail closed) on any
+    # mechanically implausible all-zero funding over this window.
+    window_days = (end - start) / 86_400_000
+    frecon = {}
+    for a in ARMS7:
+        rec = funding_reconciliation(comp.arms[a].engine.events,
+                                     comp.arms[a].engine.positions)
+        n_closed = sum(1 for p in comp.arms[a].engine.positions.values()
+                       if p.closed)
+        ok, why = funding_activity_guard(rec, window_days, n_closed)
+        rec["guard"] = {"ok": bool(ok), "reason": why}
+        frecon[a] = rec
+        if not ok:
+            raise CombinedDataError(
+                f"funding activity guard failed for arm {a}: {why}")
+        if rec.get("event_to_equity_reconciled") is False:
+            raise CombinedDataError(
+                "funding event-to-equity reconciliation failed for arm "
+                f"{a}")
+    frecon["G_matched"] = funding_reconciliation(
+        comp.shadow_matched.engine.events,
+        comp.shadow_matched.engine.positions)
+    frecon["G_feasible"] = funding_reconciliation(
+        comp.shadow_feasible.engine.events,
+        comp.shadow_feasible.engine.positions)
+
     # frozen IL assessment (Amendment A1): Arm A's closed holdout trades
     # give labels; the FIXED frozen B probability and C score recorded
     # in those arms' decision ledgers at the same (t, symbol) give the
@@ -529,6 +641,7 @@ def run_evaluation(provider, part: dict, manifests_dir: str,
                    "n_valid_rounds": int(sum(vmap.values()))},
         "rounds": comp.coordinator.counts(),
         "statistics": stats,
+        "funding_reconciliation": frecon,
         "il_assessment": il,
         "supporting_metrics": {
             a: supporting_metrics(curves[a], comp.arms[a].engine.events,

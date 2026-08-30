@@ -461,6 +461,30 @@ class Competition:
         return ([self.shadow_matched, self.shadow_feasible]
                 if self.diagnostics else [])
 
+    def _funding_at(self, t: int) -> dict[str, float]:
+        """D72 blocker A: the frozen per-bar funding map, constructed
+        IDENTICALLY to the official ArmARunner — at each funding
+        boundary, the rate recorded at exactly t for every symbol with
+        an open position in ANY engine (arms A–G and both G
+        diagnostics; each engine applies rates only to its own open
+        positions, so the shared superset map is per-engine identical
+        to ArmARunner's construction). Symbols without a recorded rate
+        stay ABSENT — the engine's frozen missing-funding rule then
+        emits a loud funding_missing event; nothing is silently
+        filled."""
+        if t % P.FUNDING_INTERVAL_MS:
+            return {}
+        states = list(self.arms.values()) + self._diagnostic_states()
+        out: dict[str, float] = {}
+        for st in states:
+            for p in st.engine.open_positions():
+                if p.symbol in out:
+                    continue
+                rate = self.provider.funding(p.symbol).get(t)
+                if rate is not None:
+                    out[p.symbol] = rate
+        return out
+
     def _mirror_g_fills(self):
         """G matched-entry diagnostic (D61 blocker A): mirror every NEW
         actual G fill into the matched engine at the identical timestamp,
@@ -543,14 +567,20 @@ class Competition:
             # diagnostic engines process the SAME bar LAST, so a fresh
             # clone receives the identical same-bar stop/target sweep,
             # mark, and MFE/MAE updates under exact engine semantics.
+            # D72: the frozen funding map is computed ONCE per bar from
+            # positions open BEFORE the bar (engine order: funding →
+            # exits → entries) and passed to every engine — arms and
+            # both G diagnostics — with ArmARunner/engine semantics.
+            fmap = self._funding_at(t)
             for st in self.arms.values():
-                st.engine.process_bar_time(t, bars,
+                st.engine.process_bar_time(t, bars, funding=fmap,
                                            prev_close=dict(self._last_close))
             if self.diagnostics:
                 self._mirror_g_fills()
                 for st in self._diagnostic_states():
                     st.engine.process_bar_time(
-                        t, bars, prev_close=dict(self._last_close))
+                        t, bars, funding=fmap,
+                        prev_close=dict(self._last_close))
             for sym, b in bars.items():
                 self._last_close[sym] = b.close
             if boundary:

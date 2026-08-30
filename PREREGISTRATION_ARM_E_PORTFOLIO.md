@@ -59,3 +59,20 @@ Arm A reference equality across runs is asserted mechanically, and any
 violation STOPS the run for adjudication. Official execution under
 lab/tools/provenance_run.py from a clean detached worktree with the
 lake-input addendum.
+
+## Amendment D72 (2026-08-30, adjudicated funding correction — BEFORE the corrected selection run)
+The reviewer adjudicated the missing-funding defect as material (D72):
+the previous M1–M4 portfolio simulations ran without funding (the
+orchestrator never passed the per-bar funding map) and the resulting
+selection cannot remain official for Checkpoint-2 eligibility.
+Committed before any corrected output exists: the orchestrator now
+passes the frozen per-bar funding map (exact ArmARunner/engine
+semantics; loud missing-funding rule; tests/
+test_funding_constitutional.py) to every engine, and this selection is
+re-run under the ORIGINAL frozen procedure — utility (annualized
+Sortino of 4h portfolio returns), decimal max drawdown, paired
+circular moving-block bootstrap DD95 (block 168, N=1000, seed
+20260901), constraint DD95(M) <= DD95(A), and the selection rule are
+all UNCHANGED. The superseded no-funding selection
+(arm_e_portfolio_selection.json of official_v4) is preserved
+unmodified as invalidated-for-eligibility history.

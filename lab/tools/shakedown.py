@@ -474,6 +474,33 @@ def main() -> None:  # pragma: no cover — the shakedown run
                             "detail": f"{len(missing_obs)} non-backstop RL "
                                       f"records missing the obs vector"})
 
+    # D72: full funding reconciliation per arm + diagnostics; the
+    # activity guard flags any mechanically implausible all-zero funding
+    # over this multi-month window as a BLOCKING defect.
+    from lab.tools.holdout_evaluator import (funding_activity_guard,
+                                             funding_reconciliation)
+    funding_recon = {}
+    span_days = (end - start) / 86_400_000
+    diag_states = {"G_matched": comp.shadow_matched,
+                   "G_feasible": comp.shadow_feasible}
+    for name, st in ({a: comp.arms[a] for a in ARMS} | diag_states).items():
+        rec = funding_reconciliation(st.engine.events,
+                                     st.engine.positions)
+        n_closed = sum(1 for p in st.engine.positions.values() if p.closed)
+        ok, why = funding_activity_guard(rec, span_days, n_closed)
+        rec["guard"] = {"ok": bool(ok), "reason": why,
+                        "n_closed_trades": n_closed}
+        funding_recon[name] = rec
+        if not ok:
+            defects.append({"id": f"SD-FUNDING-{name}",
+                            "severity": "blocking",
+                            "detail": f"funding activity guard: {why}"})
+        if rec.get("event_to_equity_reconciled") is False:
+            defects.append({"id": f"SD-FUNDINGRECON-{name}",
+                            "severity": "blocking",
+                            "detail": "funding events do not reconcile "
+                                      "to position funding_paid"})
+
     marker = "SHAKEDOWN — INVALID FOR PERFORMANCE CONCLUSIONS"
     paths = {}
 
@@ -531,6 +558,7 @@ def main() -> None:  # pragma: no cover — the shakedown run
                     "feasible_fills": len(feas_filled),
                     "unexplained": len(unexplained)},
                 "n_defects": len(defects),
+                "funding_reconciliation": funding_recon,
                 "model_wiring": {
                     "arm_b_threshold": b_threshold,
                     "arm_c_top_k": c_top_k,
