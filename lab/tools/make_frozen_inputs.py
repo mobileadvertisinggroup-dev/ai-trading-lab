@@ -34,12 +34,21 @@ MANIFEST_FILES = [
     "lake_manifest_raw-v1.json",
     "partition_meta.json",
     "holdout_recipient.txt",
+    "model_manifest_v5.json",       # D76: the bound model manifest
 ]
 MODEL_DIR_FILES = [
     "arm_b.txt", "arm_c.txt", "arm_e.txt", "arm_e_cuts.npz",
     "bc_train_selection.json", "arm_e_portfolio_selection.json",
 ]
-SB3_DIR_FILES = ["arm_f_sb3_manifest.json", "arm_f_sb3_seed4.zip"]
+
+
+def sb3_dir_files(sb3_dir: str) -> list[str]:
+    """The SB3 manifest plus the ZIP of ITS OWN selected seed (D76:
+    seed 3 after the funding-corrected retraining) — read from the
+    manifest, never hard-coded."""
+    with open(os.path.join(sb3_dir, "arm_f_sb3_manifest.json")) as f:
+        sel = int(json.load(f)["selected_seed"])
+    return ["arm_f_sb3_manifest.json", f"arm_f_sb3_seed{sel}.zip"]
 
 
 def _sha256(path: str) -> str:
@@ -71,7 +80,7 @@ def build(repo_root: str, model_dir: str, sb3_dir: str) -> dict:
         "repo_files": section(repo_root, REPO_FILES),
         "manifest_files": section(manifests_dir, MANIFEST_FILES),
         "model_dir_files": section(model_dir, MODEL_DIR_FILES),
-        "sb3_dir_files": section(sb3_dir, SB3_DIR_FILES),
+        "sb3_dir_files": section(sb3_dir, sb3_dir_files(sb3_dir)),
         "notes": ("model_dir_files / sb3_dir_files are enforced with a "
                   "STRICT census: the staged directories must contain "
                   "exactly these files and nothing else."),

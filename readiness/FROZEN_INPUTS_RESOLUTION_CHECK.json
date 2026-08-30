@@ -1,0 +1,13 @@
+{
+ "check": "D76 item 2 \u2014 frozen-input manifest resolves every file from its actual gate location",
+ "frozen_inputs_manifest_sha256": "a9a2aa6c5e9ab9a79839b1086c7f2cdf2f086ce8234f3ed6267e0c5a9a92b01e",
+ "manifests_dir": "data/manifests (repo)",
+ "model_dir": "/home/user/lake-work/stage/models (exactly the 6 pinned files)",
+ "repo_root": "/home/user/ai-trading-lab",
+ "result": {
+  "failures": [],
+  "ok": true
+ },
+ "sb3_dir": "/home/user/lake-work/stage/models_sb3 (exactly arm_f_sb3_manifest.json + arm_f_sb3_seed3.zip)",
+ "utc": "2026-08-30T20:21:32Z"
+}

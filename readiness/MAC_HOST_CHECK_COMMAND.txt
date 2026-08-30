@@ -1,0 +1,22 @@
+ONE READ-ONLY COMMAND — safe execution-host check (D76 item 7)
+
+Paste this single command into Terminal on your Mac and send back the
+output. It only READS system facts (no writes, no network, no key
+access, no installs) and prints a RECOMMENDATION line mapping your
+hardware to the options in readiness/MAC_LOCAL_EXECUTION_PLAN.md.
+
+/bin/bash -c 'echo "== MODEL ==" ; sysctl -n hw.model 2>/dev/null; sysctl -n machdep.cpu.brand_string 2>/dev/null; uname -m; sw_vers 2>/dev/null | tr "\n" " "; echo; echo "== MEMORY =="; RAM=$(sysctl -n hw.memsize); echo "MemTotal_bytes=$RAM (~$((RAM/1073741824)) GiB)"; vm_stat | awk "/free|inactive/ {print}"; echo "== SWAP =="; sysctl vm.swapusage; echo "== DISK =="; df -h / | tail -1; echo "== VIRTUALIZATION (for the Linux-VM option) =="; sysctl -n kern.hv_support 2>/dev/null | sed "s/^1$/hypervisor_supported=yes/;s/^0$/hypervisor_supported=no/"; echo "== RECOMMENDATION =="; if [ "$RAM" -ge 34359738368 ]; then echo "OPTION 1 POSSIBLE: >=32 GiB RAM — run the unmodified Linux gate in a local VM on this Mac (key never leaves this machine); next step: full-size Mac-local surrogate rehearsal inside the VM."; elif [ "$RAM" -ge 25769803776 ]; then echo "OPTION 1 MARGINAL: 24-32 GiB — a VM can host the gate only with the evaluator memory optimization proven by a Mac-local rehearsal first."; else echo "OPTION 1 NOT POSSIBLE ON THIS MAC: <24 GiB RAM — choose the evaluator-optimization path (must still be proven locally), dedicated >=32 GiB local Linux hardware (option 2), or keep the holdout sealed (option 3)."; fi'
+
+What the fields mean:
+- MemTotal decides the option per the frozen 1.5x margin (current
+  measured demand ~13.9 GB => ~20.9 GB genuinely available required;
+  re-measured by the V6 rehearsal profile in this bundle).
+- vm.swapusage is informational for macOS itself; the gate runs inside
+  a Linux VM where swap is disabled and verified (/proc/swaps) — macOS
+  swap never sees the VM's locked guest memory pages configuration,
+  which the VM setup instructions will pin.
+- kern.hv_support=yes means the Mac can run a local Linux VM (UTM/
+  Lima) for option 1.
+
+Nothing in this command touches your age key, and no option ever
+involves entering the key on a project-controlled remote host.

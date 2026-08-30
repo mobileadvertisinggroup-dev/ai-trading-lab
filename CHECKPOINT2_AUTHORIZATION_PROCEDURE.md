@@ -17,9 +17,9 @@ ledger; recovery is not self-authorizing).
 1. The repository at the commit you will authorize:
    `git status --porcelain` empty; `git rev-parse HEAD` = the commit in
    your authorization file (step 2).
-2. Constitutional state (SPEC §22 checklist): integrity manifest v4
-   hash in `build_state.json` = `ee518f08…686e`; your externally
-   preserved APPROVED root = `0de3c9ab…9fe9` and equals
+2. Constitutional state (SPEC §22 checklist): integrity manifest v6
+   hash in `build_state.json` = `32a59f43…d49f` (V6); your externally
+   preserved APPROVED root = `484f538d…6cf0` (V6, D76) and equals
    `build_state.json .approved_external_root_hash`.
 3. Full suite green from a clean worktree: `python3 -m pytest -q`.
 4. Confirmation that no holdout access has occurred:
@@ -34,16 +34,16 @@ Create `data/manifests/checkpoint2_authorization.json`:
 ```json
 {
   "user_authorization_utc": "<UTC timestamp when YOU authorize>",
-  "protocol_sha256":        "<sha256 of EXPERIMENT_PROTOCOL.md — currently da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590>",
-  "git_commit":             "<git rev-parse HEAD of the authorized commit>",
+  "protocol_sha256":        "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+  "git_commit":             "<git rev-parse HEAD of the commit YOU authorize — verified against the checkout at run time>",
   "dataset_manifest_file":  "lake_manifest_raw-v1.json",
-  "dataset_manifest_sha256": "<sha256 of data/manifests/lake_manifest_raw-v1.json>",
-  "model_manifest_file":    "<the frozen model manifest file in data/manifests you authorize>",
-  "model_manifest_sha256":  "<its sha256>",
+  "dataset_manifest_sha256": "c1ef7262f62b9cbb1cc12b6405ecc21c1898233e8e699c89bd16d31e8e2211ac",
+  "model_manifest_file":    "model_manifest_v5.json",
+  "model_manifest_sha256":  "5f010c7d83fef9306b97f6458fb2c4c6a1cdf25b454ad3fba4e96fbf5eaf1859",
   "frozen_inputs_manifest_file": "checkpoint2_frozen_inputs.json",
-  "frozen_inputs_manifest_sha256": "<sha256 of data/manifests/checkpoint2_frozen_inputs.json — currently edb0806d43d4d96ce7cfb228eec37a699365f80f513226841279f0d20d8bddc6>",
-  "integrity_manifest_sha256": "<build_state.json .integrity_manifest_hash (v4: ee518f082580e2e4a342cb17a242226e6fc03a824643c74f2dd4cb47f0cb686e)>",
-  "external_root_hash":     "0de3c9ab4dd1b0bc4e774d10550ffe3e1fc2a972173d780cb28484bdeb469fe9",
+  "frozen_inputs_manifest_sha256": "a9a2aa6c5e9ab9a79839b1086c7f2cdf2f086ce8234f3ed6267e0c5a9a92b01e",
+  "integrity_manifest_sha256": "32a59f4376b394f94ca7894ffbcffe534ff8b9fbf0779b8b81c6b594afd6d49f",
+  "external_root_hash":     "484f538d8b5f9587f2e4ff1f06a061b7aab337b195d6038fdf123d444a886cf0",
   "consumed": false
 }
 ```
@@ -67,7 +67,7 @@ EXACTLY the pinned files and nothing else (strict census — an
 additional file refuses):
 - `--model-dir`: arm_b.txt, arm_c.txt, arm_e.txt, arm_e_cuts.npz,
   bc_train_selection.json, arm_e_portfolio_selection.json
-- `--sb3-dir`: arm_f_sb3_manifest.json, arm_f_sb3_seed4.zip
+- `--sb3-dir`: arm_f_sb3_manifest.json, arm_f_sb3_seed3.zip (the funding-corrected selected seed)
 
 ```
 python3 -m lab.data.unseal \

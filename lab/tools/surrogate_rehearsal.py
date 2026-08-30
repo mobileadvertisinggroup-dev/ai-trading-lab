@@ -50,7 +50,7 @@ import pyrage
 from lab.data import lake as L
 from lab.data.seal import _df_to_parquet_bytes, _time_column_for
 from lab.tools.make_frozen_inputs import (MANIFEST_FILES, MODEL_DIR_FILES,
-                                          REPO_FILES, SB3_DIR_FILES)
+                                          REPO_FILES, sb3_dir_files)
 
 SURROGATE_ARTIFACT = "surrogate-nonholdout-v1.tar.age"
 
@@ -111,12 +111,11 @@ def build_surrogate_manifests(mdir: str, repo_root: str, part: dict,
           "holdout_artifact_sha256": sha256_file(artifact_path)}
     with open(os.path.join(mdir, "lake_manifest_raw-v1.json"), "w") as f:
         json.dump(dm, f, sort_keys=True)
+    # D76: the bound model manifest (funding-corrected v5) — copied
+    # byte-identical from the real gate location
     shutil.copy(os.path.join(repo_root, "data", "manifests",
-                             "model_manifest.json"),
-                os.path.join(mdir, "model_manifest.json")) \
-        if os.path.exists(os.path.join(repo_root, "data", "manifests",
-                                       "model_manifest.json")) \
-        else open(os.path.join(mdir, "model_manifest.json"), "w").write("{}")
+                             "model_manifest_v5.json"),
+                os.path.join(mdir, "model_manifest_v5.json"))
     with open(os.path.join(mdir, "holdout_recipient.txt"), "w") as f:
         f.write(pubkey + "\n")
 
@@ -128,7 +127,7 @@ def build_surrogate_manifests(mdir: str, repo_root: str, part: dict,
           "model_dir_files": {n: sha256_file(os.path.join(model_dir, n))
                               for n in MODEL_DIR_FILES},
           "sb3_dir_files": {n: sha256_file(os.path.join(sb3_dir, n))
-                            for n in SB3_DIR_FILES}}
+                            for n in sb3_dir_files(sb3_dir)}}
     with open(os.path.join(mdir, "checkpoint2_frozen_inputs.json"),
               "w") as f:
         json.dump(fi, f, sort_keys=True)
@@ -149,9 +148,9 @@ def build_surrogate_manifests(mdir: str, repo_root: str, part: dict,
         "dataset_manifest_file": "lake_manifest_raw-v1.json",
         "dataset_manifest_sha256": sha256_file(
             os.path.join(mdir, "lake_manifest_raw-v1.json")),
-        "model_manifest_file": "model_manifest.json",
+        "model_manifest_file": "model_manifest_v5.json",
         "model_manifest_sha256": sha256_file(
-            os.path.join(mdir, "model_manifest.json")),
+            os.path.join(mdir, "model_manifest_v5.json")),
         "integrity_manifest_sha256": bs["integrity_manifest_hash"],
         "external_root_hash": bs["approved_external_root_hash"],
         "frozen_inputs_manifest_file": "checkpoint2_frozen_inputs.json",
@@ -280,8 +279,8 @@ def main() -> None:  # pragma: no cover — rehearsal driver
     sb3_dir = os.path.join(work, "models_sb3")
     stage_dir(os.path.join(repo, "data", "models"), MODEL_DIR_FILES,
               model_dir)
-    stage_dir(os.path.join(repo, "data", "models_sb3"), SB3_DIR_FILES,
-              sb3_dir)
+    src_sb3 = os.path.join(repo, "data", "models_sb3")
+    stage_dir(src_sb3, sb3_dir_files(src_sb3), sb3_dir)
 
     # 4. isolated surrogate manifests dir (own fresh ledger)
     mdir = os.path.join(work, "manifests")
