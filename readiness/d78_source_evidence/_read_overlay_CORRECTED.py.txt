@@ -1,0 +1,17 @@
+def _read_overlay(plain_dir: str, kind: str, symbol: str) -> pd.DataFrame | None:
+    """Read one symbol's overlay rows in the LAKE-RELATIVE layout the
+    seal preserves: klines are nested (klines15m/SYM/YYYY-MM.parquet),
+    funding is FLAT (funding/SYM.parquet). D76 defect fix: the nested
+    glob alone silently missed every flat funding file — every overlay
+    funding rate was absent, which the funding activity guard caught by
+    FAILING the V6 dress rehearsal CLOSED before any real opening."""
+    files = sorted(glob.glob(os.path.join(plain_dir, kind, symbol, "*.parquet")))
+    flat = os.path.join(plain_dir, kind, f"{symbol}.parquet")
+    if os.path.isfile(flat):
+        files.append(flat)
+    if not files:
+        return None
+    return pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
+
+
+def _validate_klines(sym: str, klass: str, pre: pd.DataFrame | None,

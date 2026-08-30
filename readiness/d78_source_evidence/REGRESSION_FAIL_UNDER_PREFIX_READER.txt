@@ -1,0 +1,28 @@
+.F..............                                                         [100%]
+=================================== FAILURES ===================================
+_____________________ test_load_combined_census_and_merge ______________________
+
+env = {'lake': '/tmp/pytest-of-root/pytest-82/union0/lake', 'plain': '/tmp/pytest-of-root/pytest-82/union0/plain', 'manifests': '/tmp/pytest-of-root/pytest-82/union0/manifests'}
+
+    def test_load_combined_census_and_merge(env):
+        bars, funding, part, census = load_combined(
+            env["lake"], env["manifests"], env["plain"])
+        assert census["counts"] == {"pre_only": 1, "overlay_only": 1,
+                                    "combined": 1}
+        # combined symbol: contiguous 15m grid across the quarantine boundary
+        ot = bars["BTCUSDT"]["open_time"]
+        assert ot[0] == T0 and ot[-1] == END - B15
+        assert (np.diff(ot) == B15).all()
+        # overlay-only symbol present, rows only >= Q
+        assert bars["NEWUSDT"]["open_time"].min() == Q
+        # pre-only symbol present, rows only < Q
+        assert bars["OLDUSDT"]["open_time"].max() < Q
+        # funding merged for the overlay-only symbol — from the FLAT
+        # overlay layout the seal actually produces (D76 regression)
+>       assert funding["NEWUSDT"] and min(funding["NEWUSDT"]) >= Q
+E       assert ({})
+
+tests/test_holdout_evaluator_units.py:127: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_holdout_evaluator_units.py::test_load_combined_census_and_merge
+1 failed, 15 passed in 3.91s

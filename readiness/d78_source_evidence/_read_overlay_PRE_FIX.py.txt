@@ -1,0 +1,8 @@
+def _read_overlay(plain_dir: str, kind: str, symbol: str) -> pd.DataFrame | None:
+    files = sorted(glob.glob(os.path.join(plain_dir, kind, symbol, "*.parquet")))
+    if not files:
+        return None
+    return pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
+
+
+def _validate_klines(sym: str, klass: str, pre: pd.DataFrame | None,

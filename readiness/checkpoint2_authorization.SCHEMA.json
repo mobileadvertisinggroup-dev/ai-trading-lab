@@ -1,37 +1,75 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "checkpoint2_authorization.json — created ONLY by the key holder",
+  "title": "checkpoint2_authorization.json \u2014 created ONLY by the key holder",
   "description": "Input record for lab.data.authz.verify_authorization. Every hash is re-verified against independently RECOMPUTED values at run time; stale or fabricated values refuse (audit-logged). Consumption is established by the hash-chained state ledger, never by this file.",
   "type": "object",
   "required": [
-    "user_authorization_utc", "protocol_sha256", "git_commit",
-    "dataset_manifest_file", "dataset_manifest_sha256",
-    "model_manifest_file", "model_manifest_sha256",
-    "frozen_inputs_manifest_file", "frozen_inputs_manifest_sha256",
-    "integrity_manifest_sha256", "external_root_hash", "consumed"
+    "user_authorization_utc",
+    "protocol_sha256",
+    "git_commit",
+    "dataset_manifest_file",
+    "dataset_manifest_sha256",
+    "model_manifest_file",
+    "model_manifest_sha256",
+    "frozen_inputs_manifest_file",
+    "frozen_inputs_manifest_sha256",
+    "integrity_manifest_sha256",
+    "external_root_hash",
+    "consumed"
   ],
   "properties": {
-    "user_authorization_utc": {"type": "string",
-      "description": "UTC timestamp when the key holder authorizes"},
-    "protocol_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$",
-      "description": "must equal sha256(EXPERIMENT_PROTOCOL.md) recomputed at run time"},
-    "git_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$",
-      "description": "must equal `git rev-parse HEAD` of the checkout at run time"},
-    "dataset_manifest_file": {"type": "string",
-      "description": "filename inside data/manifests (e.g. lake_manifest_raw-v1.json)"},
-    "dataset_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "model_manifest_file": {"type": "string"},
-    "model_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "frozen_inputs_manifest_file": {"const": "checkpoint2_frozen_inputs.json",
-      "description": "D69 blocker 2: must name exactly checkpoint2_frozen_inputs.json — the ONE manifest pinning every consumed file (governing docs, dataset/partition manifests, frozen recipient, model artifacts); the gate recomputes every pinned hash BEFORE the atomic claim and refuses missing/additional/substituted/symlinked/path-escaping inputs"},
-    "frozen_inputs_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$",
-      "description": "sha256 of data/manifests/checkpoint2_frozen_inputs.json, recomputed at run time"},
-    "integrity_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$",
-      "description": "must equal build_state.json .integrity_manifest_hash"},
-    "external_root_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$",
-      "description": "must equal build_state.json .approved_external_root_hash (the externally preserved APPROVED root)"},
-    "consumed": {"const": false,
-      "description": "input flag only; the ledger is authoritative"}
+    "user_authorization_utc": {
+      "type": "string",
+      "description": "UTC timestamp when the key holder authorizes"
+    },
+    "protocol_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "must equal sha256(EXPERIMENT_PROTOCOL.md) recomputed at run time"
+    },
+    "git_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "must equal `git rev-parse HEAD` of the checkout at run time"
+    },
+    "dataset_manifest_file": {
+      "type": "string",
+      "description": "filename inside data/manifests (e.g. lake_manifest_raw-v1.json)"
+    },
+    "dataset_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "model_manifest_file": {
+      "type": "string"
+    },
+    "model_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "frozen_inputs_manifest_file": {
+      "const": "checkpoint2_frozen_inputs.json",
+      "description": "D69 blocker 2: must name exactly checkpoint2_frozen_inputs.json \u2014 the ONE manifest pinning every consumed file (governing docs, dataset/partition manifests, frozen recipient, model artifacts); the gate recomputes every pinned hash BEFORE the atomic claim and refuses missing/additional/substituted/symlinked/path-escaping inputs"
+    },
+    "frozen_inputs_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "sha256 of data/manifests/checkpoint2_frozen_inputs.json, recomputed at run time"
+    },
+    "integrity_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "must equal build_state.json .integrity_manifest_hash \u2014 currently integrity manifest V7 b91008834fdd221677cdb332b74b6b83cd40eb82a84a81d31b19c10fae4a2412 (D78: the manifest covering the gate/evaluator sources actually executing the holdout, incl. the flat-funding-layout overlay-reader correction)"
+    },
+    "external_root_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "must equal build_state.json .approved_external_root_hash (the externally preserved APPROVED root)"
+    },
+    "consumed": {
+      "const": false,
+      "description": "input flag only; the ledger is authoritative"
+    }
   },
   "additionalProperties": false
 }

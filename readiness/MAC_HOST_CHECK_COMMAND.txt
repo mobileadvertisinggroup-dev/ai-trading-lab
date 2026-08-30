@@ -5,18 +5,25 @@ output. It only READS system facts (no writes, no network, no key
 access, no installs) and prints a RECOMMENDATION line mapping your
 hardware to the options in readiness/MAC_LOCAL_EXECUTION_PLAN.md.
 
-/bin/bash -c 'echo "== MODEL ==" ; sysctl -n hw.model 2>/dev/null; sysctl -n machdep.cpu.brand_string 2>/dev/null; uname -m; sw_vers 2>/dev/null | tr "\n" " "; echo; echo "== MEMORY =="; RAM=$(sysctl -n hw.memsize); echo "MemTotal_bytes=$RAM (~$((RAM/1073741824)) GiB)"; vm_stat | awk "/free|inactive/ {print}"; echo "== SWAP =="; sysctl vm.swapusage; echo "== DISK =="; df -h / | tail -1; echo "== VIRTUALIZATION (for the Linux-VM option) =="; sysctl -n kern.hv_support 2>/dev/null | sed "s/^1$/hypervisor_supported=yes/;s/^0$/hypervisor_supported=no/"; echo "== RECOMMENDATION =="; if [ "$RAM" -ge 34359738368 ]; then echo "OPTION 1 POSSIBLE: >=32 GiB RAM — run the unmodified Linux gate in a local VM on this Mac (key never leaves this machine); next step: full-size Mac-local surrogate rehearsal inside the VM."; elif [ "$RAM" -ge 25769803776 ]; then echo "OPTION 1 MARGINAL: 24-32 GiB — a VM can host the gate only with the evaluator memory optimization proven by a Mac-local rehearsal first."; else echo "OPTION 1 NOT POSSIBLE ON THIS MAC: <24 GiB RAM — choose the evaluator-optimization path (must still be proven locally), dedicated >=32 GiB local Linux hardware (option 2), or keep the holdout sealed (option 3)."; fi'
+/bin/bash -c 'echo "== MODEL ==" ; sysctl -n hw.model 2>/dev/null; sysctl -n machdep.cpu.brand_string 2>/dev/null; uname -m; sw_vers 2>/dev/null | tr "\n" " "; echo; echo "== MEMORY =="; RAM=$(sysctl -n hw.memsize); echo "MemTotal_bytes=$RAM (~$((RAM/1073741824)) GiB)"; vm_stat | awk "/free|inactive|wired/ {print}"; echo "== HOST SWAP (must be ZERO used for any VM option) =="; sysctl vm.swapusage; ls -la /private/var/vm/ 2>/dev/null; echo "== HIBERNATION / SLEEPIMAGE =="; pmset -g | grep -E "hibernatemode|standby" ; echo "== FILEVAULT =="; fdesetup status 2>/dev/null; echo "== VIRTUALIZATION SUPPORT =="; sysctl -n kern.hv_support 2>/dev/null | sed "s/^1$/hypervisor_supported=yes/;s/^0$/hypervisor_supported=no/"; echo "== DISK =="; df -h / | tail -1; echo "== RECOMMENDATION (per the D78-revised plan) =="; if [ "$RAM" -ge 51539607552 ]; then echo "VM option CONDITIONALLY possible: >=48 GiB RAM gives host+locked-guest headroom — BUT it still requires mechanical proof of host-swap-zero, wired (non-pageable) guest RAM, hibernation/dumps off, and a full-size in-VM rehearsal, per the plan. Option A (dedicated Linux >=32 GiB) remains the recommended path."; elif [ "$RAM" -ge 34359738368 ]; then echo "VM option MARGINAL at 32-48 GiB: locked-guest + host headroom is tight; every host-persistence property must still be proven. RECOMMENDED: Option A — dedicated local Linux hardware >=32 GiB, swap disabled, key entered locally."; else echo "VM option NOT viable on this Mac (<32 GiB for host+locked guest). RECOMMENDED: Option A — dedicated local Linux hardware >=32 GiB (swap disabled, no hibernation/core dumps, key entered locally); otherwise Option B (formally amended native-macOS design, independently dress-rehearsed) or Option C (keep the holdout sealed)."; fi'
 
-What the fields mean:
-- MemTotal decides the option per the frozen 1.5x margin (current
-  measured demand ~13.9 GB => ~20.9 GB genuinely available required;
-  re-measured by the V6 rehearsal profile in this bundle).
-- vm.swapusage is informational for macOS itself; the gate runs inside
-  a Linux VM where swap is disabled and verified (/proc/swaps) — macOS
-  swap never sees the VM's locked guest memory pages configuration,
-  which the VM setup instructions will pin.
-- kern.hv_support=yes means the Mac can run a local Linux VM (UTM/
-  Lima) for option 1.
+What the fields mean (D78-corrected):
+- MemTotal governs headroom: the guest needs ~21 GB by the frozen 1.5x
+  margin, and for a VM the guest RAM must be LOCKED (non-pageable) on
+  the host — so the Mac needs host+guest headroom (realistically
+  ≥ 48 GiB) on top of every other proof.
+- vm.swapusage is a HARD criterion for any VM option: disabling swap
+  inside the Linux guest does NOT stop macOS from paging VM-process
+  memory; host swap used must be mechanically zero before/during/after,
+  with guest RAM proven wired on the host.
+- FileVault (encrypted swap) is NOT automatically sufficient under the
+  frozen no-plaintext-persistence policy; accepting it would be a
+  formal amendment for your explicit adjudication.
+- hibernatemode must be 0 with no sleepimage; core dumps, VM
+  snapshots, and suspend/save-state must never be used (they write
+  guest RAM to disk).
+- kern.hv_support=yes only means a VM CAN run — it proves none of the
+  persistence properties above.
 
 Nothing in this command touches your age key, and no option ever
 involves entering the key on a project-controlled remote host.

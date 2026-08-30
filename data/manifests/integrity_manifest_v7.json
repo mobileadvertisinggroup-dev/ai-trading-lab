@@ -1,0 +1,417 @@
+{
+ "constitutional_properties": [
+  "exact-equality differential gate vs the Independent Reference Ledger (first-divergence adjudication; 1e-9 diagnostic only)",
+  "golden fixtures G01-G12 (layer-1 Decimal-quantize exact + 1e-8 bound)",
+  "property-based accounting invariants incl. randomized differential fuzzing",
+  "holdout refusal at the read layer for exact/partial/point/funding/universe queries (GuardedLake)",
+  "authorization strictness: fabricated or merely nonempty hashes never grant access (read layer AND unseal gate)",
+  "one-time holdout gate: manifest-bound artifact, atomic single opening, tmpfs-only, FAILED_CLOSED on every post-claim failure, permanent second-opening block, corrupt chain fails closed",
+  "deliberate-leak battery: label-in-features, off-dictionary column, purge violation, post-t feature, holdout contamination all fail loudly",
+  "no-lookahead feature proof: mutating every post-t bar leaves all 28 features bit-identical",
+  "synchronized-round invalidation: any arm failure voids the round for every arm",
+  "risk-governor pauses/limits incl. trailing-window drawdown release",
+  "forced_delist_close conformance with bounded deferral logging",
+  "canonical obs-v2 observation builder: one builder for training AND inference; bit-identical parity proven mechanically",
+  "transactional synchronized rounds: invalid rounds leave end-state identical to a never-run round (control-run equivalence); only the coordinator's centralized invalid-round record survives",
+  "G matched-entry diagnostic: exact matched-fill identity with G actual (timestamp, symbol, side, qty, price, initial protection); over-cap excursions explicitly recorded",
+  "G feasible counterfactual: every divergence from G actual is recorded and explained (decision stages + governor/engine rejections); no silent divergence",
+  "G diagnostics are inert: with diagnostics on vs absent, G actual and every arm are byte-identical (superseded strict single-shadow identity preserved as failed history, SD-GSHADOW)",
+  "G_matched entry-bar semantics: a clone created on the entry bar experiences the identical same-bar stop/target sweep, mark, and MFE/MAE updates as G actual (exact engine semantics)",
+  "Arm F comparisons use the EXACT frozen Arm A conventional manager as baseline (trailing then time exit, ArmARunner order), parity-proven against official outcomes",
+  "funding is applied in EVERY engine of the seven-arm orchestrator and both G diagnostics with exact ArmARunner/engine semantics (transfer = rate x open_qty x mark x side at 8h boundaries), and in the RL trade-management environment per the policy's actual holding and reductions",
+  "missing funding is LOUD (funding_missing events, never imputed); the activity guard stops any mechanically implausible all-zero funding over an active multi-month window",
+  "funding reporting reconciles exactly: event transfers == per-position funding_paid == the equity impact",
+  "one-time gate: every frozen input hash-verified against the single authorized frozen-input manifest BEFORE the atomic claim; identity verified against the frozen recipient pre-claim; bounded-chunk wipe; results published atomically only after verified cleanup; no success representation on cleanup/publication/ledger failure",
+  "diagnostic-clone entry-bar funding exemption: a G_matched clone pays no funding (and emits no funding_missing) on exactly its entry bar \u2014 identical to the mirrored actual position, which fills after that bar's funding phase \u2014 via the position-level clone_entry_bar_ms stamp set only by clone_open; later boundaries charge normally; actual arms A-G are untouched (differential gate + diagnostics-on/off byte-identity)",
+  "the locked census includes the one-time gate and frozen-evaluator sources actually executing the holdout (holdout_evaluator, unseal, authz, frozen_inputs, preflight, holdout_ledger, access)",
+  "the overlay reader handles the seal's exact lake-relative layouts \u2014 nested klines and FLAT funding \u2014 pinned by regression; a layout miss cannot be silent (the funding activity guard fails closed on all-zero funding)"
+ ],
+ "files": [
+  {
+   "path": "DATA_DICTIONARY.md",
+   "sha256_v6": "f34190ce7776c379febc4c952d0d47e82696b34722d924b054a59501f9f1f06c",
+   "sha256_v7": "f34190ce7776c379febc4c952d0d47e82696b34722d924b054a59501f9f1f06c",
+   "status": "unchanged"
+  },
+  {
+   "path": "EXPERIMENT_PROTOCOL.md",
+   "sha256_v6": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+   "sha256_v7": "da469dfd0ff2307f4ed30c3c3872b95c0d6468e15b288ce9d3dae6ac16572590",
+   "status": "unchanged"
+  },
+  {
+   "path": "HOLDOUT_POLICY.md",
+   "sha256_v6": "58b94feefde19c1c43be18564e059ab78169c621942deaa06960e8b5702f2ca2",
+   "sha256_v7": "58b94feefde19c1c43be18564e059ab78169c621942deaa06960e8b5702f2ca2",
+   "status": "unchanged"
+  },
+  {
+   "path": "INTEGRITY_TEST_POLICY.md",
+   "sha256_v6": "275ddcefe3a7d239d8d5333378f17a3eef54c120bf9288bb4979be63870c8de7",
+   "sha256_v7": "275ddcefe3a7d239d8d5333378f17a3eef54c120bf9288bb4979be63870c8de7",
+   "status": "unchanged"
+  },
+  {
+   "path": "RISK_POLICY.md",
+   "sha256_v6": "9591f11da0bf6265ca8c7a6ba9b28b73941a33ac45060a5f37a746442f6f5608",
+   "sha256_v7": "9591f11da0bf6265ca8c7a6ba9b28b73941a33ac45060a5f37a746442f6f5608",
+   "status": "unchanged"
+  },
+  {
+   "path": "SIMULATOR_SEMANTICS.md",
+   "sha256_v6": "2edceb990a3c3ea6b7f5ebf65339a2065ef5b18f5be008ac62afe1a4d333a449",
+   "sha256_v7": "2edceb990a3c3ea6b7f5ebf65339a2065ef5b18f5be008ac62afe1a4d333a449",
+   "status": "unchanged"
+  },
+  {
+   "path": "SPEC_AMENDMENT_A1_GSHADOW.md",
+   "sha256_v6": "baef30966ffa047f2c629a5990bf7901e33dab176b8b88e1ff7c739f10f20b3b",
+   "sha256_v7": "baef30966ffa047f2c629a5990bf7901e33dab176b8b88e1ff7c739f10f20b3b",
+   "status": "unchanged"
+  },
+  {
+   "path": "SPEC_FINAL-1.2.1.md",
+   "sha256_v6": "84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8",
+   "sha256_v7": "84309a6bf53f941b6bd6353d2b14640eddbbfcb0ad95d2dd752d822e1f9665f8",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G01_long_plus_2R.json",
+   "sha256_v6": "1079c188bdeeb9014e43277ef91adc517f385849d30f9144ec25123a3f1dc13c",
+   "sha256_v7": "1079c188bdeeb9014e43277ef91adc517f385849d30f9144ec25123a3f1dc13c",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G02_short_minus_1R.json",
+   "sha256_v6": "8ccf3353ae455226f3df7381f3c24c86d46b83b8e31ec5a60e542940f8f2c021",
+   "sha256_v7": "8ccf3353ae455226f3df7381f3c24c86d46b83b8e31ec5a60e542940f8f2c021",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G03_gross_winner_net_loser_v2.json",
+   "sha256_v6": "8bb5363d9321480301b34c010e072c78d838515507c619ce61bf6f672366586e",
+   "sha256_v7": "8bb5363d9321480301b34c010e072c78d838515507c619ce61bf6f672366586e",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G04_funding_long_pays.json",
+   "sha256_v6": "22e1daae99c29fe64d58fd34c9bf908aa5fd486bd5b167520cd953278baccf61",
+   "sha256_v7": "22e1daae99c29fe64d58fd34c9bf908aa5fd486bd5b167520cd953278baccf61",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G05_capital_competition.json",
+   "sha256_v6": "bef3c0f777e05d89d3c48fcb98aaa28e388768519c293c9943901985cf219724",
+   "sha256_v7": "bef3c0f777e05d89d3c48fcb98aaa28e388768519c293c9943901985cf219724",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G06_ambiguity_stop_first.json",
+   "sha256_v6": "ed155a9b4f2a24737a460cbff61cd839d44bf948fba17f4e8bf716cfa7090b93",
+   "sha256_v7": "ed155a9b4f2a24737a460cbff61cd839d44bf948fba17f4e8bf716cfa7090b93",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G07_insolvency_ruin.json",
+   "sha256_v6": "ce687c05847e760429d9461fb2ae2eb461c45e93661a0da8a83283bf431a8d18",
+   "sha256_v7": "ce687c05847e760429d9461fb2ae2eb461c45e93661a0da8a83283bf431a8d18",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G08_missing_data.json",
+   "sha256_v6": "d6fcf4f403555051a29a2bd4794ac62af087bd6b959793828d5bfc774647afe9",
+   "sha256_v7": "d6fcf4f403555051a29a2bd4794ac62af087bd6b959793828d5bfc774647afe9",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G09_loss_limit_rejection.json",
+   "sha256_v6": "f8141c2ab1aaa302d135a3dc94283560822dfe5eb8eaf2dd7eab683b28bd4f51",
+   "sha256_v7": "f8141c2ab1aaa302d135a3dc94283560822dfe5eb8eaf2dd7eab683b28bd4f51",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G10_invalid_rl_action.json",
+   "sha256_v6": "2eb2dae2393052ce35fcae7ff8eb4a47cda5bd3f172d90996cda6732370754e0",
+   "sha256_v7": "2eb2dae2393052ce35fcae7ff8eb4a47cda5bd3f172d90996cda6732370754e0",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G11_partial_exit_breakeven.json",
+   "sha256_v6": "364f7ed6270dc5e3d923fa5f8a9a023545da723e3b5c7d4c7e3e9690b6d09521",
+   "sha256_v7": "364f7ed6270dc5e3d923fa5f8a9a023545da723e3b5c7d4c7e3e9690b6d09521",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/G12_synchronized_round_failure.json",
+   "sha256_v6": "4f2ccf57c1455327e1da1b657b12258129e3b63243e4dd319acb3e0aa5f303fa",
+   "sha256_v7": "4f2ccf57c1455327e1da1b657b12258129e3b63243e4dd319acb3e0aa5f303fa",
+   "status": "unchanged"
+  },
+  {
+   "path": "fixtures/golden/superseded/G03_gross_winner_net_loser_v1.json",
+   "sha256_v6": "dc1add29ecf69bce81d1e61b3d369c2dd3e28701f0e624fd86df1c8ba0247d28",
+   "sha256_v7": "dc1add29ecf69bce81d1e61b3d369c2dd3e28701f0e624fd86df1c8ba0247d28",
+   "status": "unchanged"
+  },
+  {
+   "path": "lab/data/access.py",
+   "reason": "ADDED TO CENSUS (D78 blocker 1): the constitutional manifest must describe the evaluator/gate actually executing the holdout; from v7 the one-time gate and frozen-evaluator sources are locked and any future change refuses without a decision-keyed reason.",
+   "sha256_v6": null,
+   "sha256_v7": "8feea30357346fe1e0171bca100d012d0f7eb5c1530a8672d27efd13cc248803",
+   "status": "added"
+  },
+  {
+   "path": "lab/data/authz.py",
+   "reason": "ADDED TO CENSUS (D78 blocker 1): the constitutional manifest must describe the evaluator/gate actually executing the holdout; from v7 the one-time gate and frozen-evaluator sources are locked and any future change refuses without a decision-keyed reason.",
+   "sha256_v6": null,
+   "sha256_v7": "54175ec88bb867a8005ff940b2de573b29c698a5ffe25878e8f4773d64c7de41",
+   "status": "added"
+  },
+  {
+   "path": "lab/data/frozen_inputs.py",
+   "reason": "ADDED TO CENSUS (D78 blocker 1): the constitutional manifest must describe the evaluator/gate actually executing the holdout; from v7 the one-time gate and frozen-evaluator sources are locked and any future change refuses without a decision-keyed reason.",
+   "sha256_v6": null,
+   "sha256_v7": "3f24f9a68f69a8729973c82b24e8bb10748fa1f4280b69f0e9185d6f44d11b21",
+   "status": "added"
+  },
+  {
+   "path": "lab/data/holdout_ledger.py",
+   "reason": "ADDED TO CENSUS (D78 blocker 1): the constitutional manifest must describe the evaluator/gate actually executing the holdout; from v7 the one-time gate and frozen-evaluator sources are locked and any future change refuses without a decision-keyed reason.",
+   "sha256_v6": null,
+   "sha256_v7": "1b4bc66d9cd1a3dcf757ddf45a458ff4e479cbf3ced4433bdbf0deaef6a5e2e3",
+   "status": "added"
+  },
+  {
+   "path": "lab/data/preflight.py",
+   "reason": "ADDED TO CENSUS (D78 blocker 1): the constitutional manifest must describe the evaluator/gate actually executing the holdout; from v7 the one-time gate and frozen-evaluator sources are locked and any future change refuses without a decision-keyed reason.",
+   "sha256_v6": null,
+   "sha256_v7": "f7f1c5fa359b694ec96d0219a9deaeead964f9ed73536163f2dfeeb164f16e34",
+   "status": "added"
+  },
+  {
+   "path": "lab/data/unseal.py",
+   "reason": "ADDED TO CENSUS (D78 blocker 1): the constitutional manifest must describe the evaluator/gate actually executing the holdout; from v7 the one-time gate and frozen-evaluator sources are locked and any future change refuses without a decision-keyed reason.",
+   "sha256_v6": null,
+   "sha256_v7": "09e5fb5bcdd3b62589d86384e3d74d73bc60dda4372b5617864ddd51d894ef37",
+   "status": "added"
+  },
+  {
+   "path": "lab/protocol.py",
+   "sha256_v6": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2",
+   "sha256_v7": "8a2cfff61f37887e22e0560af1d9bd970ef444c894ba39fe50008097a17c9ea2",
+   "status": "unchanged"
+  },
+  {
+   "path": "lab/tools/holdout_evaluator.py",
+   "reason": "ADDED TO CENSUS (D78 blocker 1): the constitutional manifest must describe the evaluator/gate actually executing the holdout; from v7 the one-time gate and frozen-evaluator sources are locked and any future change refuses without a decision-keyed reason. Carries the D76 flat-layout overlay-reader correction: _read_overlay reads both the nested kline layout (klines15m/SYM/YYYY-MM.parquet) and the FLAT funding layout (funding/SYM.parquet) the seal preserves \u2014 without it, every overlay funding file was silently invisible and the activity guard failed the rehearsal closed.",
+   "sha256_v6": null,
+   "sha256_v7": "a055069b9e3febfe4908adf6b855527568b33a1d56ebe5deffe60d8f84bdeeca",
+   "status": "added"
+  },
+  {
+   "path": "tests/__init__.py",
+   "sha256_v6": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "sha256_v7": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_arm_a.py",
+   "sha256_v6": "da7c9031c4d9f7b25fa600da8f6c35b70fbb293c75080f1769185b6a90eb13e8",
+   "sha256_v7": "da7c9031c4d9f7b25fa600da8f6c35b70fbb293c75080f1769185b6a90eb13e8",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_arm_f_baseline_parity.py",
+   "sha256_v6": "452d46741e98f10347eb4aabd540f98ac1d59824bb882c4a70a010d875b376f7",
+   "sha256_v7": "452d46741e98f10347eb4aabd540f98ac1d59824bb882c4a70a010d875b376f7",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_audit.py",
+   "sha256_v6": "01aa52cd868f1f2182cdcae8d84c10593f000b5acb44d9acbd1731251a425521",
+   "sha256_v7": "01aa52cd868f1f2182cdcae8d84c10593f000b5acb44d9acbd1731251a425521",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_authz_negative.py",
+   "sha256_v6": "2a3caf185074f931060b659753c0af5b3aa3304540ae74c76370696ed94b6dc4",
+   "sha256_v7": "2a3caf185074f931060b659753c0af5b3aa3304540ae74c76370696ed94b6dc4",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_checkpoint2_readiness.py",
+   "sha256_v6": "a5177a1f155cbc886fe060cbc0725ea8e04e357ba479bf6fed6f548f36e0064f",
+   "sha256_v7": "a5177a1f155cbc886fe060cbc0725ea8e04e357ba479bf6fed6f548f36e0064f",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_competition.py",
+   "sha256_v6": "513c46419d8f48fda942f182982fbec5ce09cefc32cf63450f83efba47e40050",
+   "sha256_v7": "513c46419d8f48fda942f182982fbec5ce09cefc32cf63450f83efba47e40050",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_dashboard.py",
+   "sha256_v6": "99080072e8bbfa1e4249e6d31dbfcdaa040d846d77c00b6c1d0ad90dcbba6dd3",
+   "sha256_v7": "99080072e8bbfa1e4249e6d31dbfcdaa040d846d77c00b6c1d0ad90dcbba6dd3",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_differential.py",
+   "sha256_v6": "7b70cb1d964c474db89fb97742c93c9a65bb20adf967447d0d69a3de4e55e883",
+   "sha256_v7": "7b70cb1d964c474db89fb97742c93c9a65bb20adf967447d0d69a3de4e55e883",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_engine.py",
+   "sha256_v6": "c4cf1981f1336c4b9189d18d9eff324a69ad1fdac643891a1b2809a8c8345740",
+   "sha256_v7": "c4cf1981f1336c4b9189d18d9eff324a69ad1fdac643891a1b2809a8c8345740",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_features.py",
+   "sha256_v6": "db4230410d74d4b9536d68d653f134fb9b3a5385edfeeee94eab24784d6fc343",
+   "sha256_v7": "db4230410d74d4b9536d68d653f134fb9b3a5385edfeeee94eab24784d6fc343",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_funding_constitutional.py",
+   "sha256_v6": "9752f84f859783e2c491ec0d5008436d4a36d89592a5eed9024cc6d3670f23f0",
+   "sha256_v7": "9752f84f859783e2c491ec0d5008436d4a36d89592a5eed9024cc6d3670f23f0",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_gate_fault_injection.py",
+   "sha256_v6": "0771650115aa40efaa7648b834897a53913ad28f25404eaf2c240bcf08044a3a",
+   "sha256_v7": "0771650115aa40efaa7648b834897a53913ad28f25404eaf2c240bcf08044a3a",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_golden_fixtures.py",
+   "sha256_v6": "eb71e800ffd8189aa05e34591a4f94ddf2126539f7dff11d3c66294016dce36c",
+   "sha256_v7": "eb71e800ffd8189aa05e34591a4f94ddf2126539f7dff11d3c66294016dce36c",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_governor.py",
+   "sha256_v6": "fb6426a1b07e6b1435a7936228aa7e71e2191b56682f2e9226e6c0a7d011ed1d",
+   "sha256_v7": "fb6426a1b07e6b1435a7936228aa7e71e2191b56682f2e9226e6c0a7d011ed1d",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_holdout_evaluator_units.py",
+   "reason": "MODIFIED (D76 defect fix, post-v6 lock; pre-recorded in POST_CHECKPOINT2_LINEAGE_PROPOSAL.md at change time): the fixture's synthetic funding layout corrected to the REAL flat seal layout (funding/SYMBOL.parquet) and a regression added proving the overlay reader finds flat funding files. The nested-only fixture had masked the frozen-evaluator defect that the V6 dress rehearsal's funding activity guard caught by FAILING CLOSED in its isolated environment.",
+   "sha256_v6": "8cf56533f74a83935426abcd88bbd1d2bea0ff373a8811a0ba369d0dc2259922",
+   "sha256_v7": "0dda91f0c7949d7e4b7fb1c5a8c779d1dc61da2c6248ae1d23829ab253cfe003",
+   "status": "modified"
+  },
+  {
+   "path": "tests/test_holdout_gate.py",
+   "sha256_v6": "9641d9a58a2e58f58ab15ba3d05378dbb487fe4eab02399cde9139658ae79a79",
+   "sha256_v7": "9641d9a58a2e58f58ab15ba3d05378dbb487fe4eab02399cde9139658ae79a79",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_ingest_parsers.py",
+   "sha256_v6": "6aff97ab6677bf2a0509d2e59bb0e5f8dbb3d9df9cef1f631f183a19bec3dfb3",
+   "sha256_v7": "6aff97ab6677bf2a0509d2e59bb0e5f8dbb3d9df9cef1f631f183a19bec3dfb3",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_invariants.py",
+   "sha256_v6": "1c8ce5ca8a5c2f8fd325698cfcaaef5822ecded1fbfa73ddd4c1ab34b018b473",
+   "sha256_v7": "1c8ce5ca8a5c2f8fd325698cfcaaef5822ecded1fbfa73ddd4c1ab34b018b473",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_labels.py",
+   "sha256_v6": "3a04f327adec43193a31c5c104b660d4687003841549eeb9f65dd2bd5b013c39",
+   "sha256_v7": "3a04f327adec43193a31c5c104b660d4687003841549eeb9f65dd2bd5b013c39",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_learnability_v3_invariance.py",
+   "sha256_v6": "f2641c9eff8bf9bfea12331cc7f1c5b342fb75dd45c8baa0a0b74409a1fef653",
+   "sha256_v7": "f2641c9eff8bf9bfea12331cc7f1c5b342fb75dd45c8baa0a0b74409a1fef653",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_observation_parity.py",
+   "sha256_v6": "ca7bfa7a3b013774c190ba65f45c37b7c51b0635923e2f66a56aa0a418038f43",
+   "sha256_v7": "ca7bfa7a3b013774c190ba65f45c37b7c51b0635923e2f66a56aa0a418038f43",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_partition.py",
+   "sha256_v6": "7da5e3af2c04f2e13bdc1e45c110802378a96c3474eddc2a4c5d1dc175e9ee4a",
+   "sha256_v7": "7da5e3af2c04f2e13bdc1e45c110802378a96c3474eddc2a4c5d1dc175e9ee4a",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_pipelines_leaks.py",
+   "sha256_v6": "11da950c98fa0de1a672e922f901954a30f78c9486d8cfe3cbec808fb9df68c0",
+   "sha256_v7": "11da950c98fa0de1a672e922f901954a30f78c9486d8cfe3cbec808fb9df68c0",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_regime_rl.py",
+   "sha256_v6": "053482fbef2afba0ddf3236b93102f8dd7f528a33fdf38094c4ae2832c57cf71",
+   "sha256_v7": "053482fbef2afba0ddf3236b93102f8dd7f528a33fdf38094c4ae2832c57cf71",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_rounds.py",
+   "sha256_v6": "8f9dcbc4e4957487a3897c8a32377c6c4d1ce974d87dc4200e6e00e3e9cbfd14",
+   "sha256_v7": "8f9dcbc4e4957487a3897c8a32377c6c4d1ce974d87dc4200e6e00e3e9cbfd14",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_seal_access.py",
+   "sha256_v6": "103464d411bca3d3de732783dbdfae249a238ff03cef5fe90a2694d1e75f0533",
+   "sha256_v7": "103464d411bca3d3de732783dbdfae249a238ff03cef5fe90a2694d1e75f0533",
+   "status": "unchanged"
+  },
+  {
+   "path": "tests/test_transactional_rounds.py",
+   "sha256_v6": "6a0715c9fd7f1a1a9817e5aeae57c46209b7d16b5711f475ef0c4859558aa125",
+   "sha256_v7": "6a0715c9fd7f1a1a9817e5aeae57c46209b7d16b5711f475ef0c4859558aa125",
+   "status": "unchanged"
+  }
+ ],
+ "integrity_manifest_hash": "b91008834fdd221677cdb332b74b6b83cd40eb82a84a81d31b19c10fae4a2412",
+ "locked_utc": "2026-08-30T21:07:57Z",
+ "material_change_rule": "spec \u00a716: any post-lock change to a listed file requires a documented amendment, review, and retraining assessment; never silent.",
+ "predecessors": [
+  {
+   "integrity_manifest_hash": "c423f7826d0e3c667681a981f75e69d553c619022f17cdf2eea62c48ae01afb6",
+   "path": "data/manifests/integrity_manifest.json",
+   "status": "HISTORICAL \u2014 NOT APPROVED (v1)"
+  },
+  {
+   "integrity_manifest_hash": "2268007d9b7ac16071bf140fcb7fd8d43b1a67e004c63ccfebafa30e06f1d130",
+   "path": "data/manifests/integrity_manifest_v2.json",
+   "status": "HISTORICAL \u2014 replacement Checkpoint 1 NOT APPROVED (v2, D61); preserved unmodified"
+  },
+  {
+   "integrity_manifest_hash": "c5cbdf7713533c190a45b4d3b739052493c3aca57a73c4997cc60afd9618c9c8",
+   "path": "data/manifests/integrity_manifest_v3.json",
+   "status": "HISTORICAL \u2014 replacement Checkpoint 1 v3 NOT APPROVED (D63); preserved unmodified"
+  },
+  {
+   "integrity_manifest_hash": "ee518f082580e2e4a342cb17a242226e6fc03a824643c74f2dd4cb47f0cb686e",
+   "path": "data/manifests/integrity_manifest_v4.json",
+   "status": "HISTORICAL \u2014 Checkpoint 1 v4 APPROVED (D66), then SUPERSEDED FOR CHECKPOINT-2 ELIGIBILITY by the adjudicated funding defect (D72); preserved unmodified"
+  },
+  {
+   "integrity_manifest_hash": "a857c2e4e52700b64170817ef9e125602b5ef922c2bdb2e49a4d4b7d91d62628",
+   "path": "data/manifests/integrity_manifest_v5.json",
+   "status": "HISTORICAL \u2014 replacement Checkpoint 1 v5 NOT APPROVED (D74: G_matched entry-bar funding ordering blocker); preserved unmodified"
+  },
+  {
+   "integrity_manifest_hash": "32a59f4376b394f94ca7894ffbcffe534ff8b9fbf0779b8b81c6b594afd6d49f",
+   "path": "data/manifests/integrity_manifest_v6.json",
+   "status": "HISTORICAL \u2014 replacement Checkpoint 1 V6 APPROVED (D76); the approved scientific root V6 is preserved UNCHANGED; v7 is a holdout-loader/readiness lineage correction only (D78), not a scientific replacement"
+  }
+ ],
+ "version": 7
+}

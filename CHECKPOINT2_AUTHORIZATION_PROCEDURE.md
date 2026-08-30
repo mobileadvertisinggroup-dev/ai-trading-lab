@@ -17,8 +17,8 @@ ledger; recovery is not self-authorizing).
 1. The repository at the commit you will authorize:
    `git status --porcelain` empty; `git rev-parse HEAD` = the commit in
    your authorization file (step 2).
-2. Constitutional state (SPEC §22 checklist): integrity manifest v6
-   hash in `build_state.json` = `32a59f43…d49f` (V6); your externally
+2. Constitutional state (SPEC §22 checklist): integrity manifest v7
+   hash in `build_state.json` = `b9100883…2412` (V7 — the manifest that describes the evaluator actually executing the holdout, D78); your externally
    preserved APPROVED root = `484f538d…6cf0` (V6, D76) and equals
    `build_state.json .approved_external_root_hash`.
 3. Full suite green from a clean worktree: `python3 -m pytest -q`.
@@ -42,7 +42,7 @@ Create `data/manifests/checkpoint2_authorization.json`:
   "model_manifest_sha256":  "5f010c7d83fef9306b97f6458fb2c4c6a1cdf25b454ad3fba4e96fbf5eaf1859",
   "frozen_inputs_manifest_file": "checkpoint2_frozen_inputs.json",
   "frozen_inputs_manifest_sha256": "a9a2aa6c5e9ab9a79839b1086c7f2cdf2f086ce8234f3ed6267e0c5a9a92b01e",
-  "integrity_manifest_sha256": "32a59f4376b394f94ca7894ffbcffe534ff8b9fbf0779b8b81c6b594afd6d49f",
+  "integrity_manifest_sha256": "b91008834fdd221677cdb332b74b6b83cd40eb82a84a81d31b19c10fae4a2412",
   "external_root_hash":     "484f538d8b5f9587f2e4ff1f06a061b7aab337b195d6038fdf123d444a886cf0",
   "consumed": false
 }

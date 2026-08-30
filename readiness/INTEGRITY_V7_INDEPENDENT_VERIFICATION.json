@@ -1,0 +1,15 @@
+{
+ "check": "D78 blocker 1 items 4+5 \u2014 independent reproduction of the V7 integrity manifest",
+ "disk_hash_mismatches": [],
+ "embedded_hash_match": true,
+ "embedded_hash_recomputed_from_body": "b91008834fdd221677cdb332b74b6b83cd40eb82a84a81d31b19c10fae4a2412",
+ "embedded_hash_recorded": "b91008834fdd221677cdb332b74b6b83cd40eb82a84a81d31b19c10fae4a2412",
+ "every_other_v6_file_unchanged": true,
+ "files_rehashed_from_disk": 57,
+ "status_counts": {
+  "added": 7,
+  "modified": 1,
+  "unchanged": 49
+ },
+ "utc": "2026-08-30T21:07:57Z"
+}

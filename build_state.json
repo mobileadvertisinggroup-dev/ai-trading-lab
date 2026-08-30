@@ -33,7 +33,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "STOPPED AT CHECKPOINT 2 (D77): post-V6 readiness refresh complete \u2014 gate bound to approved root V6; V6 dress rehearsal SUCCESS with funding reconciled (after the guard caught and we fixed the flat-funding overlay defect); awaiting the reviewer's independent review / separate explicit Checkpoint-2 authorization and the key holder's Mac host-check output; opening count zero",
+ "current_phase": "EXECUTING D78: manifest V7 lineage + source-evidence bundle V4 + Mac host-plan correction; opening count zero",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -119,7 +119,8 @@
   "D74",
   "D75",
   "D76",
-  "D77"
+  "D77",
+  "D78"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -176,12 +177,13 @@
   "sealed": true
  },
  "independent_review_gate": "SATISFIED (final narrow review 2026-08-26; mechanical corrections D37 executed)",
- "integrity_manifest_hash": "32a59f4376b394f94ca7894ffbcffe534ff8b9fbf0779b8b81c6b594afd6d49f",
+ "integrity_manifest_hash": "b91008834fdd221677cdb332b74b6b83cd40eb82a84a81d31b19c10fae4a2412",
  "integrity_manifest_hash_v1_notapproved": "c423f7826d0e3c667681a981f75e69d553c619022f17cdf2eea62c48ae01afb6",
  "integrity_manifest_hash_v2_notapproved": "2268007d9b7ac16071bf140fcb7fd8d43b1a67e004c63ccfebafa30e06f1d130",
  "integrity_manifest_hash_v3_notapproved": "c5cbdf7713533c190a45b4d3b739052493c3aca57a73c4997cc60afd9618c9c8",
  "integrity_manifest_hash_v4_superseded_for_cp2": "ee518f082580e2e4a342cb17a242226e6fc03a824643c74f2dd4cb47f0cb686e",
  "integrity_manifest_hash_v5_notapproved": "a857c2e4e52700b64170817ef9e125602b5ef922c2bdb2e49a4d4b7d91d62628",
+ "integrity_manifest_hash_v6_approved_science": "32a59f4376b394f94ca7894ffbcffe534ff8b9fbf0779b8b81c6b594afd6d49f",
  "invalidated_artifacts": [
   {
    "artifacts": [

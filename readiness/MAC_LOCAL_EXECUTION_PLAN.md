@@ -51,35 +51,74 @@ guarantee the frozen procedure requires. Running the gate directly on
 macOS would require porting those checks — a reviewed protocol change,
 not a silent adaptation. The honest options:
 
-## 5. Options for your explicit decision (key stays on the Mac in all)
-1. **Optimize + prove, then a local Linux VM on the Mac** (if the Mac
-   has ≥ 32 GB): run the unmodified Linux gate inside a local VM
-   (UTM/Lima, no network share of the key; the key is typed into the
-   VM's console ON the Mac — it never crosses a network). Requires:
-   (a) your discovery output confirming RAM; (b) a full-size surrogate
-   dress rehearsal executed INSIDE that VM (the rehearsal tool ships
-   with the repo and generates its own ephemeral key; one command);
-   (c) the VM's swap disabled (Linux: swapoff, verified by the gate's
-   /proc/swaps check). If the Mac has 16 GB, this option additionally
-   requires the evaluator memory optimization below, proven by the
-   same Mac-local rehearsal before any authorization:
-   - per-symbol streaming loads in `load_combined` (drop the pandas
-     frame after the numpy conversion, process symbols in one pass),
-     and results-ledger streaming serialization — estimated to cut the
-     13.9 GB demand materially, but ONLY a measured Mac-local
-     rehearsal number counts against the 1.5x margin.
-2. **Dedicated local Linux hardware** you control (≥ 32 GB RAM, no
-   swap): run the gate exactly as frozen; the key is typed on that
-   machine's console, which then holds it — this satisfies
-   "private-key-only-on-your-hardware" only if you accept that box as
-   equivalent to the Mac; otherwise it is out per your rule, and
-   option 1 stands.
-3. **Stop here**: keep the holdout sealed until a satisfactory host
+## 5. Options for your explicit decision (key stays on your hardware in all)
+
+**D78 correction.** An earlier revision of this plan asserted that
+macOS swap would not see the VM's guest memory. That claim was
+unsupported and is WITHDRAWN: disabling swap INSIDE a Linux guest
+(`/proc/swaps` empty) does nothing to stop the macOS HOST from paging
+the VM process's memory — including decrypted holdout pages — to
+persistent storage. The gate's Linux no-swap check governs only the
+guest.
+
+1. **Local Linux VM on the Mac — CONDITIONAL, currently NOT
+   recommended unless every host-persistence property below is
+   mechanically proven.** Under the frozen no-plaintext-persistence
+   policy, ALL of the following must be verified before a VM
+   qualifies, and each is a real obstacle on macOS:
+   - **Host swap**: `sysctl vm.swapusage` must show zero used before,
+     during, and after the run — guest `/proc/swaps` is NOT evidence.
+   - **Guest RAM actually locked on the host**: the hypervisor must
+     wire the guest's memory non-pageable (e.g. QEMU
+     `-overcommit mem-lock=on`) and this must be PROVEN on the host
+     (wired-memory accounting equal to the guest allocation), not
+     assumed. Common macOS VM front ends do not guarantee it.
+   - **FileVault / encrypted swap is NOT automatically sufficient**:
+     the frozen policy prohibits plaintext-bearing memory from
+     reaching persistent storage at all (the Linux gate refuses ANY
+     swap, encrypted or not). Treating FileVault-encrypted host swap
+     as acceptable would be a formal policy amendment for YOUR
+     explicit adjudication — it is not assumed here.
+   - **Crash/core dumps, snapshots, suspend/save-state, hibernation**:
+     host core dumps disabled; VM snapshots and suspend/save-state
+     never used (they serialize guest RAM to disk); hibernation off
+     (`pmset hibernatemode 0`) and no `/private/var/vm/sleepimage`.
+   - **Physical RAM headroom**: host + guest must fit without memory
+     pressure (guest needs ~21 GB by the frozen margin; macOS itself
+     needs several GB — realistically a ≥ 48 GB Mac for a locked
+     32 GB guest), verified by the discovery output and by
+     `memory_pressure` during a full-size rehearsal.
+   - **Verified cleanup**: after the run, VM disk images and any
+     hypervisor working files are inspected/removed; the in-VM gate's
+     own wipe-and-verify covers the guest tmpfs only.
+   If ANY of these cannot be proven mechanically, this option is out.
+   A full-size surrogate dress rehearsal INSIDE the configured VM
+   (the tool ships with the repo; ephemeral key; one command) is
+   required in every case, with the host-persistence checks recorded
+   before/during/after.
+
+2. **RECOMMENDED (Option A): dedicated local Linux hardware you
+   control** — ≥ 32 GiB RAM, swap disabled (`swapoff -a`, verified by
+   the gate), no hibernation, core dumps disabled, the key entered
+   locally on its console. This runs the gate exactly as frozen, with
+   no host/guest split and no unproven layer. It satisfies the
+   key-control rule only if you accept that machine as under your
+   exclusive control, equivalent to the Mac; that acceptance is yours
+   to make explicitly.
+
+3. **Option B: a formally amended native-macOS execution design** with
+   equivalent no-persistence guarantees (a reviewed amendment
+   replacing the Linux-specific checks with mechanically verifiable
+   macOS equivalents), independently dress-rehearsed at full size
+   before any authorization.
+
+4. **Option C: keep the holdout sealed** until a satisfactory host
    exists. Nothing in the protocol expires.
 
-NOT an option, per your rule and this plan: entering the key on the
-current remote container or any other project-controlled remote host —
-regardless of its RAM.
+The 1.5x margin and the no-plaintext-persistence rule are frozen and
+will not be weakened to make any host qualify. NOT an option, ever:
+entering the key on the current remote container or any other
+project-controlled remote host — regardless of its RAM.
 
 ## 6. What happens next
 Send the discovery output and your option choice. The next readiness
