@@ -1,0 +1,9 @@
+{
+ "commit": "a2ba87ae8b2d86980d8b75673200b7734bb6bd51",
+ "worktree": "/home/user/lake-work/wt-d78 (detached, clean \u2014 porcelain empty)",
+ "result_full_suite": "210 passed in 29.48s",
+ "result_failclosed_batteries": "69 passed in 5.24s",
+ "output_sha256": "fbf09c2c93541bf760ecc80a5ef618b9ddc5e81366bdd208726bbc69beeeae9a",
+ "utc": "2026-08-30T21:10:53Z",
+ "note": "D78 blocker 2: fresh suite + gate-battery captures at the exact final HEAD"
+}

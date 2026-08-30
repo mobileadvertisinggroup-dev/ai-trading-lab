@@ -1,0 +1,103 @@
+{
+ "approved_scientific_root_v6_unchanged": "484f538d8b5f9587f2e4ff1f06a061b7aab337b195d6038fdf123d444a886cf0",
+ "bundle": "CHECKPOINT2_READINESS_BUNDLE_V4",
+ "evidence_head": "a2ba87ae8b2d86980d8b75673200b7734bb6bd51",
+ "files": {
+  "BUILD_STATE.md": {
+   "bytes": 116195,
+   "sha256": "83bce25f823f348d53b31043cbc0c9d861adece9b87e62acd230f168c1113f87"
+  },
+  "CHECKPOINT2_AUTHORIZATION_PROCEDURE.md": {
+   "bytes": 7711,
+   "sha256": "d37641dcc3b610d96210dfbb950aa667069c6a35b0b95fdd73b4c9dca4be5f43"
+  },
+  "build_state.json": {
+   "bytes": 14759,
+   "sha256": "e70434cbdf9a7d59b4607397bc47e7d4ba54ca932a6a769561ca79f570c3cd07"
+  },
+  "data/manifests/TESTS_RERUN_a2ba87a.json": {
+   "bytes": 447,
+   "sha256": "06bd611658d73321ebc9aeed198c9524d20bc9e6361aeecbf0bd0462e06ddb30"
+  },
+  "data/manifests/TESTS_RERUN_a2ba87a.txt": {
+   "bytes": 261,
+   "sha256": "fbf09c2c93541bf760ecc80a5ef618b9ddc5e81366bdd208726bbc69beeeae9a"
+  },
+  "data/manifests/checkpoint2_frozen_inputs.json": {
+   "bytes": 2121,
+   "sha256": "a9a2aa6c5e9ab9a79839b1086c7f2cdf2f086ce8234f3ed6267e0c5a9a92b01e"
+  },
+  "data/manifests/integrity_manifest_v7.json": {
+   "bytes": 22531,
+   "sha256": "1e18397283993cd944f15722d7061354c4e714017c80b82d62bc9420082d7f66"
+  },
+  "readiness/DRESS_REHEARSAL_EVIDENCE_V6.json": {
+   "bytes": 1700,
+   "sha256": "ae664edf118a61ed9fdeacb4b8f45aabfb267da3d6a238a3f7e302dcdc75c9ae"
+  },
+  "readiness/DRESS_REHEARSAL_V6_GUARD_FAILCLOSED.json": {
+   "bytes": 2645,
+   "sha256": "176867142dd6dfba33814f3f09dbd1827d57c094bb3d70421349d2d736e1fca3"
+  },
+  "readiness/FROZEN_INPUTS_RESOLUTION_CHECK.json": {
+   "bytes": 257,
+   "sha256": "28003141fcfce4fb82a0538219d0b96c44b5b167515ea448b406b857bae9a0ed"
+  },
+  "readiness/INTEGRITY_V7_INDEPENDENT_VERIFICATION.json": {
+   "bytes": 539,
+   "sha256": "e596e56076784610b15aea31bf41d0ab09f3517f489f776a9908c0d35de9e55b"
+  },
+  "readiness/MAC_HOST_CHECK_COMMAND.txt": {
+   "bytes": 3236,
+   "sha256": "ab73a54c335fa02f759722fc3f9930939e43f6e1d4a4d200d975baedf8638214"
+  },
+  "readiness/MAC_LOCAL_EXECUTION_PLAN.md": {
+   "bytes": 7067,
+   "sha256": "f13040b05c2714d78a21776999a033c689a6feff32c78ffb26ebaf2a716c421c"
+  },
+  "readiness/SURROGATE_FUNDING_RECONCILIATION_V6.json": {
+   "bytes": 5434,
+   "sha256": "0162e6b54f6e5266ca505c50a02405a5a3c2ac3fdf6cb5793d47aaac3d4d1d88"
+  },
+  "readiness/checkpoint2_authorization.SCHEMA.json": {
+   "bytes": 3153,
+   "sha256": "42b18676940f7db4115d6d8246d93e4226fa2defab241316fc2c0017ccde24fc"
+  },
+  "readiness/d78_source_evidence/FINAL_HEAD_RECORD.json": {
+   "bytes": 611,
+   "sha256": "ff9c374ce9838e82f326a7859df75a4c7f7d8129fd8a1c0c0595cc51d22fc6ad"
+  },
+  "readiness/d78_source_evidence/FLAT_LAYOUT_FIX.patch": {
+   "bytes": 4334,
+   "sha256": "8966eef96b56dcb4b85b0943360e6029c1eee6b10c17c809460ae25e45765a6c"
+  },
+  "readiness/d78_source_evidence/REGRESSION_FAIL_UNDER_PREFIX_READER.txt": {
+   "bytes": 1606,
+   "sha256": "19fc715a3d10550aea4cf64d03bada1f38b61cf5e3f09f0875b50bd9757eb894"
+  },
+  "readiness/d78_source_evidence/REGRESSION_PASS_AFTER_FIX.txt": {
+   "bytes": 99,
+   "sha256": "1786d40152a10c86d279fec5a1587095965cb43db24b5cbce3048bd5f9933c7d"
+  },
+  "readiness/d78_source_evidence/_read_overlay_CORRECTED.py.txt": {
+   "bytes": 894,
+   "sha256": "640abdf747205756c166433a4e8f23db98c28337de94684fa8eddd0ff40a2762"
+  },
+  "readiness/d78_source_evidence/_read_overlay_PRE_FIX.py.txt": {
+   "bytes": 350,
+   "sha256": "d6a908c659c0cf07d2722e2d23d4d2eee7e3cc17f0311259946da7069bc2a263"
+  },
+  "readiness/d78_source_evidence/holdout_evaluator_CORRECTED_FULL.py.txt": {
+   "bytes": 32004,
+   "sha256": "a055069b9e3febfe4908adf6b855527568b33a1d56ebe5deffe60d8f84bdeeca"
+  },
+  "readiness/d78_source_evidence/test_holdout_evaluator_units_CURRENT.py.txt": {
+   "bytes": 15106,
+   "sha256": "0dda91f0c7949d7e4b7fb1c5a8c779d1dc61da2c6248ae1d23829ab253cfe003"
+  }
+ },
+ "generated_utc": "2026-08-30T21:11:23Z",
+ "integrity_manifest_v7": "b91008834fdd221677cdb332b74b6b83cd40eb82a84a81d31b19c10fae4a2412",
+ "n_files_listed": 23,
+ "note": "focused D78 bundle: reviewable source evidence + V7 lineage + corrected host plan; self-excluding manifest"
+}

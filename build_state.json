@@ -33,7 +33,7 @@
    "resolution": "REMOVED BY APPROVED SPECIFICATION CHANGE (FINAL-1.2); no permission to attach binance-execution-manager"
   }
  ],
- "current_phase": "EXECUTING D78: manifest V7 lineage + source-evidence bundle V4 + Mac host-plan correction; opening count zero",
+ "current_phase": "STOPPED AT CHECKPOINT 2 (D79): D78 blockers corrected \u2014 manifest V7 binds the gate to the evaluator actually executing the holdout; source-evidence bundle V4 delivered; Mac host plan corrected; awaiting independent review; opening count zero",
  "dataset_hashes": {
   "raw-v1": {
    "coverage_audit_sha256": "2cf7aa561003e142c51187d91abdc401d781589a62927c7fd2ad20e00206b96a",
@@ -120,7 +120,8 @@
   "D75",
   "D76",
   "D77",
-  "D78"
+  "D78",
+  "D79"
  ],
  "delta_review_outcome": {
   "accepted": [
@@ -281,9 +282,9 @@
   }
  },
  "pending_actions": [
-  "await independent review of CHECKPOINT2_READINESS_BUNDLE_V3.zip",
-  "await the key holder's MAC_HOST_CHECK_COMMAND output + host option choice",
-  "Checkpoint-2 opening only after the reviewer's separate explicit authorization on a host meeting the frozen 1.5x margin"
+  "await independent review of CHECKPOINT2_READINESS_BUNDLE_V4.zip",
+  "await the key holder's Mac host-check output + host option choice (Option A recommended)",
+  "Checkpoint-2 opening only after the reviewer's separate explicit authorization on a host meeting the frozen margins"
  ],
  "pending_user_inputs": [
   "age PUBLIC key (age1...) for the holdout seal recipient"
@@ -392,7 +393,7 @@
   "version": "FINAL-1.2.1"
  },
  "tests": {
-  "dev_suite": "210/210 (clean worktree cc21007)"
+  "dev_suite": "210/210 (clean worktree a2ba87a)"
  },
  "updated": "2026-08-30",
  "user_constraints_2026_08_25": [

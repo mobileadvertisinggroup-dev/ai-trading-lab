@@ -1,0 +1,9 @@
+{
+ "evidence_head": "a2ba87ae8b2d86980d8b75673200b7734bb6bd51",
+ "git_status_porcelain": "",
+ "note": "every capture in this bundle (suite, batteries, FAIL/PASS proofs, V7 verification, frozen-input resolution) was produced at evidence_head from this clean detached worktree; the closure commit that adds these capture files and this bundle to the repository follows evidence_head as the immediate next commit",
+ "porcelain_empty": true,
+ "record": "D78 blocker 2 \u2014 exact final HEAD and clean status",
+ "utc": "2026-08-30T21:11:23Z",
+ "worktree": "/home/user/lake-work/wt-d78 (detached at evidence_head)"
+}
