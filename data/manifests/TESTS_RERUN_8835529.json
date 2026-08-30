@@ -1,0 +1,8 @@
+{
+ "commit": "8835529",
+ "worktree": "/home/user/lake-work/wt-d72b (detached, clean)",
+ "result": "204 passed in 54.80s",
+ "output_sha256": "c7551113823c2a91c49a6fe3f19132d5b75563d65b05b68d85f62cebbf879433",
+ "utc": "2026-08-30T08:38:30Z",
+ "note": "D72 closure: full suite incl. the differential gate and the 13-test constitutional funding battery, from a clean detached worktree"
+}
